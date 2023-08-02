@@ -75,7 +75,7 @@ public class DeviceServiceImpl implements DeviceService {
     public byte[] exportReport() throws FileNotFoundException, JRException, SQLException {
         List<DeviceResponseDto> deviceList = deviceDaoImpl.findAll();
         //load file and compile it
-        File file = ResourceUtils.getFile("classpath:device.jrxml");
+        File file = ResourceUtils.getFile("classpath:report/device.jrxml");
         JasperReport jasperReport = JasperCompileManager.compileReport(file.getAbsolutePath());
         JRBeanCollectionDataSource dataSource = new JRBeanCollectionDataSource(deviceList);
         Map<String, Object> parameters = new HashMap<>();
