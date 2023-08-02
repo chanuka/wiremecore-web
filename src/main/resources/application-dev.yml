@@ -1,0 +1,60 @@
+spring:
+  jpa:
+    hibernate:
+      ddl-auto: validate
+  datasource:
+    url: jdbc:mysql://localhost:3306/haradb_new
+    username: root
+    password: password
+    hikari:
+      maximum-pool-size: 10
+      minimum-idle: 5
+  mail:
+    default-encoding: UTF-8
+    host: smtp.gmail.com
+    port: 587
+    username: chanuucsc@gmail.com
+    password: dlmfklwnyonycsta
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+            required: true
+    protocol: smtp
+    test-connection: false
+
+application:
+  jwt:
+    secretKey: securesecuresecuresecuresecuresecuresecuresecuresecuresecuresecure
+    tokenPrefix: Bearer
+    tokenExpirationAfterMillis: 84400000
+  refresh:
+    tokenExpirationAfterMillis: 120000
+
+rsa:
+  private-key: classpath:certs/private.pem
+  public-key: classpath:certs/public.pem
+
+springdoc:
+  api-docs:
+    path: /swagger-doc
+  swagger-ui:
+    path: /swagger-ui.html
+    enabled: true
+    default-models-expand-depth: -1
+
+swagger:
+  server:
+    url: http://localhost:8091/wireme-coreweb
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: httpexchanges,health,info,metrics,env,loggers
+    enabled-by-default: true
+
+logging:
+  config: C:\conf\wiremecoreweb\logback-spring.xml

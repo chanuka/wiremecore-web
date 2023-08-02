@@ -1,0 +1,6 @@
+-- INSERT INTO `role` (rolename) VALUES ('Admin'),('Report Viewer');
+-- INSERT INTO `user` (password,username) VALUES ('$2a$10$ktVVqJlLMsJlCPq1RKy7pu4MCe1qk3FYCMJKQk4my9N8oQ/yTcJ/u','chanuka');
+-- INSERT INTO userrole (userid,roleid) VALUES (1,1),(1,2);
+-- INSERT INTO `resource` (`name`) VALUES ('users'),('roles'),('user-roles'),('resources'),('permissions'),('partners'),('merchants'),('terminals'),('devices'),('transactions'),('audits');
+-- INSERT INTO `permission` (resourceId,roleId,created,readd,updated,deleted) VALUES (1,1,1,1,1,1),(2,1,1,1,1,1),(3,1,1,1,1,1),(4,1,1,1,1,1),(5,1,1,1,1,1),(6,1,1,1,1,1),(7,1,1,1,1,1),(8,1,1,1,1,1),(9,1,1,1,1,1),(10,1,1,1,1,1),(11,1,1,1,1,1);
+--

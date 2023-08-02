@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+ 
+    <property name="LOG_LOCATION" value="/opt/temp/wiremecoreweb" />
+	<Property name="LOG_PATTERN" value="[%-5level] %d{yyyy-MM-dd HH:mm:ss.SSS} [%t] %c{1}- %msg%n"/>
+ 
+    <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+	<!--	<filter class="ch.qos.logback.classic.filter.LevelFilter">
+            <level>ALL</level>
+            <onMatch>DENY</onMatch>
+            <onMismatch>DENY</onMismatch>
+        </filter>-->
+        <encoder>
+            <pattern>%d{yyyy-MM-dd HH:mm:ss} - %logger{36} - %msg%n</pattern>
+        </encoder>
+    </appender>
+ 
+    <appender name="debugLogger" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <File>${LOG_LOCATION}/debug.log</File>
+		<filter class="ch.qos.logback.classic.filter.LevelFilter">
+            <level>DEBUG</level>
+            <onMatch>ACCEPT</onMatch>
+            <onMismatch>DENY</onMismatch>
+        </filter>
+        <encoder>
+             <pattern>${LOG_PATTERN}</pattern>
+        </encoder>
+       <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>${LOG_LOCATION}/archived/debug/debug-%d{yyyy-MM-dd}.%i.log
+            </fileNamePattern>
+            <timeBasedFileNamingAndTriggeringPolicy
+                class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+                <maxFileSize>10MB</maxFileSize>
+            </timeBasedFileNamingAndTriggeringPolicy>
+        </rollingPolicy>
+    </appender> 
+	<appender name="errorLogger" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <File>${LOG_LOCATION}/error.log</File>
+		<filter class="ch.qos.logback.classic.filter.LevelFilter">
+            <level>ERROR</level>
+            <onMatch>ACCEPT</onMatch>
+            <onMismatch>DENY</onMismatch>
+        </filter>
+        <encoder>
+             <pattern>${LOG_PATTERN}</pattern>
+        </encoder>
+       <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>${LOG_LOCATION}/archived/error/error-%d{yyyy-MM-dd}.%i.log
+            </fileNamePattern>
+            <timeBasedFileNamingAndTriggeringPolicy
+                class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+                <maxFileSize>10MB</maxFileSize>
+            </timeBasedFileNamingAndTriggeringPolicy>
+        </rollingPolicy>
+    </appender>
+	
+	<appender name="infoLogger" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <File>${LOG_LOCATION}/info.log</File>
+		<filter class="ch.qos.logback.classic.filter.LevelFilter">
+            <level>INFO</level>
+            <onMatch>ACCEPT</onMatch>
+            <onMismatch>DENY</onMismatch>
+        </filter>
+        <encoder>
+             <pattern>${LOG_PATTERN}</pattern>
+        </encoder>
+       <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>${LOG_LOCATION}/archived/info/info-%d{yyyy-MM-dd}.%i.log
+            </fileNamePattern>
+            <timeBasedFileNamingAndTriggeringPolicy
+                class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+                <maxFileSize>10MB</maxFileSize>
+            </timeBasedFileNamingAndTriggeringPolicy>
+        </rollingPolicy>
+    </appender>
+	
+  <appender name="ASYNCDEBUG" class="ch.qos.logback.classic.AsyncAppender">
+    <appender-ref ref="debugLogger" />
+  </appender>
+  <appender name="ASYNCERROR" class="ch.qos.logback.classic.AsyncAppender">
+	<appender-ref ref="errorLogger" />
+  </appender>
+  <appender name="ASYNCINFO" class="ch.qos.logback.classic.AsyncAppender">
+	<appender-ref ref="infoLogger" />
+  </appender>
+    <root level="INFO">
+        <appender-ref ref="CONSOLE"/>
+    </root>
+	 
+	<logger name="com.cba.core.wiremeweb" level="ERROR" additivity="true">
+        <appender-ref ref="ASYNCERROR"/>
+    </logger>
+	<logger name="com.cba.core.wiremeweb" level="INFO" additivity="true">
+        <appender-ref ref="ASYNCINFO"/>
+    </logger>
+	<logger name="com.cba.core.wiremeweb" level="DEBUG" additivity="true">
+        <appender-ref ref="ASYNCDEBUG"/>
+    </logger>
+	
+ 
+    <!-- Application logs at trace level 
+    <logger name="com.cba.beanvalidationopenapi" level="ALL" additivity="false">
+        <appender-ref ref="RollingFile" />
+        <appender-ref ref="Console" />
+    </logger>-->
+</configuration>
