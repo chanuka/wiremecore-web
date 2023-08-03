@@ -16,15 +16,12 @@ public class CustomUserDetailsServiceImpl implements CustomUserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        ApplicationUserDto applicationUser = null;
         try {
-            applicationUser = customUserDetailsDaoImpl.loadUserByUsername(username);
+            ApplicationUserDto applicationUser = customUserDetailsDaoImpl.loadUserByUsername(username);
+            return applicationUser;
         } catch (Exception e) {
             e.printStackTrace();
-        }
-        if (applicationUser == null) {
             throw new UsernameNotFoundException("User not found with username: " + username);
         }
-        return applicationUser;
     }
 }

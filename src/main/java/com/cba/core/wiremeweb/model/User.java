@@ -22,6 +22,8 @@ public class User implements java.io.Serializable {
     private Device device;
     private Merchant merchant;
     private MerchantCustomer merchantCustomer;
+    private Status status;
+    private UserType userType;
     private String name;
     private String userName;
     private String password;
@@ -65,10 +67,12 @@ public class User implements java.io.Serializable {
         this.updatedAt = updatedAt;
     }
 
-    public User(Device device, Merchant merchant, MerchantCustomer merchantCustomer, String name, String userName, String password, String email, String contactNo, Date lastLoginTime, int loginAttempt, String sessionId, int createdBy, Integer modifiedBy, Date createdAt, Date updatedAt, Set<Permission> permissionsForModifiedBy, Set<UserRole> userRolesForCreatedBy, Set<DeviceConfig> deviceConfigsForModifiedBy, Set<RefreshToken> refreshTokens, Set<DeviceConfig> deviceConfigsForCreatedBy, Set<UserRole> userRolesForUserId, Set<OnetimePassword> onetimePasswords, Set<Permission> permissionsForCreatedBy, Set<Terminal> terminalsForModifiedBy, Set<Device> devicesForCreatedBy, Set<Terminal> terminalsForCreatedBy, Set<Device> devicesForModifiedBy, Set<Merchant> merchantsForCreatedBy, Set<Merchant> merchantsForModifiedBy, Set<UserConfig> userConfigs, Set<UserRole> userRolesForModifiedBy) {
+    public User(Device device, Merchant merchant, MerchantCustomer merchantCustomer, Status status, UserType userType, String name, String userName, String password, String email, String contactNo, Date lastLoginTime, int loginAttempt, String sessionId, int createdBy, Integer modifiedBy, Date createdAt, Date updatedAt, Set<Permission> permissionsForModifiedBy, Set<UserRole> userRolesForCreatedBy, Set<DeviceConfig> deviceConfigsForModifiedBy, Set<RefreshToken> refreshTokens, Set<DeviceConfig> deviceConfigsForCreatedBy, Set<UserRole> userRolesForUserId, Set<OnetimePassword> onetimePasswords, Set<Permission> permissionsForCreatedBy, Set<Terminal> terminalsForModifiedBy, Set<Device> devicesForCreatedBy, Set<Terminal> terminalsForCreatedBy, Set<Device> devicesForModifiedBy, Set<Merchant> merchantsForCreatedBy, Set<Merchant> merchantsForModifiedBy, Set<UserConfig> userConfigs, Set<UserRole> userRolesForModifiedBy) {
         this.device = device;
         this.merchant = merchant;
         this.merchantCustomer = merchantCustomer;
+        this.status = status;
+        this.userType = userType;
         this.name = name;
         this.userName = userName;
         this.password = password;
@@ -140,6 +144,25 @@ public class User implements java.io.Serializable {
         this.merchantCustomer = merchantCustomer;
     }
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "status", nullable = false)
+    public Status getStatus() {
+        return this.status;
+    }
+
+    public void setStatus(Status status) {
+        this.status = status;
+    }
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_type", nullable = false)
+    public UserType getUserType() {
+        return userType;
+    }
+
+    public void setUserType(UserType userType) {
+        this.userType = userType;
+    }
 
     @Column(name = "name", nullable = false, length = 45)
     public String getName() {

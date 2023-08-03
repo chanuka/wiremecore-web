@@ -7,6 +7,7 @@ import com.cba.core.wiremeweb.service.impl.TokenBlacklistServiceImpl;
 import com.cba.core.wiremeweb.service.impl.UserPermissionServiceImpl;
 import com.cba.core.wiremeweb.util.JwtUtils;
 import com.cba.core.wiremeweb.util.UserBean;
+import com.cba.core.wiremeweb.util.UserTypeEnum;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -55,17 +56,21 @@ public class AuthTokenVerifyFilter extends OncePerRequestFilter {
         }
 
         try {
+
             token = authorizationHeader.replace(jwtConfig.getTokenPrefix(), "").trim();
+
+            Jwt claimsJws = jwtUtils.validateJwtToken(token, decoder);
+            String username = claimsJws.getSubject();
+            String validity =  claimsJws.getClaimAsString("Validity");
+            userBean.setUsername(username); // set user data in request scope for db updating
+
+            if(!validity.equals(String.valueOf(UserTypeEnum.WEB.getValue()))){
+                throw new JwtTokenException(token, "Token is from another module..");
+            }
 
             if (tokenBlacklistServiceImpl.isTokenBlacklisted(token)) {
                 throw new JwtTokenException(token, "Token is Blacklisted..");
             }
-
-            Jwt claimsJws = jwtUtils.validateJwtToken(token, decoder);
-
-            String username = claimsJws.getSubject();
-            userBean.setUsername(username); // set user data in request scope for db updating
-
 
             String[] resource = request.getRequestURI().split("\\/");
             boolean access = false;

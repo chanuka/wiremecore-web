@@ -29,7 +29,10 @@ public class Status implements java.io.Serializable {
     private Set<TransactionSwitch> transactionSwitches = new HashSet<TransactionSwitch>(0);
     private Set<CardType> cardTypes = new HashSet<CardType>(0);
     private Set<Device> devices = new HashSet<Device>(0);
+    private Set<User> users = new HashSet<User>(0);
     private Set<Role> roles = new HashSet<Role>(0);
+    private Set<UserRole> userRoles = new HashSet<UserRole>(0);
+    private Set<UserType> userTypes = new HashSet<UserType>(0);
 
     public Status() {
     }
@@ -39,7 +42,7 @@ public class Status implements java.io.Serializable {
         this.statusCode = statusCode;
     }
 
-    public Status(String statusCode, String statusDescription, String statusCategory, Set<Bank> banks, Set<DeviceConfig> deviceConfigs, Set<TransactionType> transactionTypes, Set<Merchant> merchants, Set<SettlementInfo> settlementInfos, Set<Terminal> terminals, Set<TransactionSwitch> transactionSwitches, Set<CardType> cardTypes, Set<Device> devices, Set<Role> roles) {
+    public Status(String statusCode, String statusDescription, String statusCategory, Set<Bank> banks, Set<DeviceConfig> deviceConfigs, Set<TransactionType> transactionTypes, Set<Merchant> merchants, Set<SettlementInfo> settlementInfos, Set<Terminal> terminals, Set<TransactionSwitch> transactionSwitches, Set<CardType> cardTypes, Set<Device> devices, Set<User> users, Set<Role> roles,Set<UserRole> userRoles,Set<UserType> userTypes) {
         this.statusCode = statusCode;
         this.statusDescription = statusDescription;
         this.statusCategory = statusCategory;
@@ -52,7 +55,10 @@ public class Status implements java.io.Serializable {
         this.transactionSwitches = transactionSwitches;
         this.cardTypes = cardTypes;
         this.devices = devices;
+        this.users = users;
         this.roles = roles;
+        this.userRoles = userRoles;
+        this.userTypes = userTypes;
     }
 
     @Id
@@ -167,6 +173,15 @@ public class Status implements java.io.Serializable {
     }
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "status")
+    public Set<User> getUsers() {
+        return this.users;
+    }
+
+    public void setUsers(Set<User> users) {
+        this.users = users;
+    }
+
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "status")
     public Set<Role> getRoles() {
         return this.roles;
     }
@@ -175,7 +190,23 @@ public class Status implements java.io.Serializable {
         this.roles = roles;
     }
 
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "status")
+    public Set<UserRole> getUserRoles() {
+        return this.userRoles;
+    }
 
+    public void setUserRoles(Set<UserRole> userRoles) {
+        this.roles = roles;
+    }
+
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "status")
+    public Set<UserType> getUserTypes() {
+        return userTypes;
+    }
+
+    public void setUserTypes(Set<UserType> userTypes) {
+        this.userTypes = userTypes;
+    }
 }
 
 

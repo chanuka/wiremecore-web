@@ -39,15 +39,14 @@ public class JwtUtils {
 
     public String generateTokenFromAuthResult(Authentication authResult, JwtEncoder encoder) {
         Instant now = Instant.now();
-//        String scope = authResult.getAuthorities().stream()
-//                .map(GrantedAuthority::getAuthority)
-//                .collect(Collectors.joining(" "));
+
         JwtClaimsSet claims = JwtClaimsSet.builder()
                 .issuer("self")
                 .issuedAt(now)
                 .expiresAt(now.plus(jwtConfig.getTokenExpirationAfterMillis(), ChronoUnit.MILLIS))
                 .subject(authResult.getName())
                 .claim("authorities", authResult.getAuthorities())
+                .claim("Validity",UserTypeEnum.WEB.getValue())
                 .build();
         return encoder.encode(JwtEncoderParameters.from(claims)).getTokenValue();
     }

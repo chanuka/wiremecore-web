@@ -23,13 +23,13 @@ public class UserRole implements java.io.Serializable {
     private User userByModifiedBy;
     private Date createdAt;
     private Date updatedAt;
-    private String status;
+    private Status status;
 
     public UserRole() {
     }
 
 
-    public UserRole(int id, Role role, User userByCreatedBy, User userByUserId, Date createdAt, Date updatedAt, String status) {
+    public UserRole(int id, Role role, User userByCreatedBy, User userByUserId, Date createdAt, Date updatedAt, Status status) {
         this.id = id;
         this.role = role;
         this.userByCreatedBy = userByCreatedBy;
@@ -39,7 +39,7 @@ public class UserRole implements java.io.Serializable {
         this.status = status;
     }
 
-    public UserRole(int id, Role role, User userByCreatedBy, User userByUserId, User userByModifiedBy, Date createdAt, Date updatedAt, String status) {
+    public UserRole(int id, Role role, User userByCreatedBy, User userByUserId, User userByModifiedBy, Date createdAt, Date updatedAt, Status status) {
         this.id = id;
         this.role = role;
         this.userByCreatedBy = userByCreatedBy;
@@ -121,12 +121,13 @@ public class UserRole implements java.io.Serializable {
     }
 
 
-    @Column(name = "status", nullable = false, length = 10)
-    public String getStatus() {
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "status", nullable = false)
+    public Status getStatus() {
         return this.status;
     }
 
-    public void setStatus(String status) {
+    public void setStatus(Status status) {
         this.status = status;
     }
 
