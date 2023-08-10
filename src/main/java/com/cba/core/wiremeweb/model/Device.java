@@ -7,6 +7,11 @@ import java.util.HashSet;
 import java.util.Set;
 
 import jakarta.persistence.*;
+import org.springframework.data.annotation.CreatedBy;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedBy;
+import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 
 /**
@@ -15,18 +20,22 @@ import jakarta.persistence.*;
 @Entity
 @Table(name = "device"
 )
+@EntityListeners(AuditingEntityListener.class) // enable entity level auditing for create,modified attributes
 public class Device implements java.io.Serializable {
-
 
     private Integer id;
     private Status status;
-    private User userByCreatedBy;
-    private User userByModifiedBy;
+    @CreatedBy
+    private String userByCreatedBy;
+    @LastModifiedBy
+    private String userByModifiedBy;
     private String serialNo;
     private String emiNo;
     private String deviceType;
     private String uniqueId;
+    @CreatedDate
     private Date createdAt;
+    @LastModifiedDate
     private Date updatedAt;
     private Set<PushDevice> pushDevices = new HashSet<PushDevice>(0);
     private Set<DeviceConfig> deviceConfigs = new HashSet<DeviceConfig>(0);
@@ -36,7 +45,7 @@ public class Device implements java.io.Serializable {
     }
 
 
-    public Device(Status status, User userByCreatedBy, User userByModifiedBy, String serialNo, String emiNo, String deviceType, Date createdAt, Date updatedAt) {
+    public Device(Status status, String userByCreatedBy, String userByModifiedBy, String serialNo, String emiNo, String deviceType, Date createdAt, Date updatedAt) {
         this.status = status;
         this.userByCreatedBy = userByCreatedBy;
         this.userByModifiedBy = userByModifiedBy;
@@ -47,7 +56,7 @@ public class Device implements java.io.Serializable {
         this.updatedAt = updatedAt;
     }
 
-    public Device(Status status, User userByCreatedBy, User userByModifiedBy, String serialNo, String emiNo, String deviceType, String uniqueId, Date createdAt, Date updatedAt, Set<PushDevice> pushDevices, Set<DeviceConfig> deviceConfigs, Set<User> users) {
+    public Device(Status status, String userByCreatedBy, String userByModifiedBy, String serialNo, String emiNo, String deviceType, String uniqueId, Date createdAt, Date updatedAt, Set<PushDevice> pushDevices, Set<DeviceConfig> deviceConfigs, Set<User> users) {
         this.status = status;
         this.userByCreatedBy = userByCreatedBy;
         this.userByModifiedBy = userByModifiedBy;
@@ -83,23 +92,21 @@ public class Device implements java.io.Serializable {
         this.status = status;
     }
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "created_by", nullable = false)
-    public User getUserByCreatedBy() {
+    @Column(name = "created_by", nullable = false, length = 45)
+    public String getUserByCreatedBy() {
         return this.userByCreatedBy;
     }
 
-    public void setUserByCreatedBy(User userByCreatedBy) {
+    public void setUserByCreatedBy(String userByCreatedBy) {
         this.userByCreatedBy = userByCreatedBy;
     }
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "modified_by", nullable = false)
-    public User getUserByModifiedBy() {
+    @Column(name = "modified_by", length = 45)
+    public String getUserByModifiedBy() {
         return this.userByModifiedBy;
     }
 
-    public void setUserByModifiedBy(User userByModifiedBy) {
+    public void setUserByModifiedBy(String userByModifiedBy) {
         this.userByModifiedBy = userByModifiedBy;
     }
 
@@ -154,7 +161,7 @@ public class Device implements java.io.Serializable {
     }
 
     @Temporal(TemporalType.TIMESTAMP)
-    @Column(name = "updated_at", nullable = false, length = 19)
+    @Column(name = "updated_at", length = 19)
     public Date getUpdatedAt() {
         return this.updatedAt;
     }
@@ -189,7 +196,6 @@ public class Device implements java.io.Serializable {
     public void setUsers(Set<User> users) {
         this.users = users;
     }
-
 
 }
 

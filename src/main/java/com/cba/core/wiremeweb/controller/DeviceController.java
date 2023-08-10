@@ -6,10 +6,13 @@ import com.cba.core.wiremeweb.dto.DeviceResponseDto;
 import com.cba.core.wiremeweb.exception.InternalServerError;
 import com.cba.core.wiremeweb.exception.NotFoundException;
 import com.cba.core.wiremeweb.exception.RecordInUseException;
+import com.cba.core.wiremeweb.service.GlobalAuditEntryService;
 import com.cba.core.wiremeweb.service.impl.DeviceServiceImpl;
+import com.cba.core.wiremeweb.util.UpdateResponse;
+import com.cba.core.wiremeweb.util.UserOperationEnum;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import net.sf.jasperreports.engine.JRException;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
@@ -17,6 +20,7 @@ import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -27,7 +31,6 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.ByteArrayOutputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.List;
@@ -41,6 +44,10 @@ public class DeviceController implements DeviceResource {
     private static final Logger logger = LoggerFactory.getLogger(DeviceController.class);
 
     private final DeviceServiceImpl deviceServiceImpl;
+    private final GlobalAuditEntryService globalAuditEntryService;
+
+    @Value("${application.resource.devices}")
+    private String resource;
 
     @Override
     public ResponseEntity<List<DeviceResponseDto>> devices(@RequestParam(defaultValue = "0") int page,
@@ -122,10 +129,17 @@ public class DeviceController implements DeviceResource {
     public ResponseEntity<DeviceResponseDto> updateADevice(@PathVariable(value = "id") int id,
                                                            @RequestBody DeviceRequestDto deviceRequestDto) throws Exception {
         logger.debug("Update Single Device is called");
-
+        ObjectMapper objectMapper = new ObjectMapper();
         try {
-            DeviceResponseDto device = deviceServiceImpl.updateById(id, deviceRequestDto);
-            return ResponseEntity.ok().body(device);
+            UpdateResponse<DeviceResponseDto> response = deviceServiceImpl.updateById(id, deviceRequestDto);
+            globalAuditEntryService.createNewRevision(
+                    resource,
+                    id,
+                    UserOperationEnum.UPDATE.getValue(),
+                    objectMapper.writeValueAsString(response.getOldDataMap()),
+                    objectMapper.writeValueAsString(response.getNewDataMap()));
+
+            return ResponseEntity.ok().body(response.getT());
 
         } catch (NotFoundException nf) {
             logger.error(nf.getMessage());

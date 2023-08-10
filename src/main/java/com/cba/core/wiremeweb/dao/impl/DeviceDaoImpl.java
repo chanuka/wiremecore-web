@@ -8,10 +8,9 @@ import com.cba.core.wiremeweb.exception.RecordInUseException;
 import com.cba.core.wiremeweb.mapper.DeviceMapper;
 import com.cba.core.wiremeweb.model.Device;
 import com.cba.core.wiremeweb.model.Status;
-import com.cba.core.wiremeweb.model.User;
-import com.cba.core.wiremeweb.repository.UserRepository;
-import com.cba.core.wiremeweb.util.UserBean;
 import com.cba.core.wiremeweb.repository.DeviceRepository;
+import com.cba.core.wiremeweb.repository.UserRepository;
+import com.cba.core.wiremeweb.util.UpdateResponse;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -21,13 +20,11 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
 
 import java.sql.SQLException;
-import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.stream.Collectors;
-import java.util.stream.StreamSupport;
 
 @Component
 @Transactional
@@ -36,7 +33,6 @@ public class DeviceDaoImpl implements DeviceDao {
 
     private final DeviceRepository deviceRepository;
     private final UserRepository userRepository;
-    private final UserBean userBean;
 
     @Override
     public Page<DeviceResponseDto> findAll(int page, int pageSize) throws SQLException {
@@ -119,34 +115,55 @@ public class DeviceDaoImpl implements DeviceDao {
     }
 
     @Override
-    public DeviceResponseDto updateById(int id, DeviceRequestDto deviceRequestDto) throws SQLException {
+    public UpdateResponse<DeviceResponseDto> updateById(int id, DeviceRequestDto deviceRequestDto) throws SQLException {
 
+        UpdateResponse<DeviceResponseDto> responseBean = new UpdateResponse<>();
+        boolean updateRequired = false;
+        Map<String, Object> oldDataMap = new HashMap<>();
+        Map<String, Object> newDataMap = new HashMap<>();
         Device toBeUpdated = deviceRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("Device not found"));
 
-        toBeUpdated.setDeviceType(deviceRequestDto.getDeviceType());
-        toBeUpdated.setEmiNo(deviceRequestDto.getEmiNo());
-        toBeUpdated.setSerialNo(deviceRequestDto.getSerialNo());
-        User usr = userRepository.findByUserName(userBean.getUsername());
-        toBeUpdated.setUserByModifiedBy(usr);
-        toBeUpdated.setUpdatedAt(new Date());
+        if (!toBeUpdated.getDeviceType().equals(deviceRequestDto.getDeviceType())) {
+            updateRequired = true;
+            oldDataMap.put("deviceType", toBeUpdated.getDeviceType());
+            newDataMap.put("deviceType", deviceRequestDto.getDeviceType());
 
-        deviceRepository.save(toBeUpdated);
+            toBeUpdated.setDeviceType(deviceRequestDto.getDeviceType());
+        }
+        if (!toBeUpdated.getEmiNo().equals(deviceRequestDto.getEmiNo())) {
+            updateRequired = true;
+            oldDataMap.put("emiNo", toBeUpdated.getEmiNo());
+            newDataMap.put("emiNo", deviceRequestDto.getEmiNo());
 
-        return DeviceMapper.toDto(toBeUpdated);
+            toBeUpdated.setEmiNo(deviceRequestDto.getEmiNo());
+        }
+        if (!toBeUpdated.getSerialNo().equals(deviceRequestDto.getSerialNo())) {
+            updateRequired = true;
+            oldDataMap.put("serialNo", toBeUpdated.getSerialNo());
+            newDataMap.put("serialNo", deviceRequestDto.getSerialNo());
+
+            toBeUpdated.setSerialNo(deviceRequestDto.getSerialNo());
+        }
+        if (updateRequired) {
+
+            deviceRepository.saveAndFlush(toBeUpdated);
+
+            responseBean.setOldDataMap(oldDataMap);
+            responseBean.setNewDataMap(newDataMap);
+            responseBean.setT(DeviceMapper.toDto(toBeUpdated));
+
+            return responseBean;
+
+        } else {
+            throw new NotFoundException("No Changes found");
+        }
 
     }
 
     @Override
     public DeviceResponseDto create(DeviceRequestDto deviceRequestDto) throws SQLException {
-
         Device deviceToInsert = DeviceMapper.toModel(deviceRequestDto);
-
-        User usr = userRepository.findByUserName(userBean.getUsername());
-        deviceToInsert.setUserByCreatedBy(usr);
-        deviceToInsert.setUserByModifiedBy(usr);
-        deviceToInsert.setCreatedAt(new Date());
-        deviceToInsert.setUpdatedAt(new Date());
         deviceToInsert.setStatus(new Status(deviceRequestDto.isActive() ? "ACTV" : "DACT"));
 
         Device savedDevice = deviceRepository.save(deviceToInsert);
@@ -159,15 +176,12 @@ public class DeviceDaoImpl implements DeviceDao {
     public void createBulk(List<DeviceRequestDto> deviceRequestDtoList) throws SQLException {
 
         for (DeviceRequestDto deviceDto : deviceRequestDtoList) {
-            Device toBeUpdated = DeviceMapper.toModel(deviceDto);
 
-            User usr = userRepository.findByUserName(userBean.getUsername());
-            toBeUpdated.setUserByCreatedBy(usr);
-            toBeUpdated.setUserByModifiedBy(usr);
+            Device toBeUpdated = DeviceMapper.toModel(deviceDto);
             toBeUpdated.setCreatedAt(new Date());
             toBeUpdated.setUpdatedAt(new Date());
-//                toBeUpdated.setStatus(new Status(deviceDto.isActive() ? "ACTV" : "DACT"));
             toBeUpdated.setStatus(new Status("ACTV"));
+
             deviceRepository.save(toBeUpdated);
 
         }

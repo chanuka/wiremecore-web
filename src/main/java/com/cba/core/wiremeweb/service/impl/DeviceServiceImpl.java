@@ -4,6 +4,7 @@ import com.cba.core.wiremeweb.dto.DeviceRequestDto;
 import com.cba.core.wiremeweb.dao.impl.DeviceDaoImpl;
 import com.cba.core.wiremeweb.dto.DeviceResponseDto;
 import com.cba.core.wiremeweb.service.DeviceService;
+import com.cba.core.wiremeweb.util.UpdateResponse;
 import com.cba.core.wiremeweb.util.UserBean;
 import lombok.RequiredArgsConstructor;
 import net.sf.jasperreports.engine.*;
@@ -57,7 +58,7 @@ public class DeviceServiceImpl implements DeviceService {
     }
 
     @Override
-    public DeviceResponseDto updateById(int id, DeviceRequestDto deviceRequestDto) throws SQLException {
+    public UpdateResponse<DeviceResponseDto> updateById(int id, DeviceRequestDto deviceRequestDto) throws SQLException {
         return deviceDaoImpl.updateById(id, deviceRequestDto);
     }
 

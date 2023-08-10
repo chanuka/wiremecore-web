@@ -3,19 +3,16 @@ package com.cba.core.wiremeweb.controller.resource;
 import com.cba.core.wiremeweb.dto.DeviceRequestDto;
 import com.cba.core.wiremeweb.dto.DeviceResponseDto;
 import jakarta.validation.Valid;
-import net.sf.jasperreports.engine.JRException;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.sql.SQLException;
 import java.util.List;
 import java.util.Map;
 
 @RestController
-@RequestMapping("/devices")
+@RequestMapping("/${application.resource.devices}")
 public interface DeviceResource {
 
     @GetMapping

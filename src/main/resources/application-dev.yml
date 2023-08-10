@@ -32,6 +32,8 @@ application:
     tokenExpirationAfterMillis: 84400000
   refresh:
     tokenExpirationAfterMillis: 120000
+  resource:
+    devices: devices
 
 rsa:
   private-key: classpath:certs/private.pem
