@@ -2,6 +2,7 @@ package com.cba.core.wiremeweb.service;
 
 import com.cba.core.wiremeweb.dto.DeviceRequestDto;
 import com.cba.core.wiremeweb.dto.DeviceResponseDto;
+import com.cba.core.wiremeweb.model.Device;
 import com.cba.core.wiremeweb.util.UpdateResponse;
 import net.sf.jasperreports.engine.JRException;
 import org.springframework.data.domain.Page;
@@ -21,15 +22,15 @@ public interface DeviceService {
 
     public DeviceResponseDto findById(int id) throws SQLException;
 
-    public void deleteById(int id) throws SQLException;
+    public DeviceResponseDto deleteById(int id) throws SQLException;
 
-    public void deleteByIdList(List<Map<String, Integer>> deviceList) throws SQLException;
+    public void deleteByIdList(List<Integer> deviceList) throws SQLException;
 
     public UpdateResponse<DeviceResponseDto> updateById(int id, DeviceRequestDto deviceRequestDto) throws SQLException;
 
     public DeviceResponseDto create(DeviceRequestDto deviceRequestDto) throws SQLException;
 
-    public void createBulk(List<DeviceRequestDto> deviceRequestDto) throws SQLException;
+    public List<DeviceResponseDto> createBulk(List<DeviceRequestDto> deviceRequestDto) throws SQLException;
 
     public byte[] exportReport() throws FileNotFoundException, JRException,SQLException;
 

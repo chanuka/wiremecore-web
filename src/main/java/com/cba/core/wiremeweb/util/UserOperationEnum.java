@@ -3,6 +3,7 @@ package com.cba.core.wiremeweb.util;
 public enum UserOperationEnum {
 
     READ("READ"),
+    SEARCH("SEARCH"),
     CREATE("CREATE"),
     UPDATE("UPDATE"),
     DELETE("DELETE");

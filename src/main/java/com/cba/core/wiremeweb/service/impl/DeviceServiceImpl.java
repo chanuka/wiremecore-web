@@ -3,6 +3,7 @@ package com.cba.core.wiremeweb.service.impl;
 import com.cba.core.wiremeweb.dto.DeviceRequestDto;
 import com.cba.core.wiremeweb.dao.impl.DeviceDaoImpl;
 import com.cba.core.wiremeweb.dto.DeviceResponseDto;
+import com.cba.core.wiremeweb.model.Device;
 import com.cba.core.wiremeweb.service.DeviceService;
 import com.cba.core.wiremeweb.util.UpdateResponse;
 import com.cba.core.wiremeweb.util.UserBean;
@@ -48,12 +49,12 @@ public class DeviceServiceImpl implements DeviceService {
     }
 
     @Override
-    public void deleteById(int id) throws SQLException {
-        deviceDaoImpl.deleteById(id);
+    public DeviceResponseDto deleteById(int id) throws SQLException {
+        return deviceDaoImpl.deleteById(id);
     }
 
     @Override
-    public void deleteByIdList(List<Map<String, Integer>> deviceList) throws SQLException {
+    public void deleteByIdList(List<Integer> deviceList) throws SQLException {
         deviceDaoImpl.deleteByIdList(deviceList);
     }
 
@@ -68,8 +69,8 @@ public class DeviceServiceImpl implements DeviceService {
     }
 
     @Override
-    public void createBulk(List<DeviceRequestDto> deviceRequestDto) throws SQLException {
-        deviceDaoImpl.createBulk(deviceRequestDto);
+    public List<DeviceResponseDto> createBulk(List<DeviceRequestDto> deviceRequestDto) throws SQLException {
+        return deviceDaoImpl.createBulk(deviceRequestDto);
     }
 
     @Override

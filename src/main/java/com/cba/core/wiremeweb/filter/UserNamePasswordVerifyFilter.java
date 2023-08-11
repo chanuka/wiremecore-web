@@ -2,7 +2,7 @@ package com.cba.core.wiremeweb.filter;
 
 import com.cba.core.wiremeweb.config.JwtConfig;
 import com.cba.core.wiremeweb.dto.UsernameAndPasswordAuthenticationRequestDto;
-import com.cba.core.wiremeweb.model.RefreshToken;
+import com.cba.core.wiremeweb.model.TokenRefresh;
 import com.cba.core.wiremeweb.util.JwtUtils;
 import com.cba.core.wiremeweb.service.impl.RefreshTokenServiceImpl;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -59,7 +59,7 @@ public class UserNamePasswordVerifyFilter extends UsernamePasswordAuthentication
                                             Authentication authResult) throws IOException, ServletException {
 
         String token = jwtUtils.generateTokenFromAuthResult(authResult, encoder);
-        RefreshToken refreshToken = refreshTokenServiceImpl.createRefreshToken(authResult.getName());
+        TokenRefresh refreshToken = refreshTokenServiceImpl.createRefreshToken(authResult.getName());
 
         response.addHeader(jwtConfig.getAuthorizationHeader(), jwtConfig.getTokenPrefix() + token);
         response.addHeader("Refresh_Token", "" + refreshToken.getToken());

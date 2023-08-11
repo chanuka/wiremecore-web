@@ -2,6 +2,7 @@ package com.cba.core.wiremeweb.dao;
 
 import com.cba.core.wiremeweb.dto.DeviceRequestDto;
 import com.cba.core.wiremeweb.dto.DeviceResponseDto;
+import com.cba.core.wiremeweb.model.Device;
 import com.cba.core.wiremeweb.util.UpdateResponse;
 import org.springframework.data.domain.Page;
 
@@ -19,13 +20,13 @@ public interface DeviceDao {
 
     public DeviceResponseDto findById(int id) throws SQLException;
 
-    public void deleteById(int id) throws SQLException;
+    public DeviceResponseDto deleteById(int id) throws SQLException;
 
-    public void deleteByIdList(List<Map<String, Integer>> deviceList) throws SQLException;
+    public void deleteByIdList(List<Integer> deviceList) throws SQLException;
 
     public UpdateResponse<DeviceResponseDto> updateById(int id, DeviceRequestDto deviceRequestDto) throws SQLException;
 
     public DeviceResponseDto create(DeviceRequestDto deviceRequestDto) throws SQLException;
 
-    public void createBulk(List<DeviceRequestDto> deviceRequestDtoList) throws SQLException;
+    public List<DeviceResponseDto> createBulk(List<DeviceRequestDto> deviceRequestDtoList) throws SQLException;
 }

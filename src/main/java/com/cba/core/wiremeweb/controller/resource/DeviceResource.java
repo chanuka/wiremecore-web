@@ -9,7 +9,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
 import java.util.List;
-import java.util.Map;
 
 @RestController
 @RequestMapping("/${application.resource.devices}")
@@ -41,7 +40,7 @@ public interface DeviceResource {
     public ResponseEntity<String> createDevices(@RequestBody List<DeviceRequestDto> list) throws Exception;
 
     @DeleteMapping("/bulkDelete")
-    public ResponseEntity<String> deleteDevices(@RequestBody List<Map<String, Integer>> deviceIdList) throws Exception;
+    public ResponseEntity<String> deleteDevices(@RequestBody List<Integer> deviceIdList) throws Exception;
 
     @GetMapping(value = "/download-excel", produces = MediaType.APPLICATION_OCTET_STREAM_VALUE)
     public ResponseEntity<byte[]> downloadExcel() throws IOException;

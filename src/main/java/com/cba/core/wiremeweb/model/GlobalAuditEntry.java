@@ -90,7 +90,7 @@ public class GlobalAuditEntry {
         this.createdAt = createdAt;
     }
 
-    @Column(name = "old_value", nullable = false, length = 65535, columnDefinition = "TEXT")
+    @Column(name = "old_value", length = 65535, columnDefinition = "TEXT")
     public String getOldValue() {
         return oldValue;
     }
@@ -99,7 +99,7 @@ public class GlobalAuditEntry {
         this.oldValue = oldValue;
     }
 
-    @Column(name = "new_value", nullable = false, length = 65535, columnDefinition = "TEXT")
+    @Column(name = "new_value", length = 65535, columnDefinition = "TEXT")
     public String getNewValue() {
         return newValue;
     }

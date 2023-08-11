@@ -28,13 +28,14 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.List;
-import java.util.Map;
 
 @Component
 @RequiredArgsConstructor
@@ -107,10 +108,18 @@ public class DeviceController implements DeviceResource {
     public ResponseEntity<String> deleteADevice(@PathVariable(value = "id") int id) throws Exception {
 
         logger.debug("Delete Single Device is called");
+        ObjectMapper objectMapper = new ObjectMapper();
 
         try {
 
-            deviceServiceImpl.deleteById(id);
+            DeviceResponseDto deviceResponseDto = deviceServiceImpl.deleteById(id);
+            globalAuditEntryService.createNewRevision(
+                    resource,
+                    id,
+                    UserOperationEnum.DELETE.getValue(),
+                    objectMapper.writeValueAsString(deviceResponseDto),
+                    null);
+
             return ResponseEntity.ok().body("Success");
 
         } catch (NotFoundException nf) {
@@ -154,10 +163,19 @@ public class DeviceController implements DeviceResource {
     public ResponseEntity<DeviceResponseDto> createADevice(@Valid @RequestBody DeviceRequestDto deviceRequestDto) throws Exception {
 
         logger.debug("Create Single Device is called");
+        ObjectMapper objectMapper = new ObjectMapper();
 
         try {
 
             DeviceResponseDto device = deviceServiceImpl.create(deviceRequestDto);
+
+            globalAuditEntryService.createNewRevision(
+                    resource,
+                    device.getId(),
+                    UserOperationEnum.CREATE.getValue(),
+                    null,
+                    objectMapper.writeValueAsString(device));
+
             return ResponseEntity.ok().body(device);
 
         } catch (SQLException e) {
@@ -172,7 +190,12 @@ public class DeviceController implements DeviceResource {
         logger.debug("Create Bulk Devices is called");
 
         try {
-            deviceServiceImpl.createBulk(list);
+            List<DeviceResponseDto> deviceList = deviceServiceImpl.createBulk(list);
+            globalAuditEntryService.createNewRevisionListForCreate(
+                    resource,
+                    deviceList,
+                    UserOperationEnum.CREATE.getValue());
+
             return ResponseEntity.ok().body("Devices are created successfully");
         } catch (SQLException e) {
             logger.error(e.getMessage());
@@ -181,12 +204,19 @@ public class DeviceController implements DeviceResource {
     }
 
     @Override
-    public ResponseEntity<String> deleteDevices(@RequestBody List<Map<String, Integer>> deviceIdList) throws Exception {
+    public ResponseEntity<String> deleteDevices(@RequestBody List<Integer> deviceIdList) throws Exception {
 
         logger.debug("Delete Bulk Devices is called");
         try {
             deviceServiceImpl.deleteByIdList(deviceIdList);
+
+            globalAuditEntryService.createNewRevisionListForDelete(
+                    resource,
+                    deviceIdList,
+                    UserOperationEnum.DELETE.getValue());
+
             return ResponseEntity.ok().body("Devices are deleted successfully");
+
         } catch (NotFoundException nf) {
             logger.error(nf.getMessage());
             throw nf;

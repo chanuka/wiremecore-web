@@ -7,6 +7,8 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
+
 @Component
 @Transactional
 @RequiredArgsConstructor
@@ -14,10 +16,10 @@ public class GlobalAuditEntryDaoImpl implements GlobalAuditEntryDao {
 
     private final GlobalAuditEntryRepository globalAuditEntryRepository;
 
-    public void newRevision(Object revisionEntity, String resource, Integer effectedId, String operation,
-                            String oldValue, String newValue, String ipAddress) throws Exception {
+    public GlobalAuditEntry createRevision(String resource, Integer effectedId, String operation,
+                                           String oldValue, String newValue, String ipAddress) throws Exception {
 
-        GlobalAuditEntry globalAuditEntry = (GlobalAuditEntry) revisionEntity;
+        GlobalAuditEntry globalAuditEntry = new GlobalAuditEntry();
 
         // Set entity type, entity ID, revision type, modified fields, old value, new value, etc.
         globalAuditEntry.setResource(resource);
@@ -27,6 +29,17 @@ public class GlobalAuditEntryDaoImpl implements GlobalAuditEntryDao {
         globalAuditEntry.setNewValue(newValue);
         globalAuditEntry.setIpAddress(ipAddress);
 
+        return globalAuditEntry;
+    }
+
+
+    @Override
+    public void saveRevision(GlobalAuditEntry globalAuditEntry) throws Exception {
         globalAuditEntryRepository.save(globalAuditEntry);
+    }
+
+    @Override
+    public void saveAllRevision(List<GlobalAuditEntry> globalAuditEntryList) throws Exception {
+        globalAuditEntryRepository.saveAll(globalAuditEntryList);
     }
 }

@@ -20,10 +20,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
 
 import java.sql.SQLException;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Component
@@ -81,12 +78,15 @@ public class DeviceDaoImpl implements DeviceDao {
     }
 
     @Override
-    public void deleteById(int id) throws SQLException {
+    public DeviceResponseDto deleteById(int id) throws SQLException {
         try {
             Device device = deviceRepository.findById(id)
                     .orElseThrow(() -> new NotFoundException("Device not found"));
 
             deviceRepository.deleteById(id);
+
+            return DeviceMapper.toDto(device);
+
         } catch (NotFoundException nf) {
             throw nf;
         } catch (DataIntegrityViolationException e) {
@@ -97,19 +97,21 @@ public class DeviceDaoImpl implements DeviceDao {
     }
 
     @Override
-    public void deleteByIdList(List<Map<String, Integer>> deviceList) throws SQLException {
+    public void deleteByIdList(List<Integer> deviceList) throws SQLException {
         try {
-            for (Map<String, Integer> device : deviceList) {
-                Device deviceModel = deviceRepository.findById(device.get("id"))
+            for (Integer device : deviceList) {
+                Device deviceModel = deviceRepository.findById(device)
                         .orElseThrow(() -> new NotFoundException("Device not found"));
-
-                deviceRepository.deleteById(device.get("id"));
             }
+
+            deviceRepository.deleteAllByIdInBatch(deviceList);
+
         } catch (NotFoundException nf) {
             throw nf;
         } catch (DataIntegrityViolationException e) {
             throw new RecordInUseException("Device is in use");
         } catch (Exception ee) {
+            ee.printStackTrace();
             throw ee;
         }
     }
@@ -145,6 +147,13 @@ public class DeviceDaoImpl implements DeviceDao {
 
             toBeUpdated.setSerialNo(deviceRequestDto.getSerialNo());
         }
+        if (!toBeUpdated.getStatus().getStatusCode().equals((deviceRequestDto.isActive()) ? "ACTV" : "DACT")) {
+            updateRequired = true;
+            oldDataMap.put("active", (toBeUpdated.getStatus().getStatusCode().equals("ACTV")) ? true : false);
+            newDataMap.put("active", deviceRequestDto.isActive());
+
+            toBeUpdated.setStatus(new Status((deviceRequestDto.isActive()) ? "ACTV" : "DACT"));
+        }
         if (updateRequired) {
 
             deviceRepository.saveAndFlush(toBeUpdated);
@@ -173,18 +182,18 @@ public class DeviceDaoImpl implements DeviceDao {
     }
 
     @Override
-    public void createBulk(List<DeviceRequestDto> deviceRequestDtoList) throws SQLException {
+    public List<DeviceResponseDto> createBulk(List<DeviceRequestDto> deviceRequestDtoList) throws SQLException {
 
+        List<Device> deviceList = new ArrayList<>();
         for (DeviceRequestDto deviceDto : deviceRequestDtoList) {
-
             Device toBeUpdated = DeviceMapper.toModel(deviceDto);
-            toBeUpdated.setCreatedAt(new Date());
-            toBeUpdated.setUpdatedAt(new Date());
-            toBeUpdated.setStatus(new Status("ACTV"));
-
-            deviceRepository.save(toBeUpdated);
-
+            deviceList.add(toBeUpdated);
         }
+        return deviceRepository.saveAll(deviceList)
+                .stream()
+                .map(DeviceMapper::toDto)
+                .collect(Collectors.toList());
+//        return DeviceMapper.toDto(deviceRepository.saveAll(deviceList));
     }
 
 }
