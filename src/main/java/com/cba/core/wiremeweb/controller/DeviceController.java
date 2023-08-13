@@ -21,6 +21,8 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.MessageSource;
+import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -36,6 +38,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.List;
+import java.util.Locale;
 
 @Component
 @RequiredArgsConstructor
@@ -46,15 +49,18 @@ public class DeviceController implements DeviceResource {
 
     private final DeviceServiceImpl deviceServiceImpl;
     private final GlobalAuditEntryService globalAuditEntryService;
+    private final MessageSource messageSource;
 
     @Value("${application.resource.devices}")
     private String resource;
+
 
     @Override
     public ResponseEntity<List<DeviceResponseDto>> devices(@RequestParam(defaultValue = "0") int page,
                                                            @RequestParam(defaultValue = "5") int pageSize) throws Exception {
 
-        logger.debug("GET Devices List is called");
+        Locale currentLocale = LocaleContextHolder.getLocale();
+        logger.debug(messageSource.getMessage("DEVICE_GET_ALL_DEBUG", null, currentLocale));
         try {
             Page<DeviceResponseDto> list = deviceServiceImpl.findAll(page, pageSize);
             return ResponseEntity.ok().body(list.getContent());
@@ -63,13 +69,14 @@ public class DeviceController implements DeviceResource {
             throw nf;
         } catch (SQLException e) {
             logger.error(e.getMessage());
-            throw new InternalServerError("Internal Server Error has Occurred");
+            throw new InternalServerError(messageSource.getMessage("GLOBAL_INTERNAL_SERVER_ERROR", null, currentLocale));
         }
     }
 
     @Override
     public ResponseEntity<DeviceResponseDto> getADevice(@PathVariable(value = "id") int id) throws Exception {
-        logger.debug("GET Single Device is called");
+        Locale currentLocale = LocaleContextHolder.getLocale();
+        logger.debug(messageSource.getMessage("DEVICE_GET_ONE_DEBUG", null, currentLocale));
 
         DeviceResponseDto device = null;
         try {
@@ -80,7 +87,7 @@ public class DeviceController implements DeviceResource {
             throw nf;
         } catch (SQLException e) {
             logger.error(e.getMessage());
-            throw new InternalServerError("Internal Server Error has Occurred");
+            throw new InternalServerError(messageSource.getMessage("GLOBAL_INTERNAL_SERVER_ERROR", null, currentLocale));
         }
         return ResponseEntity.ok().body(device);
     }
@@ -89,7 +96,8 @@ public class DeviceController implements DeviceResource {
     public ResponseEntity<List<DeviceResponseDto>> searchDevices(@RequestParam(value = "serialNumber") String serialNumber,
                                                                  @RequestParam(defaultValue = "0") int page,
                                                                  @RequestParam(defaultValue = "5") int pageSize) throws Exception {
-        logger.debug("GET Search Devices is called");
+        Locale currentLocale = LocaleContextHolder.getLocale();// works only when as local statement
+        logger.debug(messageSource.getMessage("DEVICE_GET_SEARCH_DEBUG", null, currentLocale));
 
         try {
             Page<DeviceResponseDto> deviceList = deviceServiceImpl.findBySerialNoLike(serialNumber, page, pageSize);
@@ -99,7 +107,7 @@ public class DeviceController implements DeviceResource {
             throw nf;
         } catch (SQLException e) {
             logger.error(e.getMessage());
-            throw new InternalServerError("Internal Server Error has Occurred");
+            throw new InternalServerError(messageSource.getMessage("GLOBAL_INTERNAL_SERVER_ERROR", null, currentLocale));
         }
 
     }
@@ -107,7 +115,8 @@ public class DeviceController implements DeviceResource {
     @Override
     public ResponseEntity<String> deleteADevice(@PathVariable(value = "id") int id) throws Exception {
 
-        logger.debug("Delete Single Device is called");
+        Locale currentLocale = LocaleContextHolder.getLocale();// works only when as local statement
+        logger.debug(messageSource.getMessage("DEVICE_DELETE_ONE_DEBUG", null, currentLocale));
         ObjectMapper objectMapper = new ObjectMapper();
 
         try {
@@ -120,7 +129,7 @@ public class DeviceController implements DeviceResource {
                     objectMapper.writeValueAsString(deviceResponseDto),
                     null);
 
-            return ResponseEntity.ok().body("Success");
+            return ResponseEntity.ok().body(messageSource.getMessage("DEVICE_DELETE_ONE_SUCCESS", null, currentLocale));
 
         } catch (NotFoundException nf) {
             logger.error(nf.getMessage());
@@ -130,14 +139,15 @@ public class DeviceController implements DeviceResource {
             throw ru;
         } catch (Exception e) {
             logger.error(e.getMessage());
-            throw new InternalServerError("Internal Server Error has Occurred : Device cannot be deleted");
+            throw new InternalServerError(messageSource.getMessage("GLOBAL_INTERNAL_SERVER_ERROR", null, currentLocale));
         }
     }
 
     @Override
     public ResponseEntity<DeviceResponseDto> updateADevice(@PathVariable(value = "id") int id,
                                                            @RequestBody DeviceRequestDto deviceRequestDto) throws Exception {
-        logger.debug("Update Single Device is called");
+        Locale currentLocale = LocaleContextHolder.getLocale();// works only when as local statement
+        logger.debug(messageSource.getMessage("DEVICE_UPDATE_ONE_DEBUG", null, currentLocale));
         ObjectMapper objectMapper = new ObjectMapper();
         try {
             UpdateResponse<DeviceResponseDto> response = deviceServiceImpl.updateById(id, deviceRequestDto);
@@ -155,14 +165,15 @@ public class DeviceController implements DeviceResource {
             throw nf;
         } catch (SQLException e) {
             logger.error(e.getMessage());
-            throw new InternalServerError("Internal Server Error has Occurred");
+            throw new InternalServerError(messageSource.getMessage("GLOBAL_INTERNAL_SERVER_ERROR", null, currentLocale));
         }
     }
 
     @Override
     public ResponseEntity<DeviceResponseDto> createADevice(@Valid @RequestBody DeviceRequestDto deviceRequestDto) throws Exception {
 
-        logger.debug("Create Single Device is called");
+        Locale currentLocale = LocaleContextHolder.getLocale();// works only when as local statement
+        logger.debug(messageSource.getMessage("DEVICE_CREATE_ONE_DEBUG", null, currentLocale));
         ObjectMapper objectMapper = new ObjectMapper();
 
         try {
@@ -180,14 +191,15 @@ public class DeviceController implements DeviceResource {
 
         } catch (SQLException e) {
             logger.error(e.getMessage());
-            throw new InternalServerError("Internal Server Error has Occurred");
+            throw new InternalServerError(messageSource.getMessage("GLOBAL_INTERNAL_SERVER_ERROR", null, currentLocale));
         }
     }
 
     @Override
     public ResponseEntity<String> createDevices(@RequestBody List<DeviceRequestDto> list) throws Exception {
 
-        logger.debug("Create Bulk Devices is called");
+        Locale currentLocale = LocaleContextHolder.getLocale();// works only when as local statement
+        logger.debug(messageSource.getMessage("DEVICE_CREATE_BULK_DEBUG", null, currentLocale));
 
         try {
             List<DeviceResponseDto> deviceList = deviceServiceImpl.createBulk(list);
@@ -196,17 +208,18 @@ public class DeviceController implements DeviceResource {
                     deviceList,
                     UserOperationEnum.CREATE.getValue());
 
-            return ResponseEntity.ok().body("Devices are created successfully");
+            return ResponseEntity.ok().body(messageSource.getMessage("DEVICE_CREATE_ALL_SUCCESS", null, currentLocale));
         } catch (SQLException e) {
             logger.error(e.getMessage());
-            throw new InternalServerError("Internal Server Error has Occurred");
+            throw new InternalServerError(messageSource.getMessage("GLOBAL_INTERNAL_SERVER_ERROR", null, currentLocale));
         }
     }
 
     @Override
     public ResponseEntity<String> deleteDevices(@RequestBody List<Integer> deviceIdList) throws Exception {
 
-        logger.debug("Delete Bulk Devices is called");
+        Locale currentLocale = LocaleContextHolder.getLocale();// works only when as local statement
+        logger.debug(messageSource.getMessage("DEVICE_DELETE_BULK_DEBUG", null, currentLocale));
         try {
             deviceServiceImpl.deleteByIdList(deviceIdList);
 
@@ -215,7 +228,7 @@ public class DeviceController implements DeviceResource {
                     deviceIdList,
                     UserOperationEnum.DELETE.getValue());
 
-            return ResponseEntity.ok().body("Devices are deleted successfully");
+            return ResponseEntity.ok().body(messageSource.getMessage("DEVICE_DELETE_ALL_SUCCESS", null, currentLocale));
 
         } catch (NotFoundException nf) {
             logger.error(nf.getMessage());
@@ -225,13 +238,14 @@ public class DeviceController implements DeviceResource {
             throw ru;
         } catch (Exception e) {
             logger.error(e.getMessage());
-            throw new InternalServerError("Internal Server Error has Occurred : Device cannot be deleted");
+            throw new InternalServerError(messageSource.getMessage("GLOBAL_INTERNAL_SERVER_ERROR", null, currentLocale));
         }
     }
 
     @Override
     public ResponseEntity<byte[]> downloadExcel() throws IOException {
-        logger.debug("Generate Excel for Devices List is called");
+        Locale currentLocale = LocaleContextHolder.getLocale();// works only when as local statement
+        logger.debug(messageSource.getMessage("DEVICE_DOWNLOAD_EXCEL_DEBUG", null, currentLocale));
 
         try {
             Workbook workbook = new XSSFWorkbook();
@@ -293,12 +307,15 @@ public class DeviceController implements DeviceResource {
 
         } catch (Exception e) {
             logger.error(e.getMessage());
-            throw new InternalServerError("Internal Server Error has Occurred : Excel for the Device list cannot be generated");
+            throw new InternalServerError(messageSource.getMessage("GLOBAL_INTERNAL_SERVER_ERROR", null, currentLocale));
         }
     }
 
     @Override
     public ResponseEntity<byte[]> downloadJasper() throws Exception {
+
+        Locale currentLocale = LocaleContextHolder.getLocale();// works only when as local statement
+        logger.debug(messageSource.getMessage("DEVICE_DOWNLOAD_PDF_DEBUG", null, currentLocale));
 
         try {
             HttpHeaders headers = new HttpHeaders();
@@ -309,7 +326,7 @@ public class DeviceController implements DeviceResource {
 
         } catch (Exception e) {
             logger.error(e.getMessage());
-            throw new InternalServerError("Internal Server Error has Occurred : PDF for the Device list cannot be generated");
+            throw new InternalServerError(messageSource.getMessage("GLOBAL_INTERNAL_SERVER_ERROR", null, currentLocale));
         }
 
     }
