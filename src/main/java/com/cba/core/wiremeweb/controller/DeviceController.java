@@ -6,11 +6,7 @@ import com.cba.core.wiremeweb.dto.DeviceResponseDto;
 import com.cba.core.wiremeweb.exception.InternalServerError;
 import com.cba.core.wiremeweb.exception.NotFoundException;
 import com.cba.core.wiremeweb.exception.RecordInUseException;
-import com.cba.core.wiremeweb.service.GlobalAuditEntryService;
 import com.cba.core.wiremeweb.service.impl.DeviceServiceImpl;
-import com.cba.core.wiremeweb.util.UpdateResponse;
-import com.cba.core.wiremeweb.util.UserOperationEnum;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.apache.poi.ss.usermodel.Cell;
@@ -20,7 +16,6 @@ import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.MessageSource;
 import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.data.domain.Page;
@@ -36,7 +31,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.sql.SQLException;
 import java.util.List;
 import java.util.Locale;
 
@@ -48,11 +42,7 @@ public class DeviceController implements DeviceResource {
     private static final Logger logger = LoggerFactory.getLogger(DeviceController.class);
 
     private final DeviceServiceImpl deviceServiceImpl;
-    private final GlobalAuditEntryService globalAuditEntryService;
     private final MessageSource messageSource;
-
-    @Value("${application.resource.devices}")
-    private String resource;
 
 
     @Override
@@ -67,7 +57,7 @@ public class DeviceController implements DeviceResource {
         } catch (NotFoundException nf) {
             logger.error(nf.getMessage());
             throw nf;
-        } catch (SQLException e) {
+        } catch (Exception e) {
             logger.error(e.getMessage());
             throw new InternalServerError(messageSource.getMessage("GLOBAL_INTERNAL_SERVER_ERROR", null, currentLocale));
         }
@@ -85,7 +75,7 @@ public class DeviceController implements DeviceResource {
         } catch (NotFoundException nf) {
             logger.error(nf.getMessage());
             throw nf;
-        } catch (SQLException e) {
+        } catch (Exception e) {
             logger.error(e.getMessage());
             throw new InternalServerError(messageSource.getMessage("GLOBAL_INTERNAL_SERVER_ERROR", null, currentLocale));
         }
@@ -105,7 +95,7 @@ public class DeviceController implements DeviceResource {
         } catch (NotFoundException nf) {
             logger.error(nf.getMessage());
             throw nf;
-        } catch (SQLException e) {
+        } catch (Exception e) {
             logger.error(e.getMessage());
             throw new InternalServerError(messageSource.getMessage("GLOBAL_INTERNAL_SERVER_ERROR", null, currentLocale));
         }
@@ -117,18 +107,10 @@ public class DeviceController implements DeviceResource {
 
         Locale currentLocale = LocaleContextHolder.getLocale();// works only when as local statement
         logger.debug(messageSource.getMessage("DEVICE_DELETE_ONE_DEBUG", null, currentLocale));
-        ObjectMapper objectMapper = new ObjectMapper();
 
         try {
 
             DeviceResponseDto deviceResponseDto = deviceServiceImpl.deleteById(id);
-            globalAuditEntryService.createNewRevision(
-                    resource,
-                    id,
-                    UserOperationEnum.DELETE.getValue(),
-                    objectMapper.writeValueAsString(deviceResponseDto),
-                    null);
-
             return ResponseEntity.ok().body(messageSource.getMessage("DEVICE_DELETE_ONE_SUCCESS", null, currentLocale));
 
         } catch (NotFoundException nf) {
@@ -148,22 +130,14 @@ public class DeviceController implements DeviceResource {
                                                            @RequestBody DeviceRequestDto deviceRequestDto) throws Exception {
         Locale currentLocale = LocaleContextHolder.getLocale();// works only when as local statement
         logger.debug(messageSource.getMessage("DEVICE_UPDATE_ONE_DEBUG", null, currentLocale));
-        ObjectMapper objectMapper = new ObjectMapper();
         try {
-            UpdateResponse<DeviceResponseDto> response = deviceServiceImpl.updateById(id, deviceRequestDto);
-            globalAuditEntryService.createNewRevision(
-                    resource,
-                    id,
-                    UserOperationEnum.UPDATE.getValue(),
-                    objectMapper.writeValueAsString(response.getOldDataMap()),
-                    objectMapper.writeValueAsString(response.getNewDataMap()));
-
-            return ResponseEntity.ok().body(response.getT());
+            DeviceResponseDto response = deviceServiceImpl.updateById(id, deviceRequestDto);
+            return ResponseEntity.ok().body(response);
 
         } catch (NotFoundException nf) {
             logger.error(nf.getMessage());
             throw nf;
-        } catch (SQLException e) {
+        } catch (Exception e) {
             logger.error(e.getMessage());
             throw new InternalServerError(messageSource.getMessage("GLOBAL_INTERNAL_SERVER_ERROR", null, currentLocale));
         }
@@ -174,22 +148,12 @@ public class DeviceController implements DeviceResource {
 
         Locale currentLocale = LocaleContextHolder.getLocale();// works only when as local statement
         logger.debug(messageSource.getMessage("DEVICE_CREATE_ONE_DEBUG", null, currentLocale));
-        ObjectMapper objectMapper = new ObjectMapper();
-
         try {
 
             DeviceResponseDto device = deviceServiceImpl.create(deviceRequestDto);
-
-            globalAuditEntryService.createNewRevision(
-                    resource,
-                    device.getId(),
-                    UserOperationEnum.CREATE.getValue(),
-                    null,
-                    objectMapper.writeValueAsString(device));
-
             return ResponseEntity.ok().body(device);
 
-        } catch (SQLException e) {
+        } catch (Exception e) {
             logger.error(e.getMessage());
             throw new InternalServerError(messageSource.getMessage("GLOBAL_INTERNAL_SERVER_ERROR", null, currentLocale));
         }
@@ -203,13 +167,8 @@ public class DeviceController implements DeviceResource {
 
         try {
             List<DeviceResponseDto> deviceList = deviceServiceImpl.createBulk(list);
-            globalAuditEntryService.createNewRevisionListForCreate(
-                    resource,
-                    deviceList,
-                    UserOperationEnum.CREATE.getValue());
-
             return ResponseEntity.ok().body(messageSource.getMessage("DEVICE_CREATE_ALL_SUCCESS", null, currentLocale));
-        } catch (SQLException e) {
+        } catch (Exception e) {
             logger.error(e.getMessage());
             throw new InternalServerError(messageSource.getMessage("GLOBAL_INTERNAL_SERVER_ERROR", null, currentLocale));
         }
@@ -222,12 +181,6 @@ public class DeviceController implements DeviceResource {
         logger.debug(messageSource.getMessage("DEVICE_DELETE_BULK_DEBUG", null, currentLocale));
         try {
             deviceServiceImpl.deleteByIdList(deviceIdList);
-
-            globalAuditEntryService.createNewRevisionListForDelete(
-                    resource,
-                    deviceIdList,
-                    UserOperationEnum.DELETE.getValue());
-
             return ResponseEntity.ok().body(messageSource.getMessage("DEVICE_DELETE_ALL_SUCCESS", null, currentLocale));
 
         } catch (NotFoundException nf) {

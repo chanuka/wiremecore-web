@@ -30,51 +30,51 @@ public class DeviceServiceImpl implements DeviceService {
 
 
     @Override
-    public Page<DeviceResponseDto> findAll(int page, int pageSize) throws SQLException {
+    public Page<DeviceResponseDto> findAll(int page, int pageSize) throws Exception {
         return deviceDaoImpl.findAll(page, pageSize);
     }
 
     @Override
-    public List<DeviceResponseDto> findAll() throws SQLException {
+    public List<DeviceResponseDto> findAll() throws Exception {
         return deviceDaoImpl.findAll();
     }
 
     @Override
-    public Page<DeviceResponseDto> findBySerialNoLike(String serialNumber, int page, int pageSize) throws SQLException {
+    public Page<DeviceResponseDto> findBySerialNoLike(String serialNumber, int page, int pageSize) throws Exception {
         return deviceDaoImpl.findBySerialNoLike(serialNumber, page, pageSize);
     }
 
-    public DeviceResponseDto findById(int id) throws SQLException {
+    public DeviceResponseDto findById(int id) throws Exception {
         return deviceDaoImpl.findById(id);
     }
 
     @Override
-    public DeviceResponseDto deleteById(int id) throws SQLException {
+    public DeviceResponseDto deleteById(int id) throws Exception {
         return deviceDaoImpl.deleteById(id);
     }
 
     @Override
-    public void deleteByIdList(List<Integer> deviceList) throws SQLException {
+    public void deleteByIdList(List<Integer> deviceList) throws Exception {
         deviceDaoImpl.deleteByIdList(deviceList);
     }
 
     @Override
-    public UpdateResponse<DeviceResponseDto> updateById(int id, DeviceRequestDto deviceRequestDto) throws SQLException {
+    public DeviceResponseDto updateById(int id, DeviceRequestDto deviceRequestDto) throws Exception {
         return deviceDaoImpl.updateById(id, deviceRequestDto);
     }
 
     @Override
-    public DeviceResponseDto create(DeviceRequestDto deviceRequestDto) throws SQLException {
+    public DeviceResponseDto create(DeviceRequestDto deviceRequestDto) throws Exception {
         return deviceDaoImpl.create(deviceRequestDto);
     }
 
     @Override
-    public List<DeviceResponseDto> createBulk(List<DeviceRequestDto> deviceRequestDto) throws SQLException {
+    public List<DeviceResponseDto> createBulk(List<DeviceRequestDto> deviceRequestDto) throws Exception {
         return deviceDaoImpl.createBulk(deviceRequestDto);
     }
 
     @Override
-    public byte[] exportReport() throws FileNotFoundException, JRException, SQLException {
+    public byte[] exportReport() throws FileNotFoundException, JRException, Exception {
         List<DeviceResponseDto> deviceList = deviceDaoImpl.findAll();
         //load file and compile it
         File file = ResourceUtils.getFile("classpath:report/device.jrxml");

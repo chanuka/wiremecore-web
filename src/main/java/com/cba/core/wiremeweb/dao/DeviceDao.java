@@ -12,21 +12,21 @@ import java.util.Map;
 
 public interface DeviceDao {
 
-    public Page<DeviceResponseDto> findAll(int page, int pageSize) throws SQLException;
+    public Page<DeviceResponseDto> findAll(int page, int pageSize) throws Exception;
 
-    public List<DeviceResponseDto> findAll() throws SQLException;
+    public List<DeviceResponseDto> findAll() throws Exception;
 
-    public Page<DeviceResponseDto> findBySerialNoLike(String serialNumber, int page, int pageSize) throws SQLException;
+    public Page<DeviceResponseDto> findBySerialNoLike(String serialNumber, int page, int pageSize) throws Exception;
 
-    public DeviceResponseDto findById(int id) throws SQLException;
+    public DeviceResponseDto findById(int id) throws Exception;
 
-    public DeviceResponseDto deleteById(int id) throws SQLException;
+    public DeviceResponseDto deleteById(int id) throws Exception;
 
-    public void deleteByIdList(List<Integer> deviceList) throws SQLException;
+    public void deleteByIdList(List<Integer> deviceList) throws Exception;
 
-    public UpdateResponse<DeviceResponseDto> updateById(int id, DeviceRequestDto deviceRequestDto) throws SQLException;
+    public DeviceResponseDto updateById(int id, DeviceRequestDto deviceRequestDto) throws Exception;
 
-    public DeviceResponseDto create(DeviceRequestDto deviceRequestDto) throws SQLException;
+    public DeviceResponseDto create(DeviceRequestDto deviceRequestDto) throws Exception;
 
-    public List<DeviceResponseDto> createBulk(List<DeviceRequestDto> deviceRequestDtoList) throws SQLException;
+    public List<DeviceResponseDto> createBulk(List<DeviceRequestDto> deviceRequestDtoList) throws Exception;
 }

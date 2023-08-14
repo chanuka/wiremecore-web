@@ -28,14 +28,12 @@ public class GlobalAuditEntry {
     public GlobalAuditEntry() {
     }
 
-    public GlobalAuditEntry(String resource, String user, String operation, Integer effectedId, String oldValue, String newValue, Date createdAt, String ipAddress) {
+    public GlobalAuditEntry(String resource, String operation, Integer effectedId, String oldValue, String newValue, String ipAddress) {
         this.resource = resource;
-        this.user = user;
         this.operation = operation;
         this.effectedId = effectedId;
         this.oldValue = oldValue;
         this.newValue = newValue;
-        this.createdAt = createdAt;
         this.ipAddress = ipAddress;
     }
 
