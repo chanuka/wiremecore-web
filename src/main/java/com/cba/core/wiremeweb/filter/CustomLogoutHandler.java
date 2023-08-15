@@ -8,12 +8,15 @@ import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.context.MessageSource;
+import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.web.authentication.logout.LogoutHandler;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.Locale;
 
 @Service
 @RequiredArgsConstructor
@@ -23,11 +26,14 @@ public class CustomLogoutHandler implements LogoutHandler {
 
     private final JwtConfig jwtConfig;
     private final TokenBlacklistServiceImpl tokenBlacklistServiceImpl;
+    private final MessageSource messageSource;
+
 
     @Override
     public void logout(HttpServletRequest request, HttpServletResponse response, Authentication authentication) {
 
-        logger.debug("Logout function is called--");
+        Locale currentLocale = LocaleContextHolder.getLocale();// works only when as local statement
+        logger.debug(messageSource.getMessage("GLOBAL_LOGOUT_SERVER_DEBUG", null, currentLocale));
 
         String authorizationHeader = "";
         String message = "";

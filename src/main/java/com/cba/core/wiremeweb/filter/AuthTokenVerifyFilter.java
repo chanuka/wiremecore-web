@@ -78,27 +78,37 @@ public class AuthTokenVerifyFilter extends OncePerRequestFilter {
                 throw new JwtTokenException(token, messageSource.getMessage("GLOBAL_TOKEN_BLACK_ERROR", null, currentLocale));
             }
 
-            String[] resource = request.getRequestURI().split("\\/");
-            boolean access = false;
+            String[] resourceArray = request.getRequestURI().split("\\/");
+//            boolean access = false;
+            String method = request.getMethod();
             List<PermissionResponseDto> permissionDtoList = userPermissionServiceImpl.findAllByRole(username);
 
-            for (PermissionResponseDto permission : permissionDtoList) {
-                if (permission.getResource().equals(resource[2])) {
-                    if (request.getMethod().equals("GET") && permission.isReadd()) {
-                        access = true;
-                        break;
-                    } else if (request.getMethod().equals("POST") && permission.isCreated()) {
-                        access = true;
-                        break;
-                    } else if (request.getMethod().equals("PUT") && permission.isUpdated()) {
-                        access = true;
-                        break;
-                    } else if (request.getMethod().equals("DELETE") && permission.isDeleted()) {
-                        access = true;
-                        break;
-                    }
-                }
-            }
+//            for (PermissionResponseDto permission : permissionDtoList) {
+//                if (permission.getResource().equals(resourceArray[2])) {
+//                    if (method.equals("GET") && permission.isReadd()) {
+//                        access = true;
+//                        break;
+//                    } else if (method.equals("POST") && permission.isCreated()) {
+//                        access = true;
+//                        break;
+//                    } else if (method.equals("PUT") && permission.isUpdated()) {
+//                        access = true;
+//                        break;
+//                    } else if (method.equals("DELETE") && permission.isDeleted()) {
+//                        access = true;
+//                        break;
+//                    }
+//                }
+//            }
+
+            boolean access = permissionDtoList.stream()
+                    .filter(permission -> permission.getResource().equals(resourceArray[2]))
+                    .anyMatch(permission -> (
+                            (method.equals("GET") && permission.isReadd()) ||
+                                    (method.equals("POST") && permission.isCreated()) ||
+                                    (method.equals("PUT") && permission.isUpdated()) ||
+                                    (method.equals("DELETE") && permission.isDeleted())
+                    ));
 
             if (!access) {
                 logger.debug(messageSource.getMessage("GLOBAL_TOKEN_DENIED_ERROR", null, currentLocale));
