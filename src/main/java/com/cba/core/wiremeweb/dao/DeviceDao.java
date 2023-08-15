@@ -2,13 +2,9 @@ package com.cba.core.wiremeweb.dao;
 
 import com.cba.core.wiremeweb.dto.DeviceRequestDto;
 import com.cba.core.wiremeweb.dto.DeviceResponseDto;
-import com.cba.core.wiremeweb.model.Device;
-import com.cba.core.wiremeweb.util.UpdateResponse;
 import org.springframework.data.domain.Page;
 
-import java.sql.SQLException;
 import java.util.List;
-import java.util.Map;
 
 public interface DeviceDao {
 

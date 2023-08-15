@@ -13,6 +13,8 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.MessageSource;
+import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -25,6 +27,7 @@ import org.springframework.web.filter.OncePerRequestFilter;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -38,19 +41,22 @@ public class AuthTokenVerifyFilter extends OncePerRequestFilter {
     private final JwtDecoder decoder;
     private final UserBean userBean;
     private final TokenBlacklistServiceImpl tokenBlacklistServiceImpl;
+    private final MessageSource messageSource;
 
 
     @Override
     protected void doFilterInternal(HttpServletRequest request,
                                     HttpServletResponse response,
                                     FilterChain filterChain) throws ServletException, IOException {
-        logger.debug("AuthTokenVerifyFilter filter is called--");
+
+        Locale currentLocale = LocaleContextHolder.getLocale();// works only when as local statement
+        logger.debug(messageSource.getMessage("GLOBAL_SECURITY_FILTER_DEBUG", null, currentLocale));
 
         String token = null;
         String authorizationHeader = request.getHeader(jwtConfig.getAuthorizationHeader());
 
         if (authorizationHeader == null || authorizationHeader.isEmpty() || !authorizationHeader.startsWith(jwtConfig.getTokenPrefix())) {
-            logger.debug("JWT token header is missing--");
+            logger.debug(messageSource.getMessage("GLOBAL_TOKEN_MISSING_ERROR", null, currentLocale));
             filterChain.doFilter(request, response);
             return;
         }
@@ -61,21 +67,20 @@ public class AuthTokenVerifyFilter extends OncePerRequestFilter {
 
             Jwt claimsJws = jwtUtils.validateJwtToken(token, decoder);
             String username = claimsJws.getSubject();
-            String validity =  claimsJws.getClaimAsString("Validity");
+            String validity = claimsJws.getClaimAsString("Validity");
             userBean.setUsername(username); // set user data in request scope for db updating
 
-            if(!validity.equals(String.valueOf(UserTypeEnum.WEB.getValue()))){
-                throw new JwtTokenException(token, "Token is from another module..");
+            if (!validity.equals(String.valueOf(UserTypeEnum.WEB.getValue()))) {
+                throw new JwtTokenException(token, messageSource.getMessage("GLOBAL_TOKEN_MODULE_ERROR", null, currentLocale));
             }
 
             if (tokenBlacklistServiceImpl.isTokenBlacklisted(token)) {
-                throw new JwtTokenException(token, "Token is Blacklisted..");
+                throw new JwtTokenException(token, messageSource.getMessage("GLOBAL_TOKEN_BLACK_ERROR", null, currentLocale));
             }
 
             String[] resource = request.getRequestURI().split("\\/");
             boolean access = false;
-            List<PermissionResponseDto> permissionDtoList = null;
-            permissionDtoList = userPermissionServiceImpl.findAll();
+            List<PermissionResponseDto> permissionDtoList = userPermissionServiceImpl.findAllByRole(username);
 
             for (PermissionResponseDto permission : permissionDtoList) {
                 if (permission.getResource().equals(resource[2])) {
@@ -96,9 +101,9 @@ public class AuthTokenVerifyFilter extends OncePerRequestFilter {
             }
 
             if (!access) {
-                logger.debug("Access is denied for the provided JWT token");
+                logger.debug(messageSource.getMessage("GLOBAL_TOKEN_DENIED_ERROR", null, currentLocale));
                 response.setStatus(HttpStatus.UNAUTHORIZED.value());
-                throw new JwtTokenException(token, "Access is Denied..");
+                throw new JwtTokenException(token, messageSource.getMessage("GLOBAL_TOKEN_DENIED_ERROR", null, currentLocale));
             }
 
 
@@ -119,9 +124,9 @@ public class AuthTokenVerifyFilter extends OncePerRequestFilter {
         } catch (JwtTokenException ex) {
             logger.error(ex.getMessage());
             throw ex;
-        } catch (SQLException se) {
+        } catch (Exception se) {
             logger.error(se.getMessage());
-            throw new JwtTokenException(token, "Error in the token processing..");
+            throw new JwtTokenException(token, messageSource.getMessage("GLOBAL_INTERNAL_SERVER_ERROR", null, currentLocale));
         }
         filterChain.doFilter(request, response);
     }

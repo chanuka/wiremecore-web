@@ -8,4 +8,6 @@ import java.util.List;
 public interface UserPermissionDao {
 
     public List<PermissionResponseDto> findAll() throws SQLException;
+
+    public List<PermissionResponseDto> findAllByRole(String username) throws SQLException;
 }

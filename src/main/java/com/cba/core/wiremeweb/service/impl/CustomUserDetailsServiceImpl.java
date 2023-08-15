@@ -1,5 +1,6 @@
 package com.cba.core.wiremeweb.service.impl;
 
+import com.cba.core.wiremeweb.dao.CustomUserDetailsDao;
 import com.cba.core.wiremeweb.dao.impl.CustomUserDetailsDaoImpl;
 import com.cba.core.wiremeweb.dto.ApplicationUserDto;
 import com.cba.core.wiremeweb.service.CustomUserDetailsService;
@@ -12,12 +13,12 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class CustomUserDetailsServiceImpl implements CustomUserDetailsService {
 
-    private final CustomUserDetailsDaoImpl customUserDetailsDaoImpl;
+    private final CustomUserDetailsDao customUserDetailsDao;
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         try {
-            ApplicationUserDto applicationUser = customUserDetailsDaoImpl.loadUserByUsername(username);
+            ApplicationUserDto applicationUser = customUserDetailsDao.loadUserByUsername(username);
             return applicationUser;
         } catch (Exception e) {
             e.printStackTrace();

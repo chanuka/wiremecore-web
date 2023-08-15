@@ -1,5 +1,6 @@
 package com.cba.core.wiremeweb.service.impl;
 
+import com.cba.core.wiremeweb.dao.RefreshTokenDao;
 import com.cba.core.wiremeweb.dao.impl.RefreshTokenDaoImpl;
 import com.cba.core.wiremeweb.model.TokenRefresh;
 import com.cba.core.wiremeweb.service.RefreshTokenService;
@@ -13,27 +14,27 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class RefreshTokenServiceImpl implements RefreshTokenService {
 
-    private final RefreshTokenDaoImpl refreshTokenDaoImpl;
+    private final RefreshTokenDao refreshTokenDao;
 
     @Override
     public Optional<TokenRefresh> findByToken(String token) throws Exception {
-        return refreshTokenDaoImpl.findByToken(token);
+        return refreshTokenDao.findByToken(token);
     }
 
     @Override
     public TokenRefresh createRefreshToken(String userName) throws IOException {
-        TokenRefresh refreshToken = refreshTokenDaoImpl.createRefreshToken(userName);
+        TokenRefresh refreshToken = refreshTokenDao.createRefreshToken(userName);
         return refreshToken;
     }
 
     @Override
     public TokenRefresh verifyExpiration(TokenRefresh token) {// need to add exception handling
-        token = refreshTokenDaoImpl.verifyExpiration(token);
+        token = refreshTokenDao.verifyExpiration(token);
         return token;
     }
 
     @Override
     public int deleteByUserId(Long userId) throws Exception {
-        return refreshTokenDaoImpl.deleteByUserId((userId));
+        return refreshTokenDao.deleteByUserId((userId));
     }
 }

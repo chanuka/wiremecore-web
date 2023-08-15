@@ -5,6 +5,7 @@ import com.cba.core.wiremeweb.dto.TokenRefreshRequestDto;
 import com.cba.core.wiremeweb.dto.TokenRefreshResponseDto;
 import com.cba.core.wiremeweb.exception.TokenRefreshException;
 import com.cba.core.wiremeweb.model.TokenRefresh;
+import com.cba.core.wiremeweb.service.RefreshTokenService;
 import com.cba.core.wiremeweb.service.impl.RefreshTokenServiceImpl;
 import com.cba.core.wiremeweb.util.JwtUtils;
 import lombok.RequiredArgsConstructor;
@@ -19,7 +20,7 @@ import org.springframework.validation.annotation.Validated;
 @Validated
 public class RefreshTokenController implements RefreshTokenResource {
 
-    private final RefreshTokenServiceImpl refreshTokenServiceImpl;
+    private final RefreshTokenService refreshTokenService;
     private final JwtUtils jwtUtils;
     private final JwtEncoder encoder;
 
@@ -29,8 +30,8 @@ public class RefreshTokenController implements RefreshTokenResource {
 
         String requestRefreshToken = request.getRefreshToken();
 
-        return refreshTokenServiceImpl.findByToken(requestRefreshToken)
-                .map(refreshTokenServiceImpl::verifyExpiration)
+        return refreshTokenService.findByToken(requestRefreshToken)
+                .map(refreshTokenService::verifyExpiration)
                 .map(TokenRefresh::getUser)
                 .map(user -> {
                     String token = jwtUtils.generateTokenFromUsername(user.getUserName(), encoder);

@@ -4,6 +4,7 @@ import com.cba.core.wiremeweb.dao.UserPermissionDao;
 import com.cba.core.wiremeweb.dto.PermissionResponseDto;
 import com.cba.core.wiremeweb.mapper.UserPermissionMapper;
 import com.cba.core.wiremeweb.model.Permission;
+import com.cba.core.wiremeweb.model.Role;
 import com.cba.core.wiremeweb.repository.UserPermissionRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -24,6 +25,16 @@ public class UserPermissionDaoImpl implements UserPermissionDao {
     @Override
     public List<PermissionResponseDto> findAll() throws SQLException {
         Iterable<Permission> irt = userPermissionRepository.findAll();
+        List<PermissionResponseDto> result =
+                StreamSupport.stream(irt.spliterator(), false)
+                        .map(UserPermissionMapper::toDto)
+                        .collect(Collectors.toList());
+        return result;
+    }
+
+    @Override
+    public List<PermissionResponseDto> findAllByRole(String username) throws SQLException {
+        Iterable<Permission> irt = userPermissionRepository.findAllByRole(username);
         List<PermissionResponseDto> result =
                 StreamSupport.stream(irt.spliterator(), false)
                         .map(UserPermissionMapper::toDto)

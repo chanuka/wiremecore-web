@@ -2,6 +2,7 @@ package com.cba.core.wiremeweb.controller;
 
 import com.cba.core.wiremeweb.controller.resource.UserPermissionResource;
 import com.cba.core.wiremeweb.dto.PermissionResponseDto;
+import com.cba.core.wiremeweb.service.UserPermissionService;
 import com.cba.core.wiremeweb.service.impl.UserPermissionServiceImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -15,14 +16,14 @@ import java.util.List;
 @Validated
 public class UserPermissionController implements UserPermissionResource {
 
-    private final UserPermissionServiceImpl userPermissionServiceImpl;
+    private final UserPermissionService userPermissionService;
 
     @Override
     public ResponseEntity<List<PermissionResponseDto>> permission() throws Exception {
 
         List<PermissionResponseDto> list = null;
         try {
-            list = userPermissionServiceImpl.findAll();
+            list = userPermissionService.findAll();
         } catch (Exception e) {
             e.printStackTrace();
         }

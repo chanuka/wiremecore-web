@@ -6,6 +6,7 @@ import com.cba.core.wiremeweb.dto.DeviceResponseDto;
 import com.cba.core.wiremeweb.exception.InternalServerError;
 import com.cba.core.wiremeweb.exception.NotFoundException;
 import com.cba.core.wiremeweb.exception.RecordInUseException;
+import com.cba.core.wiremeweb.service.DeviceService;
 import com.cba.core.wiremeweb.service.impl.DeviceServiceImpl;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -41,7 +42,7 @@ public class DeviceController implements DeviceResource {
 
     private static final Logger logger = LoggerFactory.getLogger(DeviceController.class);
 
-    private final DeviceServiceImpl deviceServiceImpl;
+    private final DeviceService deviceService;
     private final MessageSource messageSource;
 
 
@@ -52,7 +53,7 @@ public class DeviceController implements DeviceResource {
         Locale currentLocale = LocaleContextHolder.getLocale();
         logger.debug(messageSource.getMessage("DEVICE_GET_ALL_DEBUG", null, currentLocale));
         try {
-            Page<DeviceResponseDto> list = deviceServiceImpl.findAll(page, pageSize);
+            Page<DeviceResponseDto> list = deviceService.findAll(page, pageSize);
             return ResponseEntity.ok().body(list.getContent());
         } catch (NotFoundException nf) {
             logger.error(nf.getMessage());
@@ -70,7 +71,7 @@ public class DeviceController implements DeviceResource {
 
         DeviceResponseDto device = null;
         try {
-            device = deviceServiceImpl.findById(id);
+            device = deviceService.findById(id);
 
         } catch (NotFoundException nf) {
             logger.error(nf.getMessage());
@@ -90,7 +91,7 @@ public class DeviceController implements DeviceResource {
         logger.debug(messageSource.getMessage("DEVICE_GET_SEARCH_DEBUG", null, currentLocale));
 
         try {
-            Page<DeviceResponseDto> deviceList = deviceServiceImpl.findBySerialNoLike(serialNumber, page, pageSize);
+            Page<DeviceResponseDto> deviceList = deviceService.findBySerialNoLike(serialNumber, page, pageSize);
             return ResponseEntity.ok().body(deviceList.getContent());
         } catch (NotFoundException nf) {
             logger.error(nf.getMessage());
@@ -110,7 +111,7 @@ public class DeviceController implements DeviceResource {
 
         try {
 
-            DeviceResponseDto deviceResponseDto = deviceServiceImpl.deleteById(id);
+            DeviceResponseDto deviceResponseDto = deviceService.deleteById(id);
             return ResponseEntity.ok().body(messageSource.getMessage("DEVICE_DELETE_ONE_SUCCESS", null, currentLocale));
 
         } catch (NotFoundException nf) {
@@ -131,7 +132,7 @@ public class DeviceController implements DeviceResource {
         Locale currentLocale = LocaleContextHolder.getLocale();// works only when as local statement
         logger.debug(messageSource.getMessage("DEVICE_UPDATE_ONE_DEBUG", null, currentLocale));
         try {
-            DeviceResponseDto response = deviceServiceImpl.updateById(id, deviceRequestDto);
+            DeviceResponseDto response = deviceService.updateById(id, deviceRequestDto);
             return ResponseEntity.ok().body(response);
 
         } catch (NotFoundException nf) {
@@ -150,7 +151,7 @@ public class DeviceController implements DeviceResource {
         logger.debug(messageSource.getMessage("DEVICE_CREATE_ONE_DEBUG", null, currentLocale));
         try {
 
-            DeviceResponseDto device = deviceServiceImpl.create(deviceRequestDto);
+            DeviceResponseDto device = deviceService.create(deviceRequestDto);
             return ResponseEntity.ok().body(device);
 
         } catch (Exception e) {
@@ -166,7 +167,7 @@ public class DeviceController implements DeviceResource {
         logger.debug(messageSource.getMessage("DEVICE_CREATE_BULK_DEBUG", null, currentLocale));
 
         try {
-            List<DeviceResponseDto> deviceList = deviceServiceImpl.createBulk(list);
+            List<DeviceResponseDto> deviceList = deviceService.createBulk(list);
             return ResponseEntity.ok().body(messageSource.getMessage("DEVICE_CREATE_ALL_SUCCESS", null, currentLocale));
         } catch (Exception e) {
             logger.error(e.getMessage());
@@ -180,7 +181,7 @@ public class DeviceController implements DeviceResource {
         Locale currentLocale = LocaleContextHolder.getLocale();// works only when as local statement
         logger.debug(messageSource.getMessage("DEVICE_DELETE_BULK_DEBUG", null, currentLocale));
         try {
-            deviceServiceImpl.deleteByIdList(deviceIdList);
+            deviceService.deleteByIdList(deviceIdList);
             return ResponseEntity.ok().body(messageSource.getMessage("DEVICE_DELETE_ALL_SUCCESS", null, currentLocale));
 
         } catch (NotFoundException nf) {
@@ -210,7 +211,7 @@ public class DeviceController implements DeviceResource {
                 Cell cell = headerRow.createCell(i);
                 cell.setCellValue(columnHeaders[i]);
             }
-            List<DeviceResponseDto> list = deviceServiceImpl.findAll();
+            List<DeviceResponseDto> list = deviceService.findAll();
 
             int rowCount = 1;
 
@@ -275,7 +276,7 @@ public class DeviceController implements DeviceResource {
             //set the PDF format
             headers.setContentType(MediaType.APPLICATION_PDF);
             headers.setContentDispositionFormData("filename", "device-details.pdf");
-            return new ResponseEntity<byte[]>(deviceServiceImpl.exportReport(), headers, HttpStatus.OK);
+            return new ResponseEntity<byte[]>(deviceService.exportReport(), headers, HttpStatus.OK);
 
         } catch (Exception e) {
             logger.error(e.getMessage());

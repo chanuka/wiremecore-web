@@ -17,7 +17,7 @@ import java.nio.charset.StandardCharsets;
 
 @Service
 @RequiredArgsConstructor
-public class SmtpEmailServiceImpl implements EmailService {
+public class EmailServiceImpl implements EmailService {
 
     private final JavaMailSender javaMailSender;
 

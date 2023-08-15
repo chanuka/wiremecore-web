@@ -12,6 +12,7 @@ import com.cba.core.wiremeweb.util.UserBean;
 import com.cba.core.wiremeweb.service.impl.CustomUserDetailsServiceImpl;
 import com.cba.core.wiremeweb.service.impl.UserPermissionServiceImpl;
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -42,6 +43,8 @@ public class SecurityConfig {
     private final UserBean userBean;
     private final TokenBlacklistServiceImpl tokenBlacklistServiceImpl;
     private final CustomLogoutHandler customLogoutHandler;
+    private final MessageSource messageSource;
+
 
 
     @Bean
@@ -88,7 +91,7 @@ public class SecurityConfig {
 
         http.addFilter(new UserNamePasswordVerifyFilter(authenticationManager(http.getSharedObject(AuthenticationConfiguration.class)),
                 jwtConfig, refreshTokenServiceImpl, jwtUtils, encoder));
-        http.addFilterAfter(new AuthTokenVerifyFilter(jwtConfig, jwtUtils, userPermissionServiceImpl, decoder, userBean, tokenBlacklistServiceImpl), UserNamePasswordVerifyFilter.class);
+        http.addFilterAfter(new AuthTokenVerifyFilter(jwtConfig, jwtUtils, userPermissionServiceImpl, decoder, userBean, tokenBlacklistServiceImpl,messageSource), UserNamePasswordVerifyFilter.class);
 
         return http.build();
     }

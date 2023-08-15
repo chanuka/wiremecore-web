@@ -1,5 +1,6 @@
 package com.cba.core.wiremeweb.service.impl;
 
+import com.cba.core.wiremeweb.dao.TokenBlacklistDao;
 import com.cba.core.wiremeweb.dao.impl.TokenBlacklistDaoImpl;
 import com.cba.core.wiremeweb.model.TokenBlacklist;
 import com.cba.core.wiremeweb.service.TokenBlacklistService;
@@ -12,17 +13,17 @@ import java.sql.SQLException;
 @RequiredArgsConstructor
 public class TokenBlacklistServiceImpl implements TokenBlacklistService {
 
-    private final TokenBlacklistDaoImpl tokenBlacklistDaoImpl;
+    private final TokenBlacklistDao tokenBlacklistDao;
 
     @Override
     public TokenBlacklist createBlacklistToken(String token) throws Exception {
-        TokenBlacklist tokenBlacklist = tokenBlacklistDaoImpl.createBlacklistToken(token);
+        TokenBlacklist tokenBlacklist = tokenBlacklistDao.createBlacklistToken(token);
         return tokenBlacklist;
     }
 
     @Override
     public boolean isTokenBlacklisted(String token) throws SQLException {
-        boolean isTokenBlackListed = tokenBlacklistDaoImpl.isTokenBlacklisted(token);
+        boolean isTokenBlackListed = tokenBlacklistDao.isTokenBlacklisted(token);
         return isTokenBlackListed;
     }
 }
