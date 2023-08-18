@@ -2,9 +2,9 @@ package com.cba.core.wiremeweb.model;
 // Generated Jun 20, 2023 2:49:48 PM by Hibernate Tools 4.3.1
 
 
-import java.time.Instant;
-
 import jakarta.persistence.*;
+
+import java.time.Instant;
 
 
 /**

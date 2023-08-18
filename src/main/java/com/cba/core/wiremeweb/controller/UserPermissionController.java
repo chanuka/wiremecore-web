@@ -3,7 +3,6 @@ package com.cba.core.wiremeweb.controller;
 import com.cba.core.wiremeweb.controller.resource.UserPermissionResource;
 import com.cba.core.wiremeweb.dto.PermissionResponseDto;
 import com.cba.core.wiremeweb.service.UserPermissionService;
-import com.cba.core.wiremeweb.service.impl.UserPermissionServiceImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;

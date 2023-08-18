@@ -2,10 +2,10 @@ package com.cba.core.wiremeweb.model;
 // Generated Jun 20, 2023 2:49:48 PM by Hibernate Tools 4.3.1
 
 
+import jakarta.persistence.*;
+
 import java.util.HashSet;
 import java.util.Set;
-
-import jakarta.persistence.*;
 
 
 /**

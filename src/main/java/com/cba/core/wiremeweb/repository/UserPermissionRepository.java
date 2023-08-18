@@ -1,8 +1,6 @@
 package com.cba.core.wiremeweb.repository;
 
 import com.cba.core.wiremeweb.model.Permission;
-import com.cba.core.wiremeweb.model.Role;
-import jakarta.persistence.NamedQuery;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;

@@ -1,6 +1,5 @@
 package com.cba.core.wiremeweb.util;
 
-import com.cba.core.wiremeweb.model.User;
 import org.springframework.data.domain.AuditorAware;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;

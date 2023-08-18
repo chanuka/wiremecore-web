@@ -1,7 +1,6 @@
 package com.cba.core.wiremeweb.service.impl;
 
 import com.cba.core.wiremeweb.dao.CustomUserDetailsDao;
-import com.cba.core.wiremeweb.dao.impl.CustomUserDetailsDaoImpl;
 import com.cba.core.wiremeweb.dto.ApplicationUserDto;
 import com.cba.core.wiremeweb.service.CustomUserDetailsService;
 import lombok.RequiredArgsConstructor;

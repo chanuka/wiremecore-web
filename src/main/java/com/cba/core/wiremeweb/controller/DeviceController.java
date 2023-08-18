@@ -7,7 +7,6 @@ import com.cba.core.wiremeweb.exception.InternalServerError;
 import com.cba.core.wiremeweb.exception.NotFoundException;
 import com.cba.core.wiremeweb.exception.RecordInUseException;
 import com.cba.core.wiremeweb.service.DeviceService;
-import com.cba.core.wiremeweb.service.impl.DeviceServiceImpl;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.apache.poi.ss.usermodel.Cell;

@@ -1,7 +1,6 @@
 package com.cba.core.wiremeweb.dto;
 
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -17,6 +16,7 @@ public class DeviceRequestDto implements java.io.Serializable {
     @NotBlank(message = "serialNo is required")
     private String serialNo;
     @NotBlank(message = "IMEI is required")
+    @Pattern(regexp = "\\d+", message = "Value must contain only numeric digits")
     private String emiNo;
     @NotBlank(message = "Device Type is required")
     private String deviceType;

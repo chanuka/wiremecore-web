@@ -2,7 +2,10 @@ package com.cba.core.wiremeweb.model;
 // Generated Jun 20, 2023 2:49:48 PM by Hibernate Tools 4.3.1
 
 
-import jakarta.persistence.*;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
 
 
 /**

@@ -5,8 +5,6 @@ import com.cba.core.wiremeweb.dto.DeviceResponseDto;
 import com.cba.core.wiremeweb.model.Device;
 import com.cba.core.wiremeweb.model.Status;
 
-import java.sql.SQLException;
-
 public class DeviceMapper {
 
     public static DeviceResponseDto toDto(Device device) {

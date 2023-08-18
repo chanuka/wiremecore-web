@@ -4,10 +4,10 @@ import com.cba.core.wiremeweb.dao.UserPermissionDao;
 import com.cba.core.wiremeweb.dto.PermissionResponseDto;
 import com.cba.core.wiremeweb.mapper.UserPermissionMapper;
 import com.cba.core.wiremeweb.model.Permission;
-import com.cba.core.wiremeweb.model.Role;
 import com.cba.core.wiremeweb.repository.UserPermissionRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Component;
 
 import java.sql.SQLException;
@@ -33,8 +33,10 @@ public class UserPermissionDaoImpl implements UserPermissionDao {
     }
 
     @Override
+    @Cacheable("permissions")
     public List<PermissionResponseDto> findAllByRole(String username) throws SQLException {
         Iterable<Permission> irt = userPermissionRepository.findAllByRole(username);
+        System.out.println("ddddddddddddd");
         List<PermissionResponseDto> result =
                 StreamSupport.stream(irt.spliterator(), false)
                         .map(UserPermissionMapper::toDto)

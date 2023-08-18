@@ -2,16 +2,16 @@ package com.cba.core.wiremeweb.model;
 // Generated Jun 20, 2023 2:49:48 PM by Hibernate Tools 4.3.1
 
 
-import java.util.Date;
-import java.util.HashSet;
-import java.util.Set;
-
 import jakarta.persistence.*;
 import org.springframework.data.annotation.CreatedBy;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedBy;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+
+import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
 
 
 /**

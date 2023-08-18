@@ -25,7 +25,6 @@ import org.springframework.security.oauth2.jwt.JwtDecoder;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
-import java.sql.SQLException;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -79,29 +78,11 @@ public class AuthTokenVerifyFilter extends OncePerRequestFilter {
             }
 
             String[] resourceArray = request.getRequestURI().split("\\/");
-//            boolean access = false;
+            boolean access = false;
             String method = request.getMethod();
             List<PermissionResponseDto> permissionDtoList = userPermissionServiceImpl.findAllByRole(username);
 
-//            for (PermissionResponseDto permission : permissionDtoList) {
-//                if (permission.getResource().equals(resourceArray[2])) {
-//                    if (method.equals("GET") && permission.isReadd()) {
-//                        access = true;
-//                        break;
-//                    } else if (method.equals("POST") && permission.isCreated()) {
-//                        access = true;
-//                        break;
-//                    } else if (method.equals("PUT") && permission.isUpdated()) {
-//                        access = true;
-//                        break;
-//                    } else if (method.equals("DELETE") && permission.isDeleted()) {
-//                        access = true;
-//                        break;
-//                    }
-//                }
-//            }
-
-            boolean access = permissionDtoList.stream()
+            access = permissionDtoList.stream()
                     .filter(permission -> permission.getResource().equals(resourceArray[2]))
                     .anyMatch(permission -> (
                             (method.equals("GET") && permission.isReadd()) ||
@@ -119,9 +100,10 @@ public class AuthTokenVerifyFilter extends OncePerRequestFilter {
 
             var authorities = (List<Map<String, String>>) claimsJws.getClaim("authorities");
 
-            Set<SimpleGrantedAuthority> simpleGrantedAuthorities = authorities.stream()
-                    .map(m -> new SimpleGrantedAuthority(m.get("role")))
-                    .collect(Collectors.toSet());
+            Set<SimpleGrantedAuthority> simpleGrantedAuthorities =
+                    authorities.stream()
+                            .map(m -> new SimpleGrantedAuthority(m.get("role")))
+                            .collect(Collectors.toSet());
 
             Authentication authentication = new UsernamePasswordAuthenticationToken(
                     username,

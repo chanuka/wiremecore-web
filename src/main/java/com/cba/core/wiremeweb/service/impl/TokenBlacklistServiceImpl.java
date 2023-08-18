@@ -1,7 +1,6 @@
 package com.cba.core.wiremeweb.service.impl;
 
 import com.cba.core.wiremeweb.dao.TokenBlacklistDao;
-import com.cba.core.wiremeweb.dao.impl.TokenBlacklistDaoImpl;
 import com.cba.core.wiremeweb.model.TokenBlacklist;
 import com.cba.core.wiremeweb.service.TokenBlacklistService;
 import lombok.RequiredArgsConstructor;

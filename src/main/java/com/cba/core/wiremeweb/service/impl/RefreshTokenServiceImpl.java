@@ -1,7 +1,6 @@
 package com.cba.core.wiremeweb.service.impl;
 
 import com.cba.core.wiremeweb.dao.RefreshTokenDao;
-import com.cba.core.wiremeweb.dao.impl.RefreshTokenDaoImpl;
 import com.cba.core.wiremeweb.model.TokenRefresh;
 import com.cba.core.wiremeweb.service.RefreshTokenService;
 import lombok.RequiredArgsConstructor;

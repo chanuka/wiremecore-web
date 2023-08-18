@@ -6,7 +6,6 @@ import com.cba.core.wiremeweb.dto.TokenRefreshResponseDto;
 import com.cba.core.wiremeweb.exception.TokenRefreshException;
 import com.cba.core.wiremeweb.model.TokenRefresh;
 import com.cba.core.wiremeweb.service.RefreshTokenService;
-import com.cba.core.wiremeweb.service.impl.RefreshTokenServiceImpl;
 import com.cba.core.wiremeweb.util.JwtUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;

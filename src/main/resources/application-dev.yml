@@ -1,4 +1,10 @@
 spring:
+  cache:
+    redis:
+      host: localhost
+      port: 6379
+#      time-to-live: 100S
+    type: redis
   messages:
     basename: messages
     encoding: UTF-8

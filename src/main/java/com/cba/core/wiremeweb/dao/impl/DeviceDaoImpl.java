@@ -18,6 +18,8 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -42,9 +44,10 @@ public class DeviceDaoImpl implements DeviceDao {
 
 
     @Override
+    @Cacheable("devices")
     public Page<DeviceResponseDto> findAll(int page, int pageSize) throws Exception {
-
         Pageable pageable = PageRequest.of(page, pageSize);
+        Thread.sleep(2000);
 
         Page<Device> DevicesPage = deviceRepository.findAll(pageable);
         if (DevicesPage.isEmpty()) {
@@ -54,8 +57,8 @@ public class DeviceDaoImpl implements DeviceDao {
     }
 
     @Override
+    @Cacheable("devices")
     public List<DeviceResponseDto> findAll() throws Exception {
-
         List<Device> devicesList = deviceRepository.findAll();
         if (devicesList.isEmpty()) {
             throw new NotFoundException("No Devices found");
@@ -86,6 +89,7 @@ public class DeviceDaoImpl implements DeviceDao {
     }
 
     @Override
+    @CacheEvict(value = "devices", allEntries = true)
     public DeviceResponseDto deleteById(int id) throws Exception {
         try {
             ObjectMapper objectMapper = new ObjectMapper();
@@ -109,6 +113,7 @@ public class DeviceDaoImpl implements DeviceDao {
     }
 
     @Override
+    @CacheEvict(value = "devices", allEntries = true)
     public void deleteByIdList(List<Integer> deviceList) throws Exception {
         try {
             ObjectMapper objectMapper = new ObjectMapper();
@@ -143,6 +148,7 @@ public class DeviceDaoImpl implements DeviceDao {
     }
 
     @Override
+    @CacheEvict(value = "devices", allEntries = true)
     public DeviceResponseDto updateById(int id, DeviceRequestDto deviceRequestDto) throws Exception {
 
         ObjectMapper objectMapper = new ObjectMapper();
@@ -197,6 +203,7 @@ public class DeviceDaoImpl implements DeviceDao {
     }
 
     @Override
+    @CacheEvict(value = "devices", allEntries = true)
     public DeviceResponseDto create(DeviceRequestDto deviceRequestDto) throws Exception {
 
         ObjectMapper objectMapper = new ObjectMapper();
@@ -216,6 +223,7 @@ public class DeviceDaoImpl implements DeviceDao {
     }
 
     @Override
+    @CacheEvict(value = "devices", allEntries = true)
     public List<DeviceResponseDto> createBulk(List<DeviceRequestDto> deviceRequestDtoList) throws Exception {
 
         ObjectMapper objectMapper = new ObjectMapper();
@@ -235,7 +243,7 @@ public class DeviceDaoImpl implements DeviceDao {
                                 item.getId(), null, objectMapper.writeValueAsString(deviceResponseDto),
                                 remoteAdr));
                     } catch (Exception e) {
-                        throw new RuntimeException("Exception occurred for Auditing: ");// only unchecked exception can be passed
+                        throw new RuntimeException("Exception occurred in Auditing: ");// only unchecked exception can be passed
                     }
                     return deviceResponseDto;
                 })

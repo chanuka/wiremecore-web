@@ -1,7 +1,6 @@
 package com.cba.core.wiremeweb.service.impl;
 
 import com.cba.core.wiremeweb.dao.UserPermissionDao;
-import com.cba.core.wiremeweb.dao.impl.UserPermissionDaoImpl;
 import com.cba.core.wiremeweb.dto.PermissionResponseDto;
 import com.cba.core.wiremeweb.service.UserPermissionService;
 import lombok.RequiredArgsConstructor;

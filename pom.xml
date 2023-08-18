@@ -37,7 +37,7 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-validation</artifactId>
         </dependency>
-<!--        Mysql JDBC connector-->
+        <!--        Mysql JDBC connector-->
         <dependency>
             <groupId>mysql</groupId>
             <artifactId>mysql-connector-java</artifactId>
@@ -115,16 +115,28 @@
             <artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
             <version>2.0.2</version>
         </dependency>
-<!--        This is to http trace-->
+        <!--        This is to http trace-->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-actuator</artifactId>
         </dependency>
-<!--        This is for pdf generation-->
+        <!--        This is for pdf generation-->
         <dependency>
             <groupId>net.sf.jasperreports</groupId>
             <artifactId>jasperreports</artifactId>
             <version>6.20.0</version>
+        </dependency>
+        <!-- Cache inmemory-->
+<!--        <dependency>-->
+<!--            <groupId>org.springframework.boot</groupId>-->
+<!--            <artifactId>spring-boot-starter-cache</artifactId>-->
+<!--            &lt;!&ndash;            <version>${cache.version}</version>&ndash;&gt;-->
+<!--        </dependency>-->
+        <!-- Redis distributed cache-->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-data-redis</artifactId>
+            <!--            <version>${cache.version}</version>-->
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
