@@ -13,5 +13,5 @@ public interface RefreshTokenService {
 
     public TokenRefresh verifyExpiration(TokenRefresh token);
 
-    public int deleteByUserId(Long userId) throws Exception;
+    public int deleteByUserId(Integer userId) throws Exception;
 }

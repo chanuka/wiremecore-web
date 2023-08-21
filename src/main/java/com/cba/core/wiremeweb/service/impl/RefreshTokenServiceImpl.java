@@ -33,7 +33,7 @@ public class RefreshTokenServiceImpl implements RefreshTokenService {
     }
 
     @Override
-    public int deleteByUserId(Long userId) throws Exception {
+    public int deleteByUserId(Integer userId) throws Exception {
         return refreshTokenDao.deleteByUserId((userId));
     }
 }

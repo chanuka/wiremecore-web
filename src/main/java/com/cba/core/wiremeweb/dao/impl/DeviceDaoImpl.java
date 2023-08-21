@@ -47,7 +47,6 @@ public class DeviceDaoImpl implements DeviceDao {
     @Cacheable("devices")
     public Page<DeviceResponseDto> findAll(int page, int pageSize) throws Exception {
         Pageable pageable = PageRequest.of(page, pageSize);
-        Thread.sleep(2000);
 
         Page<Device> DevicesPage = deviceRepository.findAll(pageable);
         if (DevicesPage.isEmpty()) {
@@ -180,12 +179,12 @@ public class DeviceDaoImpl implements DeviceDao {
 
             toBeUpdated.setSerialNo(deviceRequestDto.getSerialNo());
         }
-        if (!toBeUpdated.getStatus().getStatusCode().equals((deviceRequestDto.isActive()) ? "ACTV" : "DACT")) {
+        if (!toBeUpdated.getStatus().getStatusCode().equals(deviceRequestDto.getStatus())) {
             updateRequired = true;
-            oldDataMap.put("active", (toBeUpdated.getStatus().getStatusCode().equals("ACTV")) ? true : false);
-            newDataMap.put("active", deviceRequestDto.isActive());
+            oldDataMap.put("status", toBeUpdated.getStatus().getStatusCode());
+            newDataMap.put("status", deviceRequestDto.getStatus());
 
-            toBeUpdated.setStatus(new Status((deviceRequestDto.isActive()) ? "ACTV" : "DACT"));
+            toBeUpdated.setStatus(new Status(deviceRequestDto.getStatus()));
         }
         if (updateRequired) {
 
@@ -211,7 +210,7 @@ public class DeviceDaoImpl implements DeviceDao {
 
 
         Device deviceToInsert = DeviceMapper.toModel(deviceRequestDto);
-        deviceToInsert.setStatus(new Status(deviceRequestDto.isActive() ? "ACTV" : "DACT"));
+        deviceToInsert.setStatus(new Status(deviceRequestDto.getStatus()));
         Device savedDevice = deviceRepository.save(deviceToInsert);
         DeviceResponseDto deviceResponseDto = DeviceMapper.toDto(savedDevice);
         globalAuditEntryRepository.save(new GlobalAuditEntry(resource, UserOperationEnum.CREATE.getValue(),

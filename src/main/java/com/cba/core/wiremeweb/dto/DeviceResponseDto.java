@@ -15,7 +15,7 @@ public class DeviceResponseDto implements java.io.Serializable {
     private String serialNo;
     private String emiNo;
     private String deviceType;
-    private boolean active;
+    private String status;
 //    private String statusDescription;
 //    private String createdUser;
 //    private String lastUpdatedUser;

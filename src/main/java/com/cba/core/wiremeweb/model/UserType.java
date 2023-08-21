@@ -17,6 +17,10 @@ public class UserType implements java.io.Serializable {
     public UserType() {
     }
 
+    public UserType(Integer id) {
+        this.id = id;
+    }
+
     public UserType(Status status, String typeName, Set<User> users) {
         this.status = status;
         this.typeName = typeName;

@@ -3,6 +3,11 @@ package com.cba.core.wiremeweb.model;
 
 
 import jakarta.persistence.*;
+import org.springframework.data.annotation.CreatedBy;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedBy;
+import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.util.Date;
 import java.util.HashSet;
@@ -15,15 +20,20 @@ import java.util.Set;
 @Entity
 @Table(name = "role"
 )
+@EntityListeners(AuditingEntityListener.class) // enable entity level auditing for create,modified attributes
 public class Role implements java.io.Serializable {
 
 
     private Integer id;
     private Status status;
     private String roleName;
-    private int createdBy;
-    private Integer modifiedBy;
+    @CreatedBy
+    private String createdBy;
+    @LastModifiedBy
+    private String modifiedBy;
+    @CreatedDate
     private Date createdAt;
+    @LastModifiedDate
     private Date updatedAt;
     private Set<Permission> permissions = new HashSet<Permission>(0);
     private Set<UserRole> userRoles = new HashSet<UserRole>(0);
@@ -32,14 +42,14 @@ public class Role implements java.io.Serializable {
     }
 
 
-    public Role(Status status, int createdBy, Date createdAt, Date updatedAt) {
+    public Role(Status status, String createdBy, Date createdAt, Date updatedAt) {
         this.status = status;
         this.createdBy = createdBy;
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
     }
 
-    public Role(Status status, String roleName, int createdBy, Integer modifiedBy, Date createdAt, Date updatedAt, Set<Permission> permissions, Set<UserRole> userRoles) {
+    public Role(Status status, String roleName, String createdBy, String modifiedBy, Date createdAt, Date updatedAt, Set<Permission> permissions, Set<UserRole> userRoles) {
         this.status = status;
         this.roleName = roleName;
         this.createdBy = createdBy;
@@ -82,22 +92,22 @@ public class Role implements java.io.Serializable {
     }
 
 
-    @Column(name = "created_by", nullable = false)
-    public int getCreatedBy() {
+    @Column(name = "created_by", nullable = false, length = 45)
+    public String getCreatedBy() {
         return this.createdBy;
     }
 
-    public void setCreatedBy(int createdBy) {
+    public void setCreatedBy(String createdBy) {
         this.createdBy = createdBy;
     }
 
 
-    @Column(name = "modified_by")
-    public Integer getModifiedBy() {
+    @Column(name = "modified_by", length = 45)
+    public String getModifiedBy() {
         return this.modifiedBy;
     }
 
-    public void setModifiedBy(Integer modifiedBy) {
+    public void setModifiedBy(String modifiedBy) {
         this.modifiedBy = modifiedBy;
     }
 

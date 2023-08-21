@@ -33,6 +33,7 @@ public class JwtUtils {
                 .expiresAt(now.plus(jwtConfig.getTokenExpirationAfterMillis(), ChronoUnit.MILLIS))
                 .subject(username)
                 .claim("authorities", customUserDetailsServiceImpl.loadUserByUsername(username).getAuthorities())
+                .claim("Validity",UserTypeEnum.WEB.getValue())
                 .build();
         return encoder.encode(JwtEncoderParameters.from(claims)).getTokenValue();
     }

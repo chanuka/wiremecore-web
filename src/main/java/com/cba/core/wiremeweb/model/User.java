@@ -3,6 +3,9 @@ package com.cba.core.wiremeweb.model;
 
 
 import jakarta.persistence.*;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.util.Date;
 import java.util.HashSet;
@@ -15,6 +18,7 @@ import java.util.Set;
 @Entity
 @Table(name = "user"
 )
+@EntityListeners(AuditingEntityListener.class) // enable entity level auditing for create,modified attributes
 public class User implements java.io.Serializable {
 
 
@@ -34,7 +38,9 @@ public class User implements java.io.Serializable {
     private String sessionId;
     private int createdBy;
     private Integer modifiedBy;
+    @CreatedDate
     private Date createdAt;
+    @LastModifiedDate
     private Date updatedAt;
     private Set<Permission> permissionsForModifiedBy = new HashSet<Permission>(0);
     private Set<UserRole> userRolesForCreatedBy = new HashSet<UserRole>(0);
@@ -184,7 +190,7 @@ public class User implements java.io.Serializable {
     }
 
 
-    @Column(name = "password", nullable = false, length = 65535, columnDefinition = "TEXT")
+    @Column(name = "password", length = 65535, columnDefinition = "TEXT")
     public String getPassword() {
         return this.password;
     }

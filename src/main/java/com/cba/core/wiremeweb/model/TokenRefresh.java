@@ -17,7 +17,7 @@ import java.time.Instant;
 public class TokenRefresh implements java.io.Serializable {
 
 
-    private Long id;
+    private Integer id;
     private User user;
     private Instant expiryDate;
     private String token;
@@ -40,11 +40,11 @@ public class TokenRefresh implements java.io.Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", unique = true, nullable = false)
-    public Long getId() {
+    public Integer getId() {
         return this.id;
     }
 
-    public void setId(Long id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 

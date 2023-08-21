@@ -13,5 +13,5 @@ import org.springframework.web.bind.annotation.RestController;
 public interface RefreshTokenResource {
 
     @PostMapping()
-    public ResponseEntity<?> refreshToken(@Valid @RequestBody TokenRefreshRequestDto request) throws Exception;
+    ResponseEntity<?> refreshToken(@Valid @RequestBody TokenRefreshRequestDto request) throws Exception;
 }

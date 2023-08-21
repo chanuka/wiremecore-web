@@ -13,5 +13,5 @@ import java.util.List;
 public interface UserPermissionResource {
 
     @GetMapping()
-    public ResponseEntity<List<PermissionResponseDto>> permission() throws Exception;
+    ResponseEntity<List<PermissionResponseDto>> permission() throws Exception;
 }

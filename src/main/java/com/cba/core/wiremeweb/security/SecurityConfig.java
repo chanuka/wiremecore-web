@@ -76,8 +76,7 @@ public class SecurityConfig {
                 .and()
                 .authorizeHttpRequests(authorize -> {
 //                    authorize.requestMatchers("/**").permitAll();
-                    authorize.requestMatchers("/", "/devices/download-excel").permitAll();
-                    authorize.requestMatchers("/devices/download-pdf").permitAll();
+                    authorize.requestMatchers("/").permitAll();
                     authorize.requestMatchers("/refreshtoken").permitAll();
                     authorize.requestMatchers("/swagger-doc/**").permitAll();
                     authorize.requestMatchers("/swagger-ui/**", "/swagger-ui.html", "/v3/api-docs/**").permitAll();

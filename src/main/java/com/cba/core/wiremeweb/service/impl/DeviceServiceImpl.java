@@ -71,7 +71,7 @@ public class DeviceServiceImpl implements DeviceService {
     }
 
     @Override
-    public byte[] exportReport() throws FileNotFoundException, JRException, Exception {
+    public byte[] exportReport() throws Exception {
         List<DeviceResponseDto> deviceList = deviceDao.findAll();
         //load file and compile it
         File file = ResourceUtils.getFile("classpath:report/device.jrxml");

@@ -41,7 +41,7 @@ public class RefreshTokenDaoImpl implements RefreshTokenDao {
     }
 
     @Override
-    public int deleteByUserId(Long userId) throws Exception {
+    public int deleteByUserId(Integer userId) throws Exception {
         return refreshTokenRepository.deleteByUser(userRepository.findById(userId).get());
     }
 

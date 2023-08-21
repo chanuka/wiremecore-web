@@ -13,7 +13,7 @@ public class DeviceMapper {
         deviceResponseDto.setEmiNo(device.getEmiNo());
         deviceResponseDto.setId(device.getId());
         deviceResponseDto.setSerialNo(device.getSerialNo());
-        deviceResponseDto.setActive(device.getStatus().getStatusCode().equals("ACTV"));
+        deviceResponseDto.setStatus(device.getStatus().getStatusCode());
         return deviceResponseDto;
     }
 
@@ -22,8 +22,8 @@ public class DeviceMapper {
         device.setDeviceType(deviceRequestDto.getDeviceType());
         device.setEmiNo(deviceRequestDto.getEmiNo());
         device.setSerialNo(deviceRequestDto.getSerialNo());
-        Status status = new Status((deviceRequestDto.isActive()) ? "ACTV" : "DACT");
+        Status status = new Status(deviceRequestDto.getStatus());
         device.setStatus(status);
         return device;
     }
-    }
+}

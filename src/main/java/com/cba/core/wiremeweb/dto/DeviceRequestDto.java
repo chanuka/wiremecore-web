@@ -20,7 +20,8 @@ public class DeviceRequestDto implements java.io.Serializable {
     private String emiNo;
     @NotBlank(message = "Device Type is required")
     private String deviceType;
-    private boolean active;
+    @NotBlank(message = "Status is required")
+    private String status;
     private int deviceId;
 
     private static final long serialVersionUID = 1L;

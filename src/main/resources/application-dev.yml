@@ -10,7 +10,7 @@ spring:
     encoding: UTF-8
   jpa:
     hibernate:
-      ddl-auto: validate
+      ddl-auto: update
     properties:
       hibernate:
         jdbc:
@@ -47,6 +47,8 @@ application:
     tokenExpirationAfterMillis: 120000
   resource:
     devices: devices
+    users: users
+    roles: roles
 
 rsa:
   private-key: classpath:certs/private.pem

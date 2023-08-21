@@ -11,7 +11,7 @@ public interface RefreshTokenDao {
 
     public TokenRefresh createRefreshToken(String userName) throws IOException;
 
-    public int deleteByUserId(Long userId) throws Exception;
+    public int deleteByUserId(Integer userId) throws Exception;
 
     public TokenRefresh verifyExpiration(TokenRefresh token);
 }

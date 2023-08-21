@@ -28,6 +28,6 @@ public interface DeviceService {
 
     public List<DeviceResponseDto> createBulk(List<DeviceRequestDto> deviceRequestDto) throws Exception;
 
-    public byte[] exportReport() throws FileNotFoundException, JRException,Exception;
+    public byte[] exportReport() throws Exception;
 
 }
