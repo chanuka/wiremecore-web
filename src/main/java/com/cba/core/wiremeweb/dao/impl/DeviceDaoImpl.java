@@ -1,16 +1,16 @@
 package com.cba.core.wiremeweb.dao.impl;
 
-import com.cba.core.wiremeweb.dao.DeviceDao;
+import com.cba.core.wiremeweb.dao.GenericDao;
 import com.cba.core.wiremeweb.dto.DeviceRequestDto;
 import com.cba.core.wiremeweb.dto.DeviceResponseDto;
 import com.cba.core.wiremeweb.exception.NotFoundException;
-import com.cba.core.wiremeweb.exception.RecordInUseException;
 import com.cba.core.wiremeweb.mapper.DeviceMapper;
 import com.cba.core.wiremeweb.model.Device;
 import com.cba.core.wiremeweb.model.GlobalAuditEntry;
 import com.cba.core.wiremeweb.model.Status;
 import com.cba.core.wiremeweb.repository.DeviceRepository;
 import com.cba.core.wiremeweb.repository.GlobalAuditEntryRepository;
+import com.cba.core.wiremeweb.repository.specification.DeviceSpecification;
 import com.cba.core.wiremeweb.util.UserOperationEnum;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
@@ -20,10 +20,10 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
-import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Component;
 
 import java.util.HashMap;
@@ -34,9 +34,9 @@ import java.util.stream.Collectors;
 @Component
 @Transactional
 @RequiredArgsConstructor
-public class DeviceDaoImpl implements DeviceDao {
+public class DeviceDaoImpl implements GenericDao<DeviceResponseDto,DeviceRequestDto> {
 
-    private final DeviceRepository deviceRepository;
+    private final DeviceRepository repository;
     private final GlobalAuditEntryRepository globalAuditEntryRepository;
     private final HttpServletRequest request;
     @Value("${application.resource.devices}")
@@ -48,7 +48,7 @@ public class DeviceDaoImpl implements DeviceDao {
     public Page<DeviceResponseDto> findAll(int page, int pageSize) throws Exception {
         Pageable pageable = PageRequest.of(page, pageSize);
 
-        Page<Device> DevicesPage = deviceRepository.findAll(pageable);
+        Page<Device> DevicesPage = repository.findAll(pageable);
         if (DevicesPage.isEmpty()) {
             throw new NotFoundException("No Devices found");
         }
@@ -58,7 +58,7 @@ public class DeviceDaoImpl implements DeviceDao {
     @Override
     @Cacheable("devices")
     public List<DeviceResponseDto> findAll() throws Exception {
-        List<Device> devicesList = deviceRepository.findAll();
+        List<Device> devicesList = repository.findAll();
         if (devicesList.isEmpty()) {
             throw new NotFoundException("No Devices found");
         }
@@ -69,10 +69,15 @@ public class DeviceDaoImpl implements DeviceDao {
     }
 
     @Override
-    public Page<DeviceResponseDto> findBySerialNoLike(String serialNumber, int page, int pageSize) throws Exception {
+    public Page<DeviceResponseDto> findBySearchParamLike(List<Map<String, String>> searchParamList, int page, int pageSize) throws Exception {
 
         Pageable pageable = PageRequest.of(page, pageSize);
-        Page<Device> DevicesPage = deviceRepository.findBySerialNoLike("%" + serialNumber + "%", pageable);
+        Specification<Device> spec = DeviceSpecification.serialNoLikeAndDeviceTypeLike(
+                searchParamList.get(0).get("serialNumber"),
+                searchParamList.get(0).get("deviceType"));
+
+        Page<Device> DevicesPage = repository.findAll(spec,pageable);
+
         if (DevicesPage.isEmpty()) {
             throw new NotFoundException("No Devices found");
         }
@@ -83,7 +88,7 @@ public class DeviceDaoImpl implements DeviceDao {
     @Override
     public DeviceResponseDto findById(int id) throws Exception {
 
-        Device device = deviceRepository.findById(id).orElseThrow(() -> new NotFoundException("Device not found"));
+        Device device = repository.findById(id).orElseThrow(() -> new NotFoundException("Device not found"));
         return DeviceMapper.toDto(device);
     }
 
@@ -92,20 +97,16 @@ public class DeviceDaoImpl implements DeviceDao {
     public DeviceResponseDto deleteById(int id) throws Exception {
         try {
             ObjectMapper objectMapper = new ObjectMapper();
-            Device device = deviceRepository.findById(id).orElseThrow(() -> new NotFoundException("Device not found"));
+            Device device = repository.findById(id).orElseThrow(() -> new NotFoundException("Device not found"));
             DeviceResponseDto deviceResponseDto = DeviceMapper.toDto(device);
 
-            deviceRepository.deleteById(id);
+            repository.deleteById(id);
             globalAuditEntryRepository.save(new GlobalAuditEntry(resource, UserOperationEnum.DELETE.getValue(),
                     id, objectMapper.writeValueAsString(deviceResponseDto), null,
                     request.getRemoteAddr()));
 
             return deviceResponseDto;
 
-        } catch (NotFoundException nf) {
-            throw nf;
-        } catch (DataIntegrityViolationException e) {
-            throw new RecordInUseException("Device is in use");
         } catch (Exception rr) {
             throw rr;
         }
@@ -113,18 +114,18 @@ public class DeviceDaoImpl implements DeviceDao {
 
     @Override
     @CacheEvict(value = "devices", allEntries = true)
-    public void deleteByIdList(List<Integer> deviceList) throws Exception {
+    public void deleteByIdList(List<Integer> idList) throws Exception {
         try {
             ObjectMapper objectMapper = new ObjectMapper();
             String remoteAdr = request.getRemoteAddr();
 
-            deviceList.stream()
-                    .map((id) -> deviceRepository.findById(id).orElseThrow(() -> new NotFoundException("Device not found")))
+            idList.stream()
+                    .map((id) -> repository.findById(id).orElseThrow(() -> new NotFoundException("Device not found")))
                     .collect(Collectors.toList());
 
-            deviceRepository.deleteAllByIdInBatch(deviceList);
+            repository.deleteAllByIdInBatch(idList);
 
-            deviceList.stream()
+            idList.stream()
                     .forEach(item -> {
                         ObjectNode objectNode = objectMapper.createObjectNode();
                         objectNode.put("id", item);
@@ -136,10 +137,6 @@ public class DeviceDaoImpl implements DeviceDao {
                             throw new RuntimeException("Exception occurred for Auditing: ");// only unchecked exception can be passed
                         }
                     });
-        } catch (NotFoundException nf) {
-            throw nf;
-        } catch (DataIntegrityViolationException e) {
-            throw new RecordInUseException("Device is in use");
         } catch (Exception ee) {
             ee.printStackTrace();
             throw ee;
@@ -148,7 +145,7 @@ public class DeviceDaoImpl implements DeviceDao {
 
     @Override
     @CacheEvict(value = "devices", allEntries = true)
-    public DeviceResponseDto updateById(int id, DeviceRequestDto deviceRequestDto) throws Exception {
+    public DeviceResponseDto updateById(int id, DeviceRequestDto requestDto) throws Exception {
 
         ObjectMapper objectMapper = new ObjectMapper();
         String remoteAdr = request.getRemoteAddr();
@@ -156,39 +153,39 @@ public class DeviceDaoImpl implements DeviceDao {
         Map<String, Object> oldDataMap = new HashMap<>();
         Map<String, Object> newDataMap = new HashMap<>();
 
-        Device toBeUpdated = deviceRepository.findById(id).orElseThrow(() -> new NotFoundException("Device not found"));
+        Device toBeUpdated = repository.findById(id).orElseThrow(() -> new NotFoundException("Device not found"));
 
-        if (!toBeUpdated.getDeviceType().equals(deviceRequestDto.getDeviceType())) {
+        if (!toBeUpdated.getDeviceType().equals(requestDto.getDeviceType())) {
             updateRequired = true;
             oldDataMap.put("deviceType", toBeUpdated.getDeviceType());
-            newDataMap.put("deviceType", deviceRequestDto.getDeviceType());
+            newDataMap.put("deviceType", requestDto.getDeviceType());
 
-            toBeUpdated.setDeviceType(deviceRequestDto.getDeviceType());
+            toBeUpdated.setDeviceType(requestDto.getDeviceType());
         }
-        if (!toBeUpdated.getEmiNo().equals(deviceRequestDto.getEmiNo())) {
+        if (!toBeUpdated.getEmiNo().equals(requestDto.getEmiNo())) {
             updateRequired = true;
             oldDataMap.put("emiNo", toBeUpdated.getEmiNo());
-            newDataMap.put("emiNo", deviceRequestDto.getEmiNo());
+            newDataMap.put("emiNo", requestDto.getEmiNo());
 
-            toBeUpdated.setEmiNo(deviceRequestDto.getEmiNo());
+            toBeUpdated.setEmiNo(requestDto.getEmiNo());
         }
-        if (!toBeUpdated.getSerialNo().equals(deviceRequestDto.getSerialNo())) {
+        if (!toBeUpdated.getSerialNo().equals(requestDto.getSerialNo())) {
             updateRequired = true;
             oldDataMap.put("serialNo", toBeUpdated.getSerialNo());
-            newDataMap.put("serialNo", deviceRequestDto.getSerialNo());
+            newDataMap.put("serialNo", requestDto.getSerialNo());
 
-            toBeUpdated.setSerialNo(deviceRequestDto.getSerialNo());
+            toBeUpdated.setSerialNo(requestDto.getSerialNo());
         }
-        if (!toBeUpdated.getStatus().getStatusCode().equals(deviceRequestDto.getStatus())) {
+        if (!toBeUpdated.getStatus().getStatusCode().equals(requestDto.getStatus())) {
             updateRequired = true;
             oldDataMap.put("status", toBeUpdated.getStatus().getStatusCode());
-            newDataMap.put("status", deviceRequestDto.getStatus());
+            newDataMap.put("status", requestDto.getStatus());
 
-            toBeUpdated.setStatus(new Status(deviceRequestDto.getStatus()));
+            toBeUpdated.setStatus(new Status(requestDto.getStatus()));
         }
         if (updateRequired) {
 
-            deviceRepository.saveAndFlush(toBeUpdated);
+            repository.saveAndFlush(toBeUpdated);
             globalAuditEntryRepository.save(new GlobalAuditEntry(resource, UserOperationEnum.UPDATE.getValue(),
                     id, objectMapper.writeValueAsString(oldDataMap), objectMapper.writeValueAsString(newDataMap),
                     remoteAdr));
@@ -203,15 +200,15 @@ public class DeviceDaoImpl implements DeviceDao {
 
     @Override
     @CacheEvict(value = "devices", allEntries = true)
-    public DeviceResponseDto create(DeviceRequestDto deviceRequestDto) throws Exception {
+    public DeviceResponseDto create(DeviceRequestDto requestDto) throws Exception {
 
         ObjectMapper objectMapper = new ObjectMapper();
         String remoteAdr = request.getRemoteAddr();
 
 
-        Device deviceToInsert = DeviceMapper.toModel(deviceRequestDto);
-        deviceToInsert.setStatus(new Status(deviceRequestDto.getStatus()));
-        Device savedDevice = deviceRepository.save(deviceToInsert);
+        Device deviceToInsert = DeviceMapper.toModel(requestDto);
+        deviceToInsert.setStatus(new Status(requestDto.getStatus()));
+        Device savedDevice = repository.save(deviceToInsert);
         DeviceResponseDto deviceResponseDto = DeviceMapper.toDto(savedDevice);
         globalAuditEntryRepository.save(new GlobalAuditEntry(resource, UserOperationEnum.CREATE.getValue(),
                 savedDevice.getId(), null, objectMapper.writeValueAsString(deviceResponseDto),
@@ -223,17 +220,17 @@ public class DeviceDaoImpl implements DeviceDao {
 
     @Override
     @CacheEvict(value = "devices", allEntries = true)
-    public List<DeviceResponseDto> createBulk(List<DeviceRequestDto> deviceRequestDtoList) throws Exception {
+    public List<DeviceResponseDto> createBulk(List<DeviceRequestDto> requestDtoList) throws Exception {
 
         ObjectMapper objectMapper = new ObjectMapper();
         String remoteAdr = request.getRemoteAddr();
 
-        List<Device> deviceList = deviceRequestDtoList
+        List<Device> deviceList = requestDtoList
                 .stream()
                 .map(DeviceMapper::toModel)
                 .collect(Collectors.toList());
 
-        return deviceRepository.saveAll(deviceList)
+        return repository.saveAll(deviceList)
                 .stream()
                 .map(item -> {
                     DeviceResponseDto deviceResponseDto = DeviceMapper.toDto(item);

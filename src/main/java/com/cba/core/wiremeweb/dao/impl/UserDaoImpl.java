@@ -1,16 +1,16 @@
 package com.cba.core.wiremeweb.dao.impl;
 
-import com.cba.core.wiremeweb.dao.UserDao;
+import com.cba.core.wiremeweb.dao.GenericDao;
 import com.cba.core.wiremeweb.dto.UserRequestDto;
 import com.cba.core.wiremeweb.dto.UserResponseDto;
 import com.cba.core.wiremeweb.exception.NotFoundException;
-import com.cba.core.wiremeweb.exception.RecordInUseException;
 import com.cba.core.wiremeweb.mapper.UserMapper;
 import com.cba.core.wiremeweb.model.GlobalAuditEntry;
 import com.cba.core.wiremeweb.model.Status;
 import com.cba.core.wiremeweb.model.User;
 import com.cba.core.wiremeweb.repository.GlobalAuditEntryRepository;
 import com.cba.core.wiremeweb.repository.UserRepository;
+import com.cba.core.wiremeweb.repository.specification.UserSpecification;
 import com.cba.core.wiremeweb.util.UserOperationEnum;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
@@ -20,10 +20,10 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
-import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Component;
 
 import java.util.HashMap;
@@ -34,9 +34,9 @@ import java.util.stream.Collectors;
 @Component
 @Transactional
 @RequiredArgsConstructor
-public class UserDaoImpl implements UserDao {
+public class UserDaoImpl implements GenericDao<UserResponseDto, UserRequestDto> {
 
-    private final UserRepository userRepository;
+    private final UserRepository repository;
     private final GlobalAuditEntryRepository globalAuditEntryRepository;
     private final HttpServletRequest request;
     @Value("${application.resource.users}")
@@ -47,7 +47,7 @@ public class UserDaoImpl implements UserDao {
     public Page<UserResponseDto> findAll(int page, int pageSize) throws Exception {
         Pageable pageable = PageRequest.of(page, pageSize);
 
-        Page<User> usersPage = userRepository.findAll(pageable);
+        Page<User> usersPage = repository.findAll(pageable);
         if (usersPage.isEmpty()) {
             throw new NotFoundException("No Users found");
         }
@@ -57,7 +57,7 @@ public class UserDaoImpl implements UserDao {
     @Override
     @Cacheable("users")
     public List<UserResponseDto> findAll() throws Exception {
-        List<User> userList = userRepository.findAll();
+        List<User> userList = repository.findAll();
         if (userList.isEmpty()) {
             throw new NotFoundException("No Users found");
         }
@@ -68,9 +68,11 @@ public class UserDaoImpl implements UserDao {
     }
 
     @Override
-    public Page<UserResponseDto> findByUserNameLike(String userName, int page, int pageSize) throws Exception {
+    public Page<UserResponseDto> findBySearchParamLike(List<Map<String, String>> searchParamList, int page, int pageSize) throws Exception {
         Pageable pageable = PageRequest.of(page, pageSize);
-        Page<User> usersPage = userRepository.findByUserNameLike("%" + userName + "%", pageable);
+        Specification<User> spec = UserSpecification.userNameLike(searchParamList.get(0).get("userName"));
+        Page<User> usersPage = repository.findAll(spec, pageable);
+
         if (usersPage.isEmpty()) {
             throw new NotFoundException("No Users found");
         }
@@ -79,7 +81,7 @@ public class UserDaoImpl implements UserDao {
 
     @Override
     public UserResponseDto findById(int id) throws Exception {
-        User user = userRepository.findById(id).orElseThrow(() -> new NotFoundException("User not found"));
+        User user = repository.findById(id).orElseThrow(() -> new NotFoundException("User not found"));
         return UserMapper.toDto(user);
     }
 
@@ -88,20 +90,16 @@ public class UserDaoImpl implements UserDao {
     public UserResponseDto deleteById(int id) throws Exception {
         try {
             ObjectMapper objectMapper = new ObjectMapper();
-            User user = userRepository.findById(id).orElseThrow(() -> new NotFoundException("User not found"));
+            User user = repository.findById(id).orElseThrow(() -> new NotFoundException("User not found"));
             UserResponseDto userResponseDto = UserMapper.toDto(user);
 
-            userRepository.deleteById(id);
+            repository.deleteById(id);
             globalAuditEntryRepository.save(new GlobalAuditEntry(resource, UserOperationEnum.DELETE.getValue(),
                     id, objectMapper.writeValueAsString(userResponseDto), null,
                     request.getRemoteAddr()));
 
             return userResponseDto;
 
-        } catch (NotFoundException nf) {
-            throw nf;
-        } catch (DataIntegrityViolationException e) {
-            throw new RecordInUseException("User is in use");
         } catch (Exception rr) {
             throw rr;
         }
@@ -109,18 +107,18 @@ public class UserDaoImpl implements UserDao {
 
     @Override
     @CacheEvict(value = "users", allEntries = true)
-    public void deleteByIdList(List<Integer> userList) throws Exception {
+    public void deleteByIdList(List<Integer> idList) throws Exception {
         try {
             ObjectMapper objectMapper = new ObjectMapper();
             String remoteAdr = request.getRemoteAddr();
 
-            userList.stream()
-                    .map((id) -> userRepository.findById(id).orElseThrow(() -> new NotFoundException("User not found")))
+            idList.stream()
+                    .map((id) -> repository.findById(id).orElseThrow(() -> new NotFoundException("User not found")))
                     .collect(Collectors.toList());
 
-            userRepository.deleteAllByIdInBatch(userList);
+            repository.deleteAllByIdInBatch(idList);
 
-            userList.stream()
+            idList.stream()
                     .forEach(item -> {
                         ObjectNode objectNode = objectMapper.createObjectNode();
                         objectNode.put("id", item);
@@ -132,10 +130,6 @@ public class UserDaoImpl implements UserDao {
                             throw new RuntimeException("Exception occurred for Auditing: ");// only unchecked exception can be passed
                         }
                     });
-        } catch (NotFoundException nf) {
-            throw nf;
-        } catch (DataIntegrityViolationException e) {
-            throw new RecordInUseException("User is in use");
         } catch (Exception ee) {
             ee.printStackTrace();
             throw ee;
@@ -144,7 +138,7 @@ public class UserDaoImpl implements UserDao {
 
     @Override
     @CacheEvict(value = "users", allEntries = true)
-    public UserResponseDto updateById(int id, UserRequestDto userRequestDto) throws Exception {
+    public UserResponseDto updateById(int id, UserRequestDto requestDto) throws Exception {
 
         ObjectMapper objectMapper = new ObjectMapper();
         String remoteAdr = request.getRemoteAddr();
@@ -152,46 +146,46 @@ public class UserDaoImpl implements UserDao {
         Map<String, Object> oldDataMap = new HashMap<>();
         Map<String, Object> newDataMap = new HashMap<>();
 
-        User toBeUpdated = userRepository.findById(id).orElseThrow(() -> new NotFoundException("User not found"));
+        User toBeUpdated = repository.findById(id).orElseThrow(() -> new NotFoundException("User not found"));
 
-        if (!toBeUpdated.getName().equals(userRequestDto.getName())) {
+        if (!toBeUpdated.getName().equals(requestDto.getName())) {
             updateRequired = true;
             oldDataMap.put("name", toBeUpdated.getName());
-            newDataMap.put("name", userRequestDto.getName());
+            newDataMap.put("name", requestDto.getName());
 
-            toBeUpdated.setName(userRequestDto.getName());
+            toBeUpdated.setName(requestDto.getName());
         }
-        if (!toBeUpdated.getUserName().equals(userRequestDto.getUserName())) {
+        if (!toBeUpdated.getUserName().equals(requestDto.getUserName())) {
             updateRequired = true;
             oldDataMap.put("userName", toBeUpdated.getUserName());
-            newDataMap.put("userName", userRequestDto.getUserName());
+            newDataMap.put("userName", requestDto.getUserName());
 
-            toBeUpdated.setUserName(userRequestDto.getUserName());
+            toBeUpdated.setUserName(requestDto.getUserName());
         }
-        if (!toBeUpdated.getContactNo().equals(userRequestDto.getContactNo())) {
+        if (!toBeUpdated.getContactNo().equals(requestDto.getContactNo())) {
             updateRequired = true;
             oldDataMap.put("contactNo", toBeUpdated.getContactNo());
-            newDataMap.put("contactNo", userRequestDto.getContactNo());
+            newDataMap.put("contactNo", requestDto.getContactNo());
 
-            toBeUpdated.setContactNo(userRequestDto.getContactNo());
+            toBeUpdated.setContactNo(requestDto.getContactNo());
         }
-        if (!toBeUpdated.getEmail().equals(userRequestDto.getEmail())) {
+        if (!toBeUpdated.getEmail().equals(requestDto.getEmail())) {
             updateRequired = true;
             oldDataMap.put("email", toBeUpdated.getEmail());
-            newDataMap.put("email", userRequestDto.getEmail());
+            newDataMap.put("email", requestDto.getEmail());
 
-            toBeUpdated.setEmail(userRequestDto.getEmail());
+            toBeUpdated.setEmail(requestDto.getEmail());
         }
-        if (!toBeUpdated.getStatus().getStatusCode().equals(userRequestDto.getStatus())) {
+        if (!toBeUpdated.getStatus().getStatusCode().equals(requestDto.getStatus())) {
             updateRequired = true;
             oldDataMap.put("status", toBeUpdated.getStatus().getStatusCode());
-            newDataMap.put("status", userRequestDto.getStatus());
+            newDataMap.put("status", requestDto.getStatus());
 
-            toBeUpdated.setStatus(new Status(userRequestDto.getStatus()));
+            toBeUpdated.setStatus(new Status(requestDto.getStatus()));
         }
         if (updateRequired) {
 
-            userRepository.saveAndFlush(toBeUpdated);
+            repository.saveAndFlush(toBeUpdated);
             globalAuditEntryRepository.save(new GlobalAuditEntry(resource, UserOperationEnum.UPDATE.getValue(),
                     id, objectMapper.writeValueAsString(oldDataMap), objectMapper.writeValueAsString(newDataMap),
                     remoteAdr));
@@ -205,14 +199,14 @@ public class UserDaoImpl implements UserDao {
 
     @Override
     @CacheEvict(value = "users", allEntries = true)
-    public UserResponseDto create(UserRequestDto userRequestDto) throws Exception {
+    public UserResponseDto create(UserRequestDto requestDto) throws Exception {
         ObjectMapper objectMapper = new ObjectMapper();
         String remoteAdr = request.getRemoteAddr();
 
 
-        User userToInsert = UserMapper.toModel(userRequestDto);
+        User userToInsert = UserMapper.toModel(requestDto);
 
-        User savedUser = userRepository.save(userToInsert);
+        User savedUser = repository.save(userToInsert);
         UserResponseDto userResponseDto = UserMapper.toDto(savedUser);
         globalAuditEntryRepository.save(new GlobalAuditEntry(resource, UserOperationEnum.CREATE.getValue(),
                 savedUser.getId(), null, objectMapper.writeValueAsString(userResponseDto),
@@ -223,17 +217,17 @@ public class UserDaoImpl implements UserDao {
 
     @Override
     @CacheEvict(value = "users", allEntries = true)
-    public List<UserResponseDto> createBulk(List<UserRequestDto> userRequestDtoList) throws Exception {
+    public List<UserResponseDto> createBulk(List<UserRequestDto> requestDtoList) throws Exception {
 
         ObjectMapper objectMapper = new ObjectMapper();
         String remoteAdr = request.getRemoteAddr();
 
-        List<User> userList = userRequestDtoList
+        List<User> userList = requestDtoList
                 .stream()
                 .map(UserMapper::toModel)
                 .collect(Collectors.toList());
 
-        return userRepository.saveAll(userList)
+        return repository.saveAll(userList)
                 .stream()
                 .map(item -> {
                     UserResponseDto userResponseDto = UserMapper.toDto(item);

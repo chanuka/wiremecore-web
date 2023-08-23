@@ -50,10 +50,6 @@ public class User implements java.io.Serializable {
     private Set<UserRole> userRolesForUserId = new HashSet<UserRole>(0);
     private Set<OnetimePassword> onetimePasswords = new HashSet<OnetimePassword>(0);
     private Set<Permission> permissionsForCreatedBy = new HashSet<Permission>(0);
-    private Set<Terminal> terminalsForModifiedBy = new HashSet<Terminal>(0);
-    private Set<Device> devicesForCreatedBy = new HashSet<Device>(0);
-    private Set<Terminal> terminalsForCreatedBy = new HashSet<Terminal>(0);
-    private Set<Device> devicesForModifiedBy = new HashSet<Device>(0);
     private Set<Merchant> merchantsForCreatedBy = new HashSet<Merchant>(0);
     private Set<Merchant> merchantsForModifiedBy = new HashSet<Merchant>(0);
     private Set<UserConfig> userConfigs = new HashSet<UserConfig>(0);
@@ -73,7 +69,7 @@ public class User implements java.io.Serializable {
         this.updatedAt = updatedAt;
     }
 
-    public User(Device device, Merchant merchant, MerchantCustomer merchantCustomer, Status status, UserType userType, String name, String userName, String password, String email, String contactNo, Date lastLoginTime, int loginAttempt, String sessionId, int createdBy, Integer modifiedBy, Date createdAt, Date updatedAt, Set<Permission> permissionsForModifiedBy, Set<UserRole> userRolesForCreatedBy, Set<DeviceConfig> deviceConfigsForModifiedBy, Set<TokenRefresh> refreshTokens, Set<DeviceConfig> deviceConfigsForCreatedBy, Set<UserRole> userRolesForUserId, Set<OnetimePassword> onetimePasswords, Set<Permission> permissionsForCreatedBy, Set<Terminal> terminalsForModifiedBy, Set<Device> devicesForCreatedBy, Set<Terminal> terminalsForCreatedBy, Set<Device> devicesForModifiedBy, Set<Merchant> merchantsForCreatedBy, Set<Merchant> merchantsForModifiedBy, Set<UserConfig> userConfigs, Set<UserRole> userRolesForModifiedBy) {
+    public User(Device device, Merchant merchant, MerchantCustomer merchantCustomer, Status status, UserType userType, String name, String userName, String password, String email, String contactNo, Date lastLoginTime, int loginAttempt, String sessionId, int createdBy, Integer modifiedBy, Date createdAt, Date updatedAt, Set<Permission> permissionsForModifiedBy, Set<UserRole> userRolesForCreatedBy, Set<DeviceConfig> deviceConfigsForModifiedBy, Set<TokenRefresh> refreshTokens, Set<DeviceConfig> deviceConfigsForCreatedBy, Set<UserRole> userRolesForUserId, Set<OnetimePassword> onetimePasswords, Set<Permission> permissionsForCreatedBy, Set<Merchant> merchantsForCreatedBy, Set<Merchant> merchantsForModifiedBy, Set<UserConfig> userConfigs, Set<UserRole> userRolesForModifiedBy) {
         this.device = device;
         this.merchant = merchant;
         this.merchantCustomer = merchantCustomer;
@@ -99,10 +95,6 @@ public class User implements java.io.Serializable {
         this.userRolesForUserId = userRolesForUserId;
         this.onetimePasswords = onetimePasswords;
         this.permissionsForCreatedBy = permissionsForCreatedBy;
-        this.terminalsForModifiedBy = terminalsForModifiedBy;
-        this.devicesForCreatedBy = devicesForCreatedBy;
-        this.terminalsForCreatedBy = terminalsForCreatedBy;
-        this.devicesForModifiedBy = devicesForModifiedBy;
         this.merchantsForCreatedBy = merchantsForCreatedBy;
         this.merchantsForModifiedBy = merchantsForModifiedBy;
         this.userConfigs = userConfigs;
@@ -359,42 +351,6 @@ public class User implements java.io.Serializable {
 
     public void setPermissionsForCreatedBy(Set<Permission> permissionsForCreatedBy) {
         this.permissionsForCreatedBy = permissionsForCreatedBy;
-    }
-
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "userByModifiedBy")
-    public Set<Terminal> getTerminalsForModifiedBy() {
-        return this.terminalsForModifiedBy;
-    }
-
-    public void setTerminalsForModifiedBy(Set<Terminal> terminalsForModifiedBy) {
-        this.terminalsForModifiedBy = terminalsForModifiedBy;
-    }
-
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "userByCreatedBy")
-    public Set<Device> getDevicesForCreatedBy() {
-        return this.devicesForCreatedBy;
-    }
-
-    public void setDevicesForCreatedBy(Set<Device> devicesForCreatedBy) {
-        this.devicesForCreatedBy = devicesForCreatedBy;
-    }
-
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "userByCreatedBy")
-    public Set<Terminal> getTerminalsForCreatedBy() {
-        return this.terminalsForCreatedBy;
-    }
-
-    public void setTerminalsForCreatedBy(Set<Terminal> terminalsForCreatedBy) {
-        this.terminalsForCreatedBy = terminalsForCreatedBy;
-    }
-
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "userByModifiedBy")
-    public Set<Device> getDevicesForModifiedBy() {
-        return this.devicesForModifiedBy;
-    }
-
-    public void setDevicesForModifiedBy(Set<Device> devicesForModifiedBy) {
-        this.devicesForModifiedBy = devicesForModifiedBy;
     }
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "userByCreatedBy")

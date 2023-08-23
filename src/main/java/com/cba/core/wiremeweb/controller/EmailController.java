@@ -1,7 +1,6 @@
 package com.cba.core.wiremeweb.controller;
 
 import com.cba.core.wiremeweb.dto.EmailRequestDto;
-import com.cba.core.wiremeweb.exception.InternalServerError;
 import com.cba.core.wiremeweb.service.EmailService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -21,7 +20,7 @@ public class EmailController {
     private final EmailService emailService;
 
     @PostMapping("/devices/email")
-    public ResponseEntity<String> sendEmail(@RequestBody EmailRequestDto emailRequestDto) {
+    public ResponseEntity<String> sendEmail(@RequestBody EmailRequestDto emailRequestDto) throws Exception {
         try {
             Map<String, Object> model = new HashMap<>();
             model.put("name", "Chanuka !");
@@ -35,7 +34,7 @@ public class EmailController {
 
         } catch (Exception e) {
             e.printStackTrace();
-            throw new InternalServerError("Internal Server Error has Occurred");
+            throw e;
         }
     }
 }

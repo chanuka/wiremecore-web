@@ -23,7 +23,6 @@ public class RefreshTokenController implements RefreshTokenResource {
     private final JwtUtils jwtUtils;
     private final JwtEncoder encoder;
 
-
     @Override
     public ResponseEntity<?> refreshToken(TokenRefreshRequestDto request) throws Exception {
 

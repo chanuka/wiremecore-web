@@ -12,15 +12,4 @@ public class HomeController {
     public String home() {
         return "Hello, World!";
     }
-
-    @GetMapping("/merchants")
-    public String user() {
-        return "Hello, User merchants!";
-    }
-
-//    @GetMapping("/devices")
-//    public String admin() {
-//        return "Hello, Admin devices!";
-//    }
-
 }

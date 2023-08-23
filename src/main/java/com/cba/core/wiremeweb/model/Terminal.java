@@ -3,6 +3,11 @@ package com.cba.core.wiremeweb.model;
 
 
 import jakarta.persistence.*;
+import org.springframework.data.annotation.CreatedBy;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedBy;
+import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.util.Date;
 import java.util.HashSet;
@@ -15,17 +20,22 @@ import java.util.Set;
 @Entity
 @Table(name = "terminal"
 )
+@EntityListeners(AuditingEntityListener.class) // enable entity level auditing for create,modified attributes
 public class Terminal implements java.io.Serializable {
 
 
     private Integer id;
     private Merchant merchant;
     private Status status;
-    private User userByModifiedBy;
-    private User userByCreatedBy;
+    @LastModifiedBy
+    private String userByModifiedBy;
+    @CreatedBy
+    private String userByCreatedBy;
     private String terminalId;
     private Integer deviceId;
+    @CreatedDate
     private Date createdAt;
+    @LastModifiedDate
     private Date updatedAt;
     private Set<SettlementInfo> settlementInfos = new HashSet<SettlementInfo>(0);
 
@@ -33,7 +43,7 @@ public class Terminal implements java.io.Serializable {
     }
 
 
-    public Terminal(Merchant merchant, Status status, User userByCreatedBy, String terminalId, Date createdAt, Date updatedAt) {
+    public Terminal(Merchant merchant, Status status, String userByCreatedBy, String terminalId, Date createdAt, Date updatedAt) {
         this.merchant = merchant;
         this.status = status;
         this.userByCreatedBy = userByCreatedBy;
@@ -42,7 +52,7 @@ public class Terminal implements java.io.Serializable {
         this.updatedAt = updatedAt;
     }
 
-    public Terminal(Merchant merchant, Status status, User userByModifiedBy, User userByCreatedBy, String terminalId, Integer deviceId, Date createdAt, Date updatedAt, Set<SettlementInfo> settlementInfos) {
+    public Terminal(Merchant merchant, Status status, String userByModifiedBy, String userByCreatedBy, String terminalId, Integer deviceId, Date createdAt, Date updatedAt, Set<SettlementInfo> settlementInfos) {
         this.merchant = merchant;
         this.status = status;
         this.userByModifiedBy = userByModifiedBy;
@@ -85,23 +95,21 @@ public class Terminal implements java.io.Serializable {
         this.status = status;
     }
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "modified_by")
-    public User getUserByModifiedBy() {
+    @Column(name = "modified_by", length = 45)
+    public String getUserByModifiedBy() {
         return this.userByModifiedBy;
     }
 
-    public void setUserByModifiedBy(User userByModifiedBy) {
+    public void setUserByModifiedBy(String userByModifiedBy) {
         this.userByModifiedBy = userByModifiedBy;
     }
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "created_by", nullable = false)
-    public User getUserByCreatedBy() {
+    @Column(name = "created_by", nullable = false, length = 45)
+    public String getUserByCreatedBy() {
         return this.userByCreatedBy;
     }
 
-    public void setUserByCreatedBy(User userByCreatedBy) {
+    public void setUserByCreatedBy(String userByCreatedBy) {
         this.userByCreatedBy = userByCreatedBy;
     }
 

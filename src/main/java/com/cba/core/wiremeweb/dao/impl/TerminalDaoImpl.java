@@ -1,16 +1,17 @@
 package com.cba.core.wiremeweb.dao.impl;
 
 import com.cba.core.wiremeweb.dao.GenericDao;
-import com.cba.core.wiremeweb.dto.RoleRequestDto;
-import com.cba.core.wiremeweb.dto.RoleResponseDto;
+import com.cba.core.wiremeweb.dto.TerminalRequestDto;
+import com.cba.core.wiremeweb.dto.TerminalResponseDto;
 import com.cba.core.wiremeweb.exception.NotFoundException;
-import com.cba.core.wiremeweb.mapper.RoleMapper;
+import com.cba.core.wiremeweb.mapper.TerminalMapper;
 import com.cba.core.wiremeweb.model.GlobalAuditEntry;
-import com.cba.core.wiremeweb.model.Role;
+import com.cba.core.wiremeweb.model.Merchant;
 import com.cba.core.wiremeweb.model.Status;
+import com.cba.core.wiremeweb.model.Terminal;
 import com.cba.core.wiremeweb.repository.GlobalAuditEntryRepository;
-import com.cba.core.wiremeweb.repository.RoleRepository;
-import com.cba.core.wiremeweb.repository.specification.RoleSpecification;
+import com.cba.core.wiremeweb.repository.TerminalRepository;
+import com.cba.core.wiremeweb.repository.specification.TerminalSpecification;
 import com.cba.core.wiremeweb.util.UserOperationEnum;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
@@ -34,73 +35,75 @@ import java.util.stream.Collectors;
 @Component
 @Transactional
 @RequiredArgsConstructor
-public class RoleDaoImpl implements GenericDao<RoleResponseDto, RoleRequestDto> {
+public class TerminalDaoImpl implements GenericDao<TerminalResponseDto, TerminalRequestDto> {
 
-    private final RoleRepository repository;
+    private final TerminalRepository repository;
     private final GlobalAuditEntryRepository globalAuditEntryRepository;
     private final HttpServletRequest request;
-    @Value("${application.resource.roles}")
+    @Value("${application.resource.terminals}")
     private String resource;
 
     @Override
-    @Cacheable("roles")
-    public Page<RoleResponseDto> findAll(int page, int pageSize) throws Exception {
-
+    @Cacheable("terminals")
+    public Page<TerminalResponseDto> findAll(int page, int pageSize) throws Exception {
         Pageable pageable = PageRequest.of(page, pageSize);
 
-        Page<Role> rolesPage = repository.findAll(pageable);
-        if (rolesPage.isEmpty()) {
-            throw new NotFoundException("No Roles found");
+        Page<Terminal> terminalsPage = repository.findAll(pageable);
+        if (terminalsPage.isEmpty()) {
+            throw new NotFoundException("No Terminals found");
         }
-        return rolesPage.map(RoleMapper::toDto);
+        return terminalsPage.map(TerminalMapper::toDto);
     }
 
     @Override
-    @Cacheable("roles")
-    public List<RoleResponseDto> findAll() throws Exception {
-        List<Role> roleList = repository.findAll();
-        if (roleList.isEmpty()) {
-            throw new NotFoundException("No Roles found");
+    @Cacheable("terminals")
+    public List<TerminalResponseDto> findAll() throws Exception {
+        List<Terminal> terminalList = repository.findAll();
+        if (terminalList.isEmpty()) {
+            throw new NotFoundException("No Terminals found");
         }
-        return roleList
+        return terminalList
                 .stream()
-                .map(RoleMapper::toDto)
+                .map(TerminalMapper::toDto)
                 .collect(Collectors.toList());
     }
 
     @Override
-    public Page<RoleResponseDto> findBySearchParamLike(List<Map<String, String>> searchParamList, int page, int pageSize) throws Exception {
+    public Page<TerminalResponseDto> findBySearchParamLike(List<Map<String, String>> searchParamList, int page, int pageSize) throws Exception {
 
         Pageable pageable = PageRequest.of(page, pageSize);
-        Specification<Role> spec = RoleSpecification.roleNameLike(searchParamList.get(0).get("roleName"));
-        Page<Role> rolesPage = repository.findAll(spec, pageable);
+        Specification<Terminal> spec = TerminalSpecification.
+                terminalIdLikeAndMerchantIdLike(searchParamList.get(0).get("terminalId"),
+                        searchParamList.get(0).get("merchantId"));
 
-        if (rolesPage.isEmpty()) {
-            throw new NotFoundException("No Roles found");
+        Page<Terminal> terminalsPage = repository.findAll(spec, pageable);
+
+        if (terminalsPage.isEmpty()) {
+            throw new NotFoundException("No Terminals found");
         }
-        return rolesPage.map(RoleMapper::toDto);
+        return terminalsPage.map(TerminalMapper::toDto);
     }
 
     @Override
-    public RoleResponseDto findById(int id) throws Exception {
-        Role role = repository.findById(id).orElseThrow(() -> new NotFoundException("Role not found"));
-        return RoleMapper.toDto(role);
+    public TerminalResponseDto findById(int id) throws Exception {
+        Terminal terminal = repository.findById(id).orElseThrow(() -> new NotFoundException("Terminal not found"));
+        return TerminalMapper.toDto(terminal);
     }
 
     @Override
-    @CacheEvict(value = "roles", allEntries = true)
-    public RoleResponseDto deleteById(int id) throws Exception {
+    @CacheEvict(value = "terminals", allEntries = true)
+    public TerminalResponseDto deleteById(int id) throws Exception {
         try {
             ObjectMapper objectMapper = new ObjectMapper();
-            Role role = repository.findById(id).orElseThrow(() -> new NotFoundException("Role not found"));
-            RoleResponseDto roleResponseDto = RoleMapper.toDto(role);
+            Terminal terminal = repository.findById(id).orElseThrow(() -> new NotFoundException("Terminal not found"));
+            TerminalResponseDto terminalResponseDto = TerminalMapper.toDto(terminal);
 
             repository.deleteById(id);
             globalAuditEntryRepository.save(new GlobalAuditEntry(resource, UserOperationEnum.DELETE.getValue(),
-                    id, objectMapper.writeValueAsString(roleResponseDto), null,
+                    id, objectMapper.writeValueAsString(terminalResponseDto), null,
                     request.getRemoteAddr()));
 
-            return roleResponseDto;
+            return terminalResponseDto;
 
         } catch (Exception rr) {
             throw rr;
@@ -108,14 +111,14 @@ public class RoleDaoImpl implements GenericDao<RoleResponseDto, RoleRequestDto> 
     }
 
     @Override
-    @CacheEvict(value = "roles", allEntries = true)
+    @CacheEvict(value = "terminals", allEntries = true)
     public void deleteByIdList(List<Integer> idList) throws Exception {
         try {
             ObjectMapper objectMapper = new ObjectMapper();
             String remoteAdr = request.getRemoteAddr();
 
             idList.stream()
-                    .map((id) -> repository.findById(id).orElseThrow(() -> new NotFoundException("Role not found")))
+                    .map((id) -> repository.findById(id).orElseThrow(() -> new NotFoundException("Terminal not found")))
                     .collect(Collectors.toList());
 
             repository.deleteAllByIdInBatch(idList);
@@ -139,8 +142,8 @@ public class RoleDaoImpl implements GenericDao<RoleResponseDto, RoleRequestDto> 
     }
 
     @Override
-    @CacheEvict(value = "roles", allEntries = true)
-    public RoleResponseDto updateById(int id, RoleRequestDto requestDto) throws Exception {
+    @CacheEvict(value = "terminals", allEntries = true)
+    public TerminalResponseDto updateById(int id, TerminalRequestDto requestDto) throws Exception {
 
         ObjectMapper objectMapper = new ObjectMapper();
         String remoteAdr = request.getRemoteAddr();
@@ -148,14 +151,28 @@ public class RoleDaoImpl implements GenericDao<RoleResponseDto, RoleRequestDto> 
         Map<String, Object> oldDataMap = new HashMap<>();
         Map<String, Object> newDataMap = new HashMap<>();
 
-        Role toBeUpdated = repository.findById(id).orElseThrow(() -> new NotFoundException("Role not found"));
+        Terminal toBeUpdated = repository.findById(id).orElseThrow(() -> new NotFoundException("Terminal not found"));
 
-        if (!toBeUpdated.getRoleName().equals(requestDto.getRoleName())) {
+        if (!toBeUpdated.getTerminalId().equals(requestDto.getTerminalId())) {
             updateRequired = true;
-            oldDataMap.put("roleName", toBeUpdated.getRoleName());
-            newDataMap.put("roleName", requestDto.getRoleName());
+            oldDataMap.put("terminalId", toBeUpdated.getTerminalId());
+            newDataMap.put("terminalId", requestDto.getTerminalId());
 
-            toBeUpdated.setRoleName(requestDto.getRoleName());
+            toBeUpdated.setTerminalId(requestDto.getTerminalId());
+        }
+        if (toBeUpdated.getMerchant().getId() != (requestDto.getMerchantId())) {
+            updateRequired = true;
+            oldDataMap.put("merchantId", toBeUpdated.getTerminalId());
+            newDataMap.put("merchantId", requestDto.getMerchantId());
+
+            toBeUpdated.setMerchant(new Merchant(requestDto.getMerchantId()));
+        }
+        if (toBeUpdated.getDeviceId() != (requestDto.getDeviceId())) {
+            updateRequired = true;
+            oldDataMap.put("deviceId", toBeUpdated.getDeviceId());
+            newDataMap.put("deviceId", requestDto.getDeviceId());
+
+            toBeUpdated.setDeviceId(requestDto.getDeviceId());
         }
         if (!toBeUpdated.getStatus().equals(requestDto.getStatus())) {
             updateRequired = true;
@@ -171,7 +188,7 @@ public class RoleDaoImpl implements GenericDao<RoleResponseDto, RoleRequestDto> 
                     id, objectMapper.writeValueAsString(oldDataMap), objectMapper.writeValueAsString(newDataMap),
                     remoteAdr));
 
-            return RoleMapper.toDto(toBeUpdated);
+            return TerminalMapper.toDto(toBeUpdated);
 
         } else {
             throw new NotFoundException("No Changes found");
@@ -179,48 +196,47 @@ public class RoleDaoImpl implements GenericDao<RoleResponseDto, RoleRequestDto> 
     }
 
     @Override
-    @CacheEvict(value = "roles", allEntries = true)
-    public RoleResponseDto create(RoleRequestDto requestDto) throws Exception {
+    @CacheEvict(value = "terminals", allEntries = true)
+    public TerminalResponseDto create(TerminalRequestDto requestDto) throws Exception {
 
         ObjectMapper objectMapper = new ObjectMapper();
         String remoteAdr = request.getRemoteAddr();
 
+        Terminal roleToInsert = TerminalMapper.toModel(requestDto);
 
-        Role roleToInsert = RoleMapper.toModel(requestDto);
-
-        Role savedRole = repository.save(roleToInsert);
-        RoleResponseDto roleResponseDto = RoleMapper.toDto(savedRole);
+        Terminal savedTerminal = repository.save(roleToInsert);
+        TerminalResponseDto terminalResponseDto = TerminalMapper.toDto(savedTerminal);
         globalAuditEntryRepository.save(new GlobalAuditEntry(resource, UserOperationEnum.CREATE.getValue(),
-                savedRole.getId(), null, objectMapper.writeValueAsString(roleResponseDto),
+                savedTerminal.getId(), null, objectMapper.writeValueAsString(terminalResponseDto),
                 remoteAdr));
 
-        return roleResponseDto;
+        return terminalResponseDto;
     }
 
     @Override
-    @CacheEvict(value = "roles", allEntries = true)
-    public List<RoleResponseDto> createBulk(List<RoleRequestDto> requestDtoList) throws Exception {
+    @CacheEvict(value = "terminals", allEntries = true)
+    public List<TerminalResponseDto> createBulk(List<TerminalRequestDto> requestDtoList) throws Exception {
 
         ObjectMapper objectMapper = new ObjectMapper();
         String remoteAdr = request.getRemoteAddr();
 
-        List<Role> roleList = requestDtoList
+        List<Terminal> roleList = requestDtoList
                 .stream()
-                .map(RoleMapper::toModel)
+                .map(TerminalMapper::toModel)
                 .collect(Collectors.toList());
 
         return repository.saveAll(roleList)
                 .stream()
                 .map(item -> {
-                    RoleResponseDto roleResponseDto = RoleMapper.toDto(item);
+                    TerminalResponseDto terminalResponseDto = TerminalMapper.toDto(item);
                     try {
                         globalAuditEntryRepository.save(new GlobalAuditEntry(resource, UserOperationEnum.CREATE.getValue(),
-                                item.getId(), null, objectMapper.writeValueAsString(roleResponseDto),
+                                item.getId(), null, objectMapper.writeValueAsString(terminalResponseDto),
                                 remoteAdr));
                     } catch (Exception e) {
                         throw new RuntimeException("Exception occurred in Auditing: ");// only unchecked exception can be passed
                     }
-                    return roleResponseDto;
+                    return terminalResponseDto;
                 })
                 .collect(Collectors.toList());
     }

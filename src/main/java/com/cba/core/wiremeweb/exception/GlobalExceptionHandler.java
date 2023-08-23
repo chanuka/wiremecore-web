@@ -1,6 +1,10 @@
 package com.cba.core.wiremeweb.exception;
 
 import com.cba.core.wiremeweb.dto.ExceptionResponseDto;
+import lombok.RequiredArgsConstructor;
+import org.springframework.context.MessageSource;
+import org.springframework.context.i18n.LocaleContextHolder;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
@@ -12,12 +16,17 @@ import org.springframework.web.context.request.WebRequest;
 
 import java.net.BindException;
 import java.time.LocalDateTime;
+import java.util.Locale;
 
 /**
  * This is the class handle all the exceptions other than JWT token level authentication exceptions
  */
 @RestControllerAdvice
+@RequiredArgsConstructor
 public class GlobalExceptionHandler {
+
+    private final MessageSource messageSource;
+
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<ExceptionResponseDto> handleValidationException(MethodArgumentNotValidException methodArgumentNotValidException,
                                                                           WebRequest request) {
@@ -42,24 +51,14 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(exceptionResponseDto, HttpStatus.BAD_REQUEST);
     }
 
-    @ExceptionHandler(RecordInUseException.class)
-    public ResponseEntity<ExceptionResponseDto> handleRecordInUseException(RecordInUseException recordInUseException,
+    @ExceptionHandler(DataIntegrityViolationException.class)
+    public ResponseEntity<ExceptionResponseDto> handleRecordInUseException(DataIntegrityViolationException recordInUseException,
                                                                            WebRequest request) {
         ExceptionResponseDto exceptionResponseDto = new ExceptionResponseDto(LocalDateTime.now(),
-                recordInUseException.getMessage(),
+                "Record In Use",
                 request.getDescription(false));
 
         return new ResponseEntity<>(exceptionResponseDto, HttpStatus.IM_USED);
-    }
-
-    @ExceptionHandler(InternalServerError.class)
-    public ResponseEntity<ExceptionResponseDto> handleInternalServerError(InternalServerError internalServerError,
-                                                                          WebRequest request) {
-        ExceptionResponseDto exceptionResponseDto = new ExceptionResponseDto(LocalDateTime.now(),
-                internalServerError.getMessage(),
-                request.getDescription(false));
-
-        return new ResponseEntity<>(exceptionResponseDto, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
     @ExceptionHandler(TokenRefreshException.class)
@@ -79,5 +78,17 @@ public class GlobalExceptionHandler {
                 ex.getMessage(),
                 request.getDescription(false));
         return new ResponseEntity<>(exceptionResponseDto, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<ExceptionResponseDto> handleAllOtherErrors(Exception exception,
+                                                                     WebRequest request) {
+        Locale currentLocale = LocaleContextHolder.getLocale();
+
+        ExceptionResponseDto exceptionResponseDto = new ExceptionResponseDto(LocalDateTime.now(),
+                messageSource.getMessage("GLOBAL_INTERNAL_SERVER_ERROR", null, currentLocale),
+                request.getDescription(false));
+
+        return new ResponseEntity<>(exceptionResponseDto, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 }

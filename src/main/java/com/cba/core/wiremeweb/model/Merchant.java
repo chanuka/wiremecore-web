@@ -38,6 +38,9 @@ public class Merchant implements java.io.Serializable {
     public Merchant() {
     }
 
+    public Merchant(Integer id) {
+        this.id = id;
+    }
 
     public Merchant(MerchantCustomer merchantCustomer, User userByCreatedBy, String name, String merchantId, String email, String province, String district, Date createdAt, Date updatedAt) {
         this.merchantCustomer = merchantCustomer;

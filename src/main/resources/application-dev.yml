@@ -10,7 +10,7 @@ spring:
     encoding: UTF-8
   jpa:
     hibernate:
-      ddl-auto: update
+      ddl-auto: validate
     properties:
       hibernate:
         jdbc:
@@ -49,6 +49,7 @@ application:
     devices: devices
     users: users
     roles: roles
+    terminals: terminals
 
 rsa:
   private-key: classpath:certs/private.pem

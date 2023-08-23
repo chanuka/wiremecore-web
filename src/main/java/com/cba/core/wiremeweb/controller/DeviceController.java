@@ -1,12 +1,9 @@
 package com.cba.core.wiremeweb.controller;
 
-import com.cba.core.wiremeweb.controller.resource.DeviceResource;
+import com.cba.core.wiremeweb.controller.resource.GenericResource;
 import com.cba.core.wiremeweb.dto.DeviceRequestDto;
 import com.cba.core.wiremeweb.dto.DeviceResponseDto;
-import com.cba.core.wiremeweb.exception.InternalServerError;
-import com.cba.core.wiremeweb.exception.NotFoundException;
-import com.cba.core.wiremeweb.exception.RecordInUseException;
-import com.cba.core.wiremeweb.service.DeviceService;
+import com.cba.core.wiremeweb.service.GenericService;
 import lombok.RequiredArgsConstructor;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
@@ -23,173 +20,145 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
+import org.springframework.web.bind.annotation.RequestMapping;
 
 import java.io.ByteArrayOutputStream;
-import java.io.IOException;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 
 @Component
 @RequiredArgsConstructor
-public class DeviceController implements DeviceResource {
+@RequestMapping("/${application.resource.devices}")
+public class DeviceController implements GenericResource<DeviceResponseDto, DeviceRequestDto> {
 
     private static final Logger logger = LoggerFactory.getLogger(DeviceController.class);
 
-    private final DeviceService deviceService;
+    private final GenericService<DeviceResponseDto, DeviceRequestDto> service;
     private final MessageSource messageSource;
 
 
     @Override
-    public ResponseEntity<List<DeviceResponseDto>> devices(int page, int pageSize) throws Exception {
+    public ResponseEntity<List<DeviceResponseDto>> getAllByPageWise(int page, int pageSize) throws Exception {
 
         Locale currentLocale = LocaleContextHolder.getLocale();
         logger.debug(messageSource.getMessage("DEVICE_GET_ALL_DEBUG", null, currentLocale));
         try {
-            Page<DeviceResponseDto> list = deviceService.findAll(page, pageSize);
-            return ResponseEntity.ok().body(list.getContent());
-        } catch (NotFoundException nf) {
-            logger.error(nf.getMessage());
-            throw nf;
+            Page<DeviceResponseDto> responseDtolist = service.findAll(page, pageSize);
+            return ResponseEntity.ok().body(responseDtolist.getContent());
         } catch (Exception e) {
             logger.error(e.getMessage());
-            throw new InternalServerError(messageSource.getMessage("GLOBAL_INTERNAL_SERVER_ERROR", null, currentLocale));
+            throw e;
         }
     }
 
     @Override
-    public ResponseEntity<DeviceResponseDto> getADevice(int id) throws Exception {
+    public ResponseEntity<DeviceResponseDto> getOne(int id) throws Exception {
 
         Locale currentLocale = LocaleContextHolder.getLocale();
         logger.debug(messageSource.getMessage("DEVICE_GET_ONE_DEBUG", null, currentLocale));
 
-        DeviceResponseDto device = null;
         try {
-            device = deviceService.findById(id);
-
-        } catch (NotFoundException nf) {
-            logger.error(nf.getMessage());
-            throw nf;
+            DeviceResponseDto responseDto = service.findById(id);
+            return ResponseEntity.ok().body(responseDto);
         } catch (Exception e) {
             logger.error(e.getMessage());
-            throw new InternalServerError(messageSource.getMessage("GLOBAL_INTERNAL_SERVER_ERROR", null, currentLocale));
+            throw e;
         }
-        return ResponseEntity.ok().body(device);
     }
 
     @Override
-    public ResponseEntity<List<DeviceResponseDto>> searchDevices(String serialNumber, int page, int pageSize) throws Exception {
+    public ResponseEntity<List<DeviceResponseDto>> searchAllByPageWise(List<Map<String, String>> searchParamList, int page, int pageSize) throws Exception {
 
         Locale currentLocale = LocaleContextHolder.getLocale();// works only when as local statement
         logger.debug(messageSource.getMessage("DEVICE_GET_SEARCH_DEBUG", null, currentLocale));
 
         try {
-            Page<DeviceResponseDto> deviceList = deviceService.findBySerialNoLike(serialNumber, page, pageSize);
-            return ResponseEntity.ok().body(deviceList.getContent());
-        } catch (NotFoundException nf) {
-            logger.error(nf.getMessage());
-            throw nf;
+            Page<DeviceResponseDto> responseDtolist = service.findBySearchParamLike(searchParamList, page, pageSize);
+            return ResponseEntity.ok().body(responseDtolist.getContent());
         } catch (Exception e) {
             logger.error(e.getMessage());
-            throw new InternalServerError(messageSource.getMessage("GLOBAL_INTERNAL_SERVER_ERROR", null, currentLocale));
+            throw e;
         }
 
     }
 
     @Override
-    public ResponseEntity<String> deleteADevice(int id) throws Exception {
+    public ResponseEntity<String> deleteOne(int id) throws Exception {
 
         Locale currentLocale = LocaleContextHolder.getLocale();// works only when as local statement
         logger.debug(messageSource.getMessage("DEVICE_DELETE_ONE_DEBUG", null, currentLocale));
 
         try {
-
-            DeviceResponseDto deviceResponseDto = deviceService.deleteById(id);
+            DeviceResponseDto responseDto = service.deleteById(id);
             return ResponseEntity.ok().body(messageSource.getMessage("DEVICE_DELETE_ONE_SUCCESS", null, currentLocale));
-
-        } catch (NotFoundException nf) {
-            logger.error(nf.getMessage());
-            throw nf;
-        } catch (RecordInUseException ru) {
-            logger.error(ru.getMessage());
-            throw ru;
         } catch (Exception e) {
             logger.error(e.getMessage());
-            throw new InternalServerError(messageSource.getMessage("GLOBAL_INTERNAL_SERVER_ERROR", null, currentLocale));
+            throw e;
         }
     }
 
     @Override
-    public ResponseEntity<DeviceResponseDto> updateADevice(int id, DeviceRequestDto deviceRequestDto) throws Exception {
+    public ResponseEntity<DeviceResponseDto> updateOne(int id, DeviceRequestDto requestDto) throws Exception {
 
         Locale currentLocale = LocaleContextHolder.getLocale();// works only when as local statement
         logger.debug(messageSource.getMessage("DEVICE_UPDATE_ONE_DEBUG", null, currentLocale));
         try {
-            DeviceResponseDto response = deviceService.updateById(id, deviceRequestDto);
-            return ResponseEntity.ok().body(response);
+            DeviceResponseDto responseDto = service.updateById(id, requestDto);
+            return ResponseEntity.ok().body(responseDto);
 
-        } catch (NotFoundException nf) {
-            logger.error(nf.getMessage());
-            throw nf;
         } catch (Exception e) {
             logger.error(e.getMessage());
-            throw new InternalServerError(messageSource.getMessage("GLOBAL_INTERNAL_SERVER_ERROR", null, currentLocale));
+            throw e;
         }
     }
 
     @Override
-    public ResponseEntity<DeviceResponseDto> createADevice(DeviceRequestDto deviceRequestDto) throws Exception {
+    public ResponseEntity<DeviceResponseDto> createOne(DeviceRequestDto requestDto) throws Exception {
 
         Locale currentLocale = LocaleContextHolder.getLocale();// works only when as local statement
         logger.debug(messageSource.getMessage("DEVICE_CREATE_ONE_DEBUG", null, currentLocale));
         try {
-
-            DeviceResponseDto device = deviceService.create(deviceRequestDto);
-            return ResponseEntity.ok().body(device);
-
+            DeviceResponseDto responseDto = service.create(requestDto);
+            return ResponseEntity.ok().body(responseDto);
         } catch (Exception e) {
             logger.error(e.getMessage());
-            throw new InternalServerError(messageSource.getMessage("GLOBAL_INTERNAL_SERVER_ERROR", null, currentLocale));
+            throw e;
         }
     }
 
     @Override
-    public ResponseEntity<String> createDevices(List<DeviceRequestDto> list) throws Exception {
+    public ResponseEntity<String> createBulk(List<DeviceRequestDto> requestDtoList) throws Exception {
 
         Locale currentLocale = LocaleContextHolder.getLocale();// works only when as local statement
         logger.debug(messageSource.getMessage("DEVICE_CREATE_BULK_DEBUG", null, currentLocale));
 
         try {
-            List<DeviceResponseDto> deviceList = deviceService.createBulk(list);
+            List<DeviceResponseDto> responseDtoList = service.createBulk(requestDtoList);
             return ResponseEntity.ok().body(messageSource.getMessage("DEVICE_CREATE_ALL_SUCCESS", null, currentLocale));
         } catch (Exception e) {
             logger.error(e.getMessage());
-            throw new InternalServerError(messageSource.getMessage("GLOBAL_INTERNAL_SERVER_ERROR", null, currentLocale));
+            throw e;
         }
     }
 
     @Override
-    public ResponseEntity<String> deleteDevices(List<Integer> deviceIdList) throws Exception {
+    public ResponseEntity<String> deleteBulkByIdList(List<Integer> idList) throws Exception {
 
         Locale currentLocale = LocaleContextHolder.getLocale();// works only when as local statement
         logger.debug(messageSource.getMessage("DEVICE_DELETE_BULK_DEBUG", null, currentLocale));
         try {
-            deviceService.deleteByIdList(deviceIdList);
+            service.deleteByIdList(idList);
             return ResponseEntity.ok().body(messageSource.getMessage("DEVICE_DELETE_ALL_SUCCESS", null, currentLocale));
-
-        } catch (NotFoundException nf) {
-            logger.error(nf.getMessage());
-            throw nf;
-        } catch (RecordInUseException ru) {
-            logger.error(ru.getMessage());
-            throw ru;
         } catch (Exception e) {
             logger.error(e.getMessage());
-            throw new InternalServerError(messageSource.getMessage("GLOBAL_INTERNAL_SERVER_ERROR", null, currentLocale));
+            throw e;
         }
     }
 
     @Override
-    public ResponseEntity<byte[]> downloadExcel() throws IOException {
+    public ResponseEntity<byte[]> downloadExcel() throws Exception {
+
         Locale currentLocale = LocaleContextHolder.getLocale();// works only when as local statement
         logger.debug(messageSource.getMessage("DEVICE_DOWNLOAD_EXCEL_DEBUG", null, currentLocale));
 
@@ -203,33 +172,33 @@ public class DeviceController implements DeviceResource {
                 Cell cell = headerRow.createCell(i);
                 cell.setCellValue(columnHeaders[i]);
             }
-            List<DeviceResponseDto> list = deviceService.findAll();
+            List<DeviceResponseDto> responseDtoist = service.findAll();
 
             int rowCount = 1;
 
-            for (DeviceResponseDto deviceResponseDto : list) {
+            for (DeviceResponseDto responseDto : responseDtoist) {
                 Row row = sheet.createRow(rowCount++);
                 int columnCount = 0;
 
                 Cell cell = row.createCell(columnCount++);
-                if (deviceResponseDto.getId() instanceof Integer) {
-                    cell.setCellValue((Integer) deviceResponseDto.getId());
+                if (responseDto.getId() instanceof Integer) {
+                    cell.setCellValue((Integer) responseDto.getId());
                 }
                 cell = row.createCell(columnCount++);
-                if (deviceResponseDto.getSerialNo() instanceof String) {
-                    cell.setCellValue((String) deviceResponseDto.getSerialNo());
+                if (responseDto.getSerialNo() instanceof String) {
+                    cell.setCellValue((String) responseDto.getSerialNo());
                 }
                 cell = row.createCell(columnCount++);
-                if (deviceResponseDto.getEmiNo() instanceof String) {
-                    cell.setCellValue((String) deviceResponseDto.getEmiNo());
+                if (responseDto.getEmiNo() instanceof String) {
+                    cell.setCellValue((String) responseDto.getEmiNo());
                 }
                 cell = row.createCell(columnCount++);
-                if (deviceResponseDto.getDeviceType() instanceof String) {
-                    cell.setCellValue((String) deviceResponseDto.getDeviceType());
+                if (responseDto.getDeviceType() instanceof String) {
+                    cell.setCellValue((String) responseDto.getDeviceType());
                 }
                 cell = row.createCell(columnCount++);
-                if (deviceResponseDto.getStatus() instanceof String) {
-                    cell.setCellValue((String) deviceResponseDto.getStatus());
+                if (responseDto.getStatus() instanceof String) {
+                    cell.setCellValue((String) responseDto.getStatus());
                 }
 
             }
@@ -251,7 +220,7 @@ public class DeviceController implements DeviceResource {
 
         } catch (Exception e) {
             logger.error(e.getMessage());
-            throw new InternalServerError(messageSource.getMessage("GLOBAL_INTERNAL_SERVER_ERROR", null, currentLocale));
+            throw e;
         }
     }
 
@@ -266,11 +235,11 @@ public class DeviceController implements DeviceResource {
             //set the PDF format
             headers.setContentType(MediaType.APPLICATION_PDF);
             headers.setContentDispositionFormData("filename", "device-details.pdf");
-            return new ResponseEntity<byte[]>(deviceService.exportReport(), headers, HttpStatus.OK);
+            return new ResponseEntity<byte[]>(service.exportReport(), headers, HttpStatus.OK);
 
         } catch (Exception e) {
             logger.error(e.getMessage());
-            throw new InternalServerError(messageSource.getMessage("GLOBAL_INTERNAL_SERVER_ERROR", null, currentLocale));
+            throw e;
         }
 
     }

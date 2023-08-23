@@ -1,12 +1,9 @@
 package com.cba.core.wiremeweb.controller;
 
-import com.cba.core.wiremeweb.controller.resource.RoleResource;
+import com.cba.core.wiremeweb.controller.resource.GenericResource;
 import com.cba.core.wiremeweb.dto.RoleRequestDto;
 import com.cba.core.wiremeweb.dto.RoleResponseDto;
-import com.cba.core.wiremeweb.exception.InternalServerError;
-import com.cba.core.wiremeweb.exception.NotFoundException;
-import com.cba.core.wiremeweb.exception.RecordInUseException;
-import com.cba.core.wiremeweb.service.RoleService;
+import com.cba.core.wiremeweb.service.GenericService;
 import lombok.RequiredArgsConstructor;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
@@ -23,167 +20,138 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
+import org.springframework.web.bind.annotation.RequestMapping;
 
 import java.io.ByteArrayOutputStream;
-import java.io.IOException;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 
 @Component
 @RequiredArgsConstructor
-public class RoleController implements RoleResource {
+@RequestMapping("/${application.resource.roles}")
+public class RoleController implements GenericResource<RoleResponseDto, RoleRequestDto> {
 
-    private static final Logger logger = LoggerFactory.getLogger(DeviceController.class);
+    private static final Logger logger = LoggerFactory.getLogger(RoleController.class);
 
-    private final RoleService roleService;
+    private final GenericService<RoleResponseDto, RoleRequestDto> service;
     private final MessageSource messageSource;
 
     @Override
-    public ResponseEntity<List<RoleResponseDto>> roles(int page, int pageSize) throws Exception {
+    public ResponseEntity<List<RoleResponseDto>> getAllByPageWise(int page, int pageSize) throws Exception {
         Locale currentLocale = LocaleContextHolder.getLocale();
         logger.debug(messageSource.getMessage("ROLE_GET_ALL_DEBUG", null, currentLocale));
         try {
-            Page<RoleResponseDto> list = roleService.findAll(page, pageSize);
-            return ResponseEntity.ok().body(list.getContent());
-        } catch (NotFoundException nf) {
-            logger.error(nf.getMessage());
-            throw nf;
+            Page<RoleResponseDto> responseDtolist = service.findAll(page, pageSize);
+            return ResponseEntity.ok().body(responseDtolist.getContent());
         } catch (Exception e) {
             logger.error(e.getMessage());
-            throw new InternalServerError(messageSource.getMessage("GLOBAL_INTERNAL_SERVER_ERROR", null, currentLocale));
+            throw e;
         }
     }
 
     @Override
-    public ResponseEntity<RoleResponseDto> getARole(int id) throws Exception {
+    public ResponseEntity<RoleResponseDto> getOne(int id) throws Exception {
         Locale currentLocale = LocaleContextHolder.getLocale();
         logger.debug(messageSource.getMessage("ROLE_GET_ONE_DEBUG", null, currentLocale));
 
-        RoleResponseDto roleResponseDto = null;
         try {
-            roleResponseDto = roleService.findById(id);
-
-        } catch (NotFoundException nf) {
-            logger.error(nf.getMessage());
-            throw nf;
+            RoleResponseDto responseDto = service.findById(id);
+            return ResponseEntity.ok().body(responseDto);
         } catch (Exception e) {
             logger.error(e.getMessage());
-            throw new InternalServerError(messageSource.getMessage("GLOBAL_INTERNAL_SERVER_ERROR", null, currentLocale));
+            throw e;
         }
-        return ResponseEntity.ok().body(roleResponseDto);
     }
 
     @Override
-    public ResponseEntity<List<RoleResponseDto>> searchRoles(String roleName, int page, int pageSize) throws Exception {
+    public ResponseEntity<List<RoleResponseDto>> searchAllByPageWise(List<Map<String, String>> searchParamList, int page, int pageSize) throws Exception {
         Locale currentLocale = LocaleContextHolder.getLocale();// works only when as local statement
         logger.debug(messageSource.getMessage("ROLE_GET_SEARCH_DEBUG", null, currentLocale));
 
         try {
-            Page<RoleResponseDto> userList = roleService.findByRoleNameLike(roleName, page, pageSize);
-            return ResponseEntity.ok().body(userList.getContent());
-        } catch (NotFoundException nf) {
-            logger.error(nf.getMessage());
-            throw nf;
+            Page<RoleResponseDto> responseDtolist = service.findBySearchParamLike(searchParamList, page, pageSize);
+            return ResponseEntity.ok().body(responseDtolist.getContent());
         } catch (Exception e) {
             logger.error(e.getMessage());
-            throw new InternalServerError(messageSource.getMessage("GLOBAL_INTERNAL_SERVER_ERROR", null, currentLocale));
+            throw e;
         }
     }
 
     @Override
-    public ResponseEntity<String> deleteARole(int id) throws Exception {
+    public ResponseEntity<String> deleteOne(int id) throws Exception {
         Locale currentLocale = LocaleContextHolder.getLocale();// works only when as local statement
         logger.debug(messageSource.getMessage("ROLE_DELETE_ONE_DEBUG", null, currentLocale));
 
         try {
-
-            RoleResponseDto roleResponseDto = roleService.deleteById(id);
+            RoleResponseDto responseDto = service.deleteById(id);
             return ResponseEntity.ok().body(messageSource.getMessage("ROLE_DELETE_ONE_SUCCESS", null, currentLocale));
-
-        } catch (NotFoundException nf) {
-            logger.error(nf.getMessage());
-            throw nf;
-        } catch (RecordInUseException ru) {
-            logger.error(ru.getMessage());
-            throw ru;
         } catch (Exception e) {
             logger.error(e.getMessage());
-            throw new InternalServerError(messageSource.getMessage("GLOBAL_INTERNAL_SERVER_ERROR", null, currentLocale));
+            throw e;
         }
     }
 
     @Override
-    public ResponseEntity<RoleResponseDto> updateARole(int id, RoleRequestDto roleRequestDto) throws Exception {
+    public ResponseEntity<RoleResponseDto> updateOne(int id, RoleRequestDto requestDto) throws Exception {
 
         Locale currentLocale = LocaleContextHolder.getLocale();// works only when as local statement
         logger.debug(messageSource.getMessage("ROLE_UPDATE_ONE_DEBUG", null, currentLocale));
         try {
-            RoleResponseDto response = roleService.updateById(id, roleRequestDto);
+            RoleResponseDto response = service.updateById(id, requestDto);
             return ResponseEntity.ok().body(response);
 
-        } catch (NotFoundException nf) {
-            logger.error(nf.getMessage());
-            throw nf;
         } catch (Exception e) {
             logger.error(e.getMessage());
-            throw new InternalServerError(messageSource.getMessage("GLOBAL_INTERNAL_SERVER_ERROR", null, currentLocale));
+            throw e;
         }
     }
 
     @Override
-    public ResponseEntity<RoleResponseDto> createARole(RoleRequestDto roleRequestDto) throws Exception {
+    public ResponseEntity<RoleResponseDto> createOne(RoleRequestDto requestDto) throws Exception {
 
         Locale currentLocale = LocaleContextHolder.getLocale();// works only when as local statement
         logger.debug(messageSource.getMessage("ROLE_CREATE_ONE_DEBUG", null, currentLocale));
         try {
-
-            RoleResponseDto roleResponseDto = roleService.create(roleRequestDto);
-            return ResponseEntity.ok().body(roleResponseDto);
-
+            RoleResponseDto responseDto = service.create(requestDto);
+            return ResponseEntity.ok().body(responseDto);
         } catch (Exception e) {
             logger.error(e.getMessage());
-            throw new InternalServerError(messageSource.getMessage("GLOBAL_INTERNAL_SERVER_ERROR", null, currentLocale));
+            throw e;
         }
     }
 
     @Override
-    public ResponseEntity<String> createRoles(List<RoleRequestDto> list) throws Exception {
+    public ResponseEntity<String> createBulk(List<RoleRequestDto> requestDtoList) throws Exception {
 
         Locale currentLocale = LocaleContextHolder.getLocale();// works only when as local statement
         logger.debug(messageSource.getMessage("ROLE_CREATE_BULK_DEBUG", null, currentLocale));
 
         try {
-            List<RoleResponseDto> userList = roleService.createBulk(list);
+            List<RoleResponseDto> responseDtoList = service.createBulk(requestDtoList);
             return ResponseEntity.ok().body(messageSource.getMessage("ROLE_CREATE_ALL_SUCCESS", null, currentLocale));
         } catch (Exception e) {
             logger.error(e.getMessage());
-            throw new InternalServerError(messageSource.getMessage("GLOBAL_INTERNAL_SERVER_ERROR", null, currentLocale));
+            throw e;
         }
     }
 
     @Override
-    public ResponseEntity<String> deleteRoles(List<Integer> roleIdList) throws Exception {
+    public ResponseEntity<String> deleteBulkByIdList(List<Integer> idList) throws Exception {
 
         Locale currentLocale = LocaleContextHolder.getLocale();// works only when as local statement
         logger.debug(messageSource.getMessage("ROLE_DELETE_BULK_DEBUG", null, currentLocale));
         try {
-            roleService.deleteByIdList(roleIdList);
+            service.deleteByIdList(idList);
             return ResponseEntity.ok().body(messageSource.getMessage("ROLE_DELETE_ALL_SUCCESS", null, currentLocale));
-
-        } catch (NotFoundException nf) {
-            logger.error(nf.getMessage());
-            throw nf;
-        } catch (RecordInUseException ru) {
-            logger.error(ru.getMessage());
-            throw ru;
         } catch (Exception e) {
             logger.error(e.getMessage());
-            throw new InternalServerError(messageSource.getMessage("GLOBAL_INTERNAL_SERVER_ERROR", null, currentLocale));
+            throw e;
         }
     }
 
     @Override
-    public ResponseEntity<byte[]> downloadExcel() throws IOException {
+    public ResponseEntity<byte[]> downloadExcel() throws Exception {
 
         Locale currentLocale = LocaleContextHolder.getLocale();// works only when as local statement
         logger.debug(messageSource.getMessage("ROLE_DOWNLOAD_EXCEL_DEBUG", null, currentLocale));
@@ -198,25 +166,25 @@ public class RoleController implements RoleResource {
                 Cell cell = headerRow.createCell(i);
                 cell.setCellValue(columnHeaders[i]);
             }
-            List<RoleResponseDto> list = roleService.findAll();
+            List<RoleResponseDto> responseDtoList = service.findAll();
 
             int rowCount = 1;
 
-            for (RoleResponseDto roleResponseDto : list) {
+            for (RoleResponseDto responseDto : responseDtoList) {
                 Row row = sheet.createRow(rowCount++);
                 int columnCount = 0;
 
                 Cell cell = row.createCell(columnCount++);
-                if (roleResponseDto.getId() instanceof Integer) {
-                    cell.setCellValue((Integer) roleResponseDto.getId());
+                if (responseDto.getId() instanceof Integer) {
+                    cell.setCellValue((Integer) responseDto.getId());
                 }
                 cell = row.createCell(columnCount++);
-                if (roleResponseDto.getRoleName() instanceof String) {
-                    cell.setCellValue((String) roleResponseDto.getRoleName());
+                if (responseDto.getRoleName() instanceof String) {
+                    cell.setCellValue((String) responseDto.getRoleName());
                 }
                 cell = row.createCell(columnCount++);
-                if (roleResponseDto.getStatus() instanceof String) {
-                    cell.setCellValue((String) roleResponseDto.getStatus());
+                if (responseDto.getStatus() instanceof String) {
+                    cell.setCellValue((String) responseDto.getStatus());
                 }
 
             }
@@ -238,7 +206,7 @@ public class RoleController implements RoleResource {
 
         } catch (Exception e) {
             logger.error(e.getMessage());
-            throw new InternalServerError(messageSource.getMessage("GLOBAL_INTERNAL_SERVER_ERROR", null, currentLocale));
+            throw e;
         }
     }
 
@@ -253,11 +221,11 @@ public class RoleController implements RoleResource {
             //set the PDF format
             headers.setContentType(MediaType.APPLICATION_PDF);
             headers.setContentDispositionFormData("filename", "role-details.pdf");
-            return new ResponseEntity<byte[]>(roleService.exportReport(), headers, HttpStatus.OK);
+            return new ResponseEntity<byte[]>(service.exportReport(), headers, HttpStatus.OK);
 
         } catch (Exception e) {
             logger.error(e.getMessage());
-            throw new InternalServerError(messageSource.getMessage("GLOBAL_INTERNAL_SERVER_ERROR", null, currentLocale));
+            throw e;
         }
     }
 }

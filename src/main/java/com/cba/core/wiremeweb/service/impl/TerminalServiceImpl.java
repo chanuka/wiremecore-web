@@ -1,8 +1,8 @@
 package com.cba.core.wiremeweb.service.impl;
 
 import com.cba.core.wiremeweb.dao.GenericDao;
-import com.cba.core.wiremeweb.dto.RoleRequestDto;
-import com.cba.core.wiremeweb.dto.RoleResponseDto;
+import com.cba.core.wiremeweb.dto.TerminalRequestDto;
+import com.cba.core.wiremeweb.dto.TerminalResponseDto;
 import com.cba.core.wiremeweb.service.GenericService;
 import com.cba.core.wiremeweb.util.UserBean;
 import lombok.RequiredArgsConstructor;
@@ -19,33 +19,33 @@ import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
-public class RoleServiceImpl implements GenericService<RoleResponseDto,RoleRequestDto> {
+public class TerminalServiceImpl implements GenericService<TerminalResponseDto, TerminalRequestDto> {
 
-    private final GenericDao<RoleResponseDto,RoleRequestDto> dao;
+    private final GenericDao<TerminalResponseDto, TerminalRequestDto> dao;
     private final UserBean userBean;
 
     @Override
-    public Page<RoleResponseDto> findAll(int page, int pageSize) throws Exception {
+    public Page<TerminalResponseDto> findAll(int page, int pageSize) throws Exception {
         return dao.findAll(page, pageSize);
     }
 
     @Override
-    public List<RoleResponseDto> findAll() throws Exception {
+    public List<TerminalResponseDto> findAll() throws Exception {
         return dao.findAll();
     }
 
     @Override
-    public Page<RoleResponseDto> findBySearchParamLike(List<Map<String, String>> searchParamList, int page, int pageSize) throws Exception {
+    public Page<TerminalResponseDto> findBySearchParamLike(List<Map<String, String>> searchParamList, int page, int pageSize) throws Exception {
         return dao.findBySearchParamLike(searchParamList, page, pageSize);
     }
 
     @Override
-    public RoleResponseDto findById(int id) throws Exception {
+    public TerminalResponseDto findById(int id) throws Exception {
         return dao.findById(id);
     }
 
     @Override
-    public RoleResponseDto deleteById(int id) throws Exception {
+    public TerminalResponseDto deleteById(int id) throws Exception {
         return dao.deleteById(id);
     }
 
@@ -56,28 +56,28 @@ public class RoleServiceImpl implements GenericService<RoleResponseDto,RoleReque
     }
 
     @Override
-    public RoleResponseDto updateById(int id, RoleRequestDto requestDto) throws Exception {
+    public TerminalResponseDto updateById(int id, TerminalRequestDto requestDto) throws Exception {
         return dao.updateById(id, requestDto);
     }
 
     @Override
-    public RoleResponseDto create(RoleRequestDto requestDto) throws Exception {
+    public TerminalResponseDto create(TerminalRequestDto requestDto) throws Exception {
         return dao.create(requestDto);
     }
 
     @Override
-    public List<RoleResponseDto> createBulk(List<RoleRequestDto> requestDtoList) throws Exception {
+    public List<TerminalResponseDto> createBulk(List<TerminalRequestDto> requestDtoList) throws Exception {
         return dao.createBulk(requestDtoList);
     }
 
     @Override
     public byte[] exportReport() throws Exception {
 
-        List<RoleResponseDto> ResponseDtoList = dao.findAll();
+        List<TerminalResponseDto> responseDtoList = dao.findAll();
         //load file and compile it
-        File file = ResourceUtils.getFile("classpath:report/role.jrxml");
+        File file = ResourceUtils.getFile("classpath:report/terminal.jrxml");
         JasperReport jasperReport = JasperCompileManager.compileReport(file.getAbsolutePath());
-        JRBeanCollectionDataSource dataSource = new JRBeanCollectionDataSource(ResponseDtoList);
+        JRBeanCollectionDataSource dataSource = new JRBeanCollectionDataSource(responseDtoList);
         Map<String, Object> parameters = new HashMap<>();
         parameters.put("createdBy", "Created By :" + userBean.getUsername()); // username can be extracted once the url is accessible
 

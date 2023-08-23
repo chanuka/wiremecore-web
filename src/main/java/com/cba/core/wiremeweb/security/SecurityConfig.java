@@ -75,14 +75,11 @@ public class SecurityConfig {
                 .addLogoutHandler(customLogoutHandler)
                 .and()
                 .authorizeHttpRequests(authorize -> {
-//                    authorize.requestMatchers("/**").permitAll();
                     authorize.requestMatchers("/").permitAll();
                     authorize.requestMatchers("/refreshtoken").permitAll();
                     authorize.requestMatchers("/swagger-doc/**").permitAll();
                     authorize.requestMatchers("/swagger-ui/**", "/swagger-ui.html", "/v3/api-docs/**").permitAll();
-                    authorize.requestMatchers("/actuator/**").permitAll();
-//                    authorize.requestMatchers("/actuator/**").hasRole("Report Viewer"); // need to whitelist at AuthTokenVerifyFilter
-                    authorize.requestMatchers("/merchants").hasRole("Report Viewer")
+                    authorize.requestMatchers("/actuator/**").permitAll()
                             .anyRequest().authenticated();
                 });
 //                .httpBasic();
