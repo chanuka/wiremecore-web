@@ -50,6 +50,7 @@ application:
     users: users
     roles: roles
     terminals: terminals
+    partners: partners
 
 rsa:
   private-key: classpath:certs/private.pem

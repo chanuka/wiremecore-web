@@ -76,7 +76,7 @@ public class Terminal implements java.io.Serializable {
     }
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "merchantid", nullable = false)
+    @JoinColumn(name = "merchant_id", nullable = false)
     public Merchant getMerchant() {
         return this.merchant;
     }

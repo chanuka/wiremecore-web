@@ -17,7 +17,7 @@ public interface GenericDao<T, K> {
 
     T deleteById(int id) throws Exception;
 
-    void deleteByIdList(List<Integer> list) throws Exception;
+    void deleteByIdList(List<Integer> idList) throws Exception;
 
     T updateById(int id, K requestDto) throws Exception;
 

@@ -8,11 +8,12 @@ import org.springframework.data.jpa.domain.Specification;
 
 public interface TerminalSpecification {
 
-    static Specification<Terminal> terminalIdLikeAndMerchantIdLike(String terminalId, String merchantId) {
+    static Specification<Terminal> terminalIdLikeAndMerchantIdLike(String terminalId, String merchantId) throws Exception {
         return (root, query, criteriaBuilder) -> {
             Join<Terminal, Merchant> merchantJoin = root.join("merchant", JoinType.INNER);
             return criteriaBuilder.and(
-                    criteriaBuilder.like(merchantJoin.get("id"), "%" + merchantId + "%"),
+//                    criteriaBuilder.like(criteriaBuilder.concat("", merchantJoin.get("id")), "%" + merchantId + "%"),
+                    criteriaBuilder.equal(merchantJoin.get("id"), Integer.parseInt(merchantId)),
                     criteriaBuilder.like(criteriaBuilder.lower(root.get("terminalId")), "%" + terminalId.toLowerCase() + "%")
             );
         };

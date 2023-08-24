@@ -3,6 +3,11 @@ package com.cba.core.wiremeweb.model;
 
 
 import jakarta.persistence.*;
+import org.springframework.data.annotation.CreatedBy;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedBy;
+import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.util.Date;
 import java.util.HashSet;
@@ -15,17 +20,23 @@ import java.util.Set;
 @Entity
 @Table(name = "merchant_customer"
 )
+@EntityListeners(AuditingEntityListener.class) // enable entity level auditing for create,modified attributes
 public class MerchantCustomer implements java.io.Serializable {
 
 
     private int id;
+    private Status status;
     private String name;
     private String address;
     private String email;
     private String contactNo;
-    private int createdBy;
-    private Integer modifiedby;
+    @CreatedBy
+    private String createdBy;
+    @LastModifiedBy
+    private String modifiedBy;
+    @CreatedDate
     private Date createdAt;
+    @LastModifiedDate
     private Date updatedAt;
     private Set<User> users = new HashSet<User>(0);
     private Set<Merchant> merchants = new HashSet<Merchant>(0);
@@ -34,7 +45,7 @@ public class MerchantCustomer implements java.io.Serializable {
     }
 
 
-    public MerchantCustomer(int id, String name, String address, String email, String contactNo, int createdBy, Date createdAt, Date updatedAt) {
+    public MerchantCustomer(int id, String name, String address, String email, String contactNo, String createdBy, Date createdAt, Date updatedAt) {
         this.id = id;
         this.name = name;
         this.address = address;
@@ -45,14 +56,15 @@ public class MerchantCustomer implements java.io.Serializable {
         this.updatedAt = updatedAt;
     }
 
-    public MerchantCustomer(int id, String name, String address, String email, String contactNo, int createdBy, Integer modifiedby, Date createdAt, Date updatedAt, Set<User> users, Set<Merchant> merchants) {
+    public MerchantCustomer(int id, Status status, String name, String address, String email, String contactNo, String createdBy, String modifiedBy, Date createdAt, Date updatedAt, Set<User> users, Set<Merchant> merchants) {
         this.id = id;
+        this.status = status;
         this.name = name;
         this.address = address;
         this.email = email;
         this.contactNo = contactNo;
         this.createdBy = createdBy;
-        this.modifiedby = modifiedby;
+        this.modifiedBy = modifiedBy;
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
         this.users = users;
@@ -111,23 +123,23 @@ public class MerchantCustomer implements java.io.Serializable {
     }
 
 
-    @Column(name = "created_by", nullable = false)
-    public int getCreatedBy() {
+    @Column(name = "created_by", nullable = false, length = 45)
+    public String getCreatedBy() {
         return this.createdBy;
     }
 
-    public void setCreatedBy(int createdBy) {
+    public void setCreatedBy(String createdBy) {
         this.createdBy = createdBy;
     }
 
 
-    @Column(name = "modifiedby")
-    public Integer getModifiedby() {
-        return this.modifiedby;
+    @Column(name = "modified_by", length = 45)
+    public String getModifiedBy() {
+        return this.modifiedBy;
     }
 
-    public void setModifiedby(Integer modifiedby) {
-        this.modifiedby = modifiedby;
+    public void setModifiedBy(String modifiedBy) {
+        this.modifiedBy = modifiedBy;
     }
 
     @Temporal(TemporalType.TIMESTAMP)
@@ -168,6 +180,15 @@ public class MerchantCustomer implements java.io.Serializable {
         this.merchants = merchants;
     }
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "status")
+    public Status getStatus() {
+        return this.status;
+    }
+
+    public void setStatus(Status status) {
+        this.status = status;
+    }
 
 }
 

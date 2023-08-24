@@ -5,7 +5,7 @@ import org.springframework.data.jpa.domain.Specification;
 
 public interface DeviceSpecification {
 
-    static Specification<Device> serialNoLikeAndDeviceTypeLike(String serialNo,String deviceType) {
+    static Specification<Device> serialNoLikeAndDeviceTypeLike(String serialNo, String deviceType) throws Exception {
         return (root, query, criteriaBuilder) ->
                 criteriaBuilder.and(
                         criteriaBuilder.like(criteriaBuilder.lower(root.get("serialNo")), "%" + serialNo.toLowerCase() + "%"),

@@ -48,21 +48,21 @@ public class RoleDaoImpl implements GenericDao<RoleResponseDto, RoleRequestDto> 
 
         Pageable pageable = PageRequest.of(page, pageSize);
 
-        Page<Role> rolesPage = repository.findAll(pageable);
-        if (rolesPage.isEmpty()) {
+        Page<Role> entitiesPage = repository.findAll(pageable);
+        if (entitiesPage.isEmpty()) {
             throw new NotFoundException("No Roles found");
         }
-        return rolesPage.map(RoleMapper::toDto);
+        return entitiesPage.map(RoleMapper::toDto);
     }
 
     @Override
     @Cacheable("roles")
     public List<RoleResponseDto> findAll() throws Exception {
-        List<Role> roleList = repository.findAll();
-        if (roleList.isEmpty()) {
+        List<Role> entityList = repository.findAll();
+        if (entityList.isEmpty()) {
             throw new NotFoundException("No Roles found");
         }
-        return roleList
+        return entityList
                 .stream()
                 .map(RoleMapper::toDto)
                 .collect(Collectors.toList());
@@ -73,18 +73,18 @@ public class RoleDaoImpl implements GenericDao<RoleResponseDto, RoleRequestDto> 
 
         Pageable pageable = PageRequest.of(page, pageSize);
         Specification<Role> spec = RoleSpecification.roleNameLike(searchParamList.get(0).get("roleName"));
-        Page<Role> rolesPage = repository.findAll(spec, pageable);
+        Page<Role> entitiesPage = repository.findAll(spec, pageable);
 
-        if (rolesPage.isEmpty()) {
+        if (entitiesPage.isEmpty()) {
             throw new NotFoundException("No Roles found");
         }
-        return rolesPage.map(RoleMapper::toDto);
+        return entitiesPage.map(RoleMapper::toDto);
     }
 
     @Override
     public RoleResponseDto findById(int id) throws Exception {
-        Role role = repository.findById(id).orElseThrow(() -> new NotFoundException("Role not found"));
-        return RoleMapper.toDto(role);
+        Role entity = repository.findById(id).orElseThrow(() -> new NotFoundException("Role not found"));
+        return RoleMapper.toDto(entity);
     }
 
     @Override
@@ -92,8 +92,8 @@ public class RoleDaoImpl implements GenericDao<RoleResponseDto, RoleRequestDto> 
     public RoleResponseDto deleteById(int id) throws Exception {
         try {
             ObjectMapper objectMapper = new ObjectMapper();
-            Role role = repository.findById(id).orElseThrow(() -> new NotFoundException("Role not found"));
-            RoleResponseDto roleResponseDto = RoleMapper.toDto(role);
+            Role entity = repository.findById(id).orElseThrow(() -> new NotFoundException("Role not found"));
+            RoleResponseDto roleResponseDto = RoleMapper.toDto(entity);
 
             repository.deleteById(id);
             globalAuditEntryRepository.save(new GlobalAuditEntry(resource, UserOperationEnum.DELETE.getValue(),
@@ -186,15 +186,15 @@ public class RoleDaoImpl implements GenericDao<RoleResponseDto, RoleRequestDto> 
         String remoteAdr = request.getRemoteAddr();
 
 
-        Role roleToInsert = RoleMapper.toModel(requestDto);
+        Role toInsert = RoleMapper.toModel(requestDto);
 
-        Role savedRole = repository.save(roleToInsert);
-        RoleResponseDto roleResponseDto = RoleMapper.toDto(savedRole);
+        Role savedEntity = repository.save(toInsert);
+        RoleResponseDto responseDto = RoleMapper.toDto(savedEntity);
         globalAuditEntryRepository.save(new GlobalAuditEntry(resource, UserOperationEnum.CREATE.getValue(),
-                savedRole.getId(), null, objectMapper.writeValueAsString(roleResponseDto),
+                savedEntity.getId(), null, objectMapper.writeValueAsString(responseDto),
                 remoteAdr));
 
-        return roleResponseDto;
+        return responseDto;
     }
 
     @Override
@@ -204,23 +204,23 @@ public class RoleDaoImpl implements GenericDao<RoleResponseDto, RoleRequestDto> 
         ObjectMapper objectMapper = new ObjectMapper();
         String remoteAdr = request.getRemoteAddr();
 
-        List<Role> roleList = requestDtoList
+        List<Role> entityList = requestDtoList
                 .stream()
                 .map(RoleMapper::toModel)
                 .collect(Collectors.toList());
 
-        return repository.saveAll(roleList)
+        return repository.saveAll(entityList)
                 .stream()
                 .map(item -> {
-                    RoleResponseDto roleResponseDto = RoleMapper.toDto(item);
+                    RoleResponseDto responseDto = RoleMapper.toDto(item);
                     try {
                         globalAuditEntryRepository.save(new GlobalAuditEntry(resource, UserOperationEnum.CREATE.getValue(),
-                                item.getId(), null, objectMapper.writeValueAsString(roleResponseDto),
+                                item.getId(), null, objectMapper.writeValueAsString(responseDto),
                                 remoteAdr));
                     } catch (Exception e) {
                         throw new RuntimeException("Exception occurred in Auditing: ");// only unchecked exception can be passed
                     }
-                    return roleResponseDto;
+                    return responseDto;
                 })
                 .collect(Collectors.toList());
     }

@@ -48,7 +48,7 @@ public class GlobalExceptionHandler {
                 notFoundException.getMessage(),
                 request.getDescription(false));
 
-        return new ResponseEntity<>(exceptionResponseDto, HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(exceptionResponseDto, HttpStatus.OK);
     }
 
     @ExceptionHandler(DataIntegrityViolationException.class)

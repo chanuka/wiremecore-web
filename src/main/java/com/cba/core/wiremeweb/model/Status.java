@@ -24,6 +24,7 @@ public class Status implements java.io.Serializable {
     private Set<DeviceConfig> deviceConfigs = new HashSet<DeviceConfig>(0);
     private Set<TransactionType> transactionTypes = new HashSet<TransactionType>(0);
     private Set<Merchant> merchants = new HashSet<Merchant>(0);
+    private Set<MerchantCustomer> merchantCustomers = new HashSet<>(0);
     private Set<SettlementInfo> settlementInfos = new HashSet<SettlementInfo>(0);
     private Set<Terminal> terminals = new HashSet<Terminal>(0);
     private Set<TransactionSwitch> transactionSwitches = new HashSet<TransactionSwitch>(0);
@@ -42,7 +43,7 @@ public class Status implements java.io.Serializable {
         this.statusCode = statusCode;
     }
 
-    public Status(String statusCode, String statusDescription, String statusCategory, Set<Bank> banks, Set<DeviceConfig> deviceConfigs, Set<TransactionType> transactionTypes, Set<Merchant> merchants, Set<SettlementInfo> settlementInfos, Set<Terminal> terminals, Set<TransactionSwitch> transactionSwitches, Set<CardType> cardTypes, Set<Device> devices, Set<User> users, Set<Role> roles,Set<UserRole> userRoles,Set<UserType> userTypes) {
+    public Status(String statusCode, String statusDescription, String statusCategory, Set<Bank> banks, Set<DeviceConfig> deviceConfigs, Set<TransactionType> transactionTypes, Set<Merchant> merchants, Set<MerchantCustomer> merchantCustomers, Set<SettlementInfo> settlementInfos, Set<Terminal> terminals, Set<TransactionSwitch> transactionSwitches, Set<CardType> cardTypes, Set<Device> devices, Set<User> users, Set<Role> roles, Set<UserRole> userRoles, Set<UserType> userTypes) {
         this.statusCode = statusCode;
         this.statusDescription = statusDescription;
         this.statusCategory = statusCategory;
@@ -50,6 +51,7 @@ public class Status implements java.io.Serializable {
         this.deviceConfigs = deviceConfigs;
         this.transactionTypes = transactionTypes;
         this.merchants = merchants;
+        this.merchantCustomers = merchantCustomers;
         this.settlementInfos = settlementInfos;
         this.terminals = terminals;
         this.transactionSwitches = transactionSwitches;
@@ -125,6 +127,15 @@ public class Status implements java.io.Serializable {
 
     public void setMerchants(Set<Merchant> merchants) {
         this.merchants = merchants;
+    }
+
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "status")
+    public Set<MerchantCustomer> getMerchantCustomers() {
+        return this.merchantCustomers;
+    }
+
+    public void setMerchantCustomers(Set<MerchantCustomer> merchantCustomers) {
+        this.merchantCustomers = merchantCustomers;
     }
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "status")

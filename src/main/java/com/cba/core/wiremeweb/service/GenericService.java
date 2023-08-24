@@ -17,13 +17,13 @@ public interface GenericService<T, K> {
 
     public T deleteById(int id) throws Exception;
 
-    public void deleteByIdList(List<Integer> list) throws Exception;
+    public void deleteByIdList(List<Integer> idList) throws Exception;
 
     public T updateById(int id, K requestDto) throws Exception;
 
     public T create(K requestDto) throws Exception;
 
-    public List<T> createBulk(List<K> list) throws Exception;
+    public List<T> createBulk(List<K> requestDtoList) throws Exception;
 
     public byte[] exportReport() throws Exception;
 }

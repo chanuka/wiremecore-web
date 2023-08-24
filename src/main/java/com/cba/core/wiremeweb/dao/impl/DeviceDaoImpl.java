@@ -48,21 +48,21 @@ public class DeviceDaoImpl implements GenericDao<DeviceResponseDto,DeviceRequest
     public Page<DeviceResponseDto> findAll(int page, int pageSize) throws Exception {
         Pageable pageable = PageRequest.of(page, pageSize);
 
-        Page<Device> DevicesPage = repository.findAll(pageable);
-        if (DevicesPage.isEmpty()) {
+        Page<Device> entitiesPage = repository.findAll(pageable);
+        if (entitiesPage.isEmpty()) {
             throw new NotFoundException("No Devices found");
         }
-        return DevicesPage.map(DeviceMapper::toDto);
+        return entitiesPage.map(DeviceMapper::toDto);
     }
 
     @Override
     @Cacheable("devices")
     public List<DeviceResponseDto> findAll() throws Exception {
-        List<Device> devicesList = repository.findAll();
-        if (devicesList.isEmpty()) {
+        List<Device> entityList = repository.findAll();
+        if (entityList.isEmpty()) {
             throw new NotFoundException("No Devices found");
         }
-        return devicesList
+        return entityList
                 .stream()
                 .map(DeviceMapper::toDto)
                 .collect(Collectors.toList());
@@ -76,20 +76,20 @@ public class DeviceDaoImpl implements GenericDao<DeviceResponseDto,DeviceRequest
                 searchParamList.get(0).get("serialNumber"),
                 searchParamList.get(0).get("deviceType"));
 
-        Page<Device> DevicesPage = repository.findAll(spec,pageable);
+        Page<Device> entitiesPage = repository.findAll(spec,pageable);
 
-        if (DevicesPage.isEmpty()) {
+        if (entitiesPage.isEmpty()) {
             throw new NotFoundException("No Devices found");
         }
-        return DevicesPage.map(DeviceMapper::toDto);
+        return entitiesPage.map(DeviceMapper::toDto);
 
     }
 
     @Override
     public DeviceResponseDto findById(int id) throws Exception {
 
-        Device device = repository.findById(id).orElseThrow(() -> new NotFoundException("Device not found"));
-        return DeviceMapper.toDto(device);
+        Device entity = repository.findById(id).orElseThrow(() -> new NotFoundException("Device not found"));
+        return DeviceMapper.toDto(entity);
     }
 
     @Override
@@ -97,8 +97,8 @@ public class DeviceDaoImpl implements GenericDao<DeviceResponseDto,DeviceRequest
     public DeviceResponseDto deleteById(int id) throws Exception {
         try {
             ObjectMapper objectMapper = new ObjectMapper();
-            Device device = repository.findById(id).orElseThrow(() -> new NotFoundException("Device not found"));
-            DeviceResponseDto deviceResponseDto = DeviceMapper.toDto(device);
+            Device entity = repository.findById(id).orElseThrow(() -> new NotFoundException("Device not found"));
+            DeviceResponseDto deviceResponseDto = DeviceMapper.toDto(entity);
 
             repository.deleteById(id);
             globalAuditEntryRepository.save(new GlobalAuditEntry(resource, UserOperationEnum.DELETE.getValue(),
@@ -206,15 +206,15 @@ public class DeviceDaoImpl implements GenericDao<DeviceResponseDto,DeviceRequest
         String remoteAdr = request.getRemoteAddr();
 
 
-        Device deviceToInsert = DeviceMapper.toModel(requestDto);
-        deviceToInsert.setStatus(new Status(requestDto.getStatus()));
-        Device savedDevice = repository.save(deviceToInsert);
-        DeviceResponseDto deviceResponseDto = DeviceMapper.toDto(savedDevice);
+        Device toInsert = DeviceMapper.toModel(requestDto);
+        toInsert.setStatus(new Status(requestDto.getStatus()));
+        Device savedEntity = repository.save(toInsert);
+        DeviceResponseDto responseDto = DeviceMapper.toDto(savedEntity);
         globalAuditEntryRepository.save(new GlobalAuditEntry(resource, UserOperationEnum.CREATE.getValue(),
-                savedDevice.getId(), null, objectMapper.writeValueAsString(deviceResponseDto),
+                savedEntity.getId(), null, objectMapper.writeValueAsString(responseDto),
                 remoteAdr));
 
-        return deviceResponseDto;
+        return responseDto;
 
     }
 
@@ -225,23 +225,23 @@ public class DeviceDaoImpl implements GenericDao<DeviceResponseDto,DeviceRequest
         ObjectMapper objectMapper = new ObjectMapper();
         String remoteAdr = request.getRemoteAddr();
 
-        List<Device> deviceList = requestDtoList
+        List<Device> entityList = requestDtoList
                 .stream()
                 .map(DeviceMapper::toModel)
                 .collect(Collectors.toList());
 
-        return repository.saveAll(deviceList)
+        return repository.saveAll(entityList)
                 .stream()
                 .map(item -> {
-                    DeviceResponseDto deviceResponseDto = DeviceMapper.toDto(item);
+                    DeviceResponseDto responseDto = DeviceMapper.toDto(item);
                     try {
                         globalAuditEntryRepository.save(new GlobalAuditEntry(resource, UserOperationEnum.CREATE.getValue(),
-                                item.getId(), null, objectMapper.writeValueAsString(deviceResponseDto),
+                                item.getId(), null, objectMapper.writeValueAsString(responseDto),
                                 remoteAdr));
                     } catch (Exception e) {
                         throw new RuntimeException("Exception occurred in Auditing: ");// only unchecked exception can be passed
                     }
-                    return deviceResponseDto;
+                    return responseDto;
                 })
                 .collect(Collectors.toList());
     }

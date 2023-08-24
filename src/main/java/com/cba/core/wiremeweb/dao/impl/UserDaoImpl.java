@@ -47,21 +47,21 @@ public class UserDaoImpl implements GenericDao<UserResponseDto, UserRequestDto> 
     public Page<UserResponseDto> findAll(int page, int pageSize) throws Exception {
         Pageable pageable = PageRequest.of(page, pageSize);
 
-        Page<User> usersPage = repository.findAll(pageable);
-        if (usersPage.isEmpty()) {
+        Page<User> entitiesPage = repository.findAll(pageable);
+        if (entitiesPage.isEmpty()) {
             throw new NotFoundException("No Users found");
         }
-        return usersPage.map(UserMapper::toDto);
+        return entitiesPage.map(UserMapper::toDto);
     }
 
     @Override
     @Cacheable("users")
     public List<UserResponseDto> findAll() throws Exception {
-        List<User> userList = repository.findAll();
-        if (userList.isEmpty()) {
+        List<User> entityList = repository.findAll();
+        if (entityList.isEmpty()) {
             throw new NotFoundException("No Users found");
         }
-        return userList
+        return entityList
                 .stream()
                 .map(UserMapper::toDto)
                 .collect(Collectors.toList());
@@ -71,18 +71,18 @@ public class UserDaoImpl implements GenericDao<UserResponseDto, UserRequestDto> 
     public Page<UserResponseDto> findBySearchParamLike(List<Map<String, String>> searchParamList, int page, int pageSize) throws Exception {
         Pageable pageable = PageRequest.of(page, pageSize);
         Specification<User> spec = UserSpecification.userNameLike(searchParamList.get(0).get("userName"));
-        Page<User> usersPage = repository.findAll(spec, pageable);
+        Page<User> entitiesPage = repository.findAll(spec, pageable);
 
-        if (usersPage.isEmpty()) {
+        if (entitiesPage.isEmpty()) {
             throw new NotFoundException("No Users found");
         }
-        return usersPage.map(UserMapper::toDto);
+        return entitiesPage.map(UserMapper::toDto);
     }
 
     @Override
     public UserResponseDto findById(int id) throws Exception {
-        User user = repository.findById(id).orElseThrow(() -> new NotFoundException("User not found"));
-        return UserMapper.toDto(user);
+        User entity = repository.findById(id).orElseThrow(() -> new NotFoundException("User not found"));
+        return UserMapper.toDto(entity);
     }
 
     @Override
@@ -90,8 +90,8 @@ public class UserDaoImpl implements GenericDao<UserResponseDto, UserRequestDto> 
     public UserResponseDto deleteById(int id) throws Exception {
         try {
             ObjectMapper objectMapper = new ObjectMapper();
-            User user = repository.findById(id).orElseThrow(() -> new NotFoundException("User not found"));
-            UserResponseDto userResponseDto = UserMapper.toDto(user);
+            User entity = repository.findById(id).orElseThrow(() -> new NotFoundException("User not found"));
+            UserResponseDto userResponseDto = UserMapper.toDto(entity);
 
             repository.deleteById(id);
             globalAuditEntryRepository.save(new GlobalAuditEntry(resource, UserOperationEnum.DELETE.getValue(),
@@ -204,15 +204,15 @@ public class UserDaoImpl implements GenericDao<UserResponseDto, UserRequestDto> 
         String remoteAdr = request.getRemoteAddr();
 
 
-        User userToInsert = UserMapper.toModel(requestDto);
+        User toInsert = UserMapper.toModel(requestDto);
 
-        User savedUser = repository.save(userToInsert);
-        UserResponseDto userResponseDto = UserMapper.toDto(savedUser);
+        User savedEntity = repository.save(toInsert);
+        UserResponseDto responseDto = UserMapper.toDto(savedEntity);
         globalAuditEntryRepository.save(new GlobalAuditEntry(resource, UserOperationEnum.CREATE.getValue(),
-                savedUser.getId(), null, objectMapper.writeValueAsString(userResponseDto),
+                savedEntity.getId(), null, objectMapper.writeValueAsString(responseDto),
                 remoteAdr));
 
-        return userResponseDto;
+        return responseDto;
     }
 
     @Override
@@ -222,23 +222,23 @@ public class UserDaoImpl implements GenericDao<UserResponseDto, UserRequestDto> 
         ObjectMapper objectMapper = new ObjectMapper();
         String remoteAdr = request.getRemoteAddr();
 
-        List<User> userList = requestDtoList
+        List<User> entityList = requestDtoList
                 .stream()
                 .map(UserMapper::toModel)
                 .collect(Collectors.toList());
 
-        return repository.saveAll(userList)
+        return repository.saveAll(entityList)
                 .stream()
                 .map(item -> {
-                    UserResponseDto userResponseDto = UserMapper.toDto(item);
+                    UserResponseDto responseDto = UserMapper.toDto(item);
                     try {
                         globalAuditEntryRepository.save(new GlobalAuditEntry(resource, UserOperationEnum.CREATE.getValue(),
-                                item.getId(), null, objectMapper.writeValueAsString(userResponseDto),
+                                item.getId(), null, objectMapper.writeValueAsString(responseDto),
                                 remoteAdr));
                     } catch (Exception e) {
                         throw new RuntimeException("Exception occurred in Auditing: ");// only unchecked exception can be passed
                     }
-                    return userResponseDto;
+                    return responseDto;
                 })
                 .collect(Collectors.toList());
     }
