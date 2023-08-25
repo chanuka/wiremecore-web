@@ -1,17 +1,17 @@
 package com.cba.core.wiremeweb.dao.impl;
 
 import com.cba.core.wiremeweb.dao.GenericDao;
-import com.cba.core.wiremeweb.dto.TerminalRequestDto;
-import com.cba.core.wiremeweb.dto.TerminalResponseDto;
+import com.cba.core.wiremeweb.dto.MerchantRequestDto;
+import com.cba.core.wiremeweb.dto.MerchantResponseDto;
 import com.cba.core.wiremeweb.exception.NotFoundException;
-import com.cba.core.wiremeweb.mapper.TerminalMapper;
+import com.cba.core.wiremeweb.mapper.MerchantMapper;
 import com.cba.core.wiremeweb.model.GlobalAuditEntry;
 import com.cba.core.wiremeweb.model.Merchant;
+import com.cba.core.wiremeweb.model.MerchantCustomer;
 import com.cba.core.wiremeweb.model.Status;
-import com.cba.core.wiremeweb.model.Terminal;
 import com.cba.core.wiremeweb.repository.GlobalAuditEntryRepository;
-import com.cba.core.wiremeweb.repository.TerminalRepository;
-import com.cba.core.wiremeweb.repository.specification.TerminalSpecification;
+import com.cba.core.wiremeweb.repository.MerchantRepository;
+import com.cba.core.wiremeweb.repository.specification.MerchantSpecification;
 import com.cba.core.wiremeweb.util.UserOperationEnum;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
@@ -35,68 +35,67 @@ import java.util.stream.Collectors;
 @Component
 @Transactional
 @RequiredArgsConstructor
-public class TerminalDaoImpl implements GenericDao<TerminalResponseDto, TerminalRequestDto> {
+public class MerchantDaoImpl implements GenericDao<MerchantResponseDto, MerchantRequestDto> {
 
-    private final TerminalRepository repository;
+    private final MerchantRepository repository;
     private final GlobalAuditEntryRepository globalAuditEntryRepository;
     private final HttpServletRequest request;
-    @Value("${application.resource.terminals}")
+    @Value("${application.resource.merchants}")
     private String resource;
 
     @Override
-    @Cacheable("terminals")
-    public Page<TerminalResponseDto> findAll(int page, int pageSize) throws Exception {
+    @Cacheable("merchants")
+    public Page<MerchantResponseDto> findAll(int page, int pageSize) throws Exception {
         Pageable pageable = PageRequest.of(page, pageSize);
 
-        Page<Terminal> entitiesPage = repository.findAll(pageable);
+        Page<Merchant> entitiesPage = repository.findAll(pageable);
         if (entitiesPage.isEmpty()) {
-            throw new NotFoundException("No Terminals found");
+            throw new NotFoundException("No Merchants found");
         }
-        return entitiesPage.map(TerminalMapper::toDto);
+        return entitiesPage.map(MerchantMapper::toDto);
     }
 
     @Override
-    @Cacheable("terminals")
-    public List<TerminalResponseDto> findAll() throws Exception {
-        List<Terminal> entityList = repository.findAll();
+    @Cacheable("merchants")
+    public List<MerchantResponseDto> findAll() throws Exception {
+        List<Merchant> entityList = repository.findAll();
         if (entityList.isEmpty()) {
-            throw new NotFoundException("No Terminals found");
+            throw new NotFoundException("No Merchants found");
         }
         return entityList
                 .stream()
-                .map(TerminalMapper::toDto)
+                .map(MerchantMapper::toDto)
                 .collect(Collectors.toList());
     }
 
     @Override
-    public Page<TerminalResponseDto> findBySearchParamLike(List<Map<String, String>> searchParamList, int page, int pageSize) throws Exception {
-
+    public Page<MerchantResponseDto> findBySearchParamLike(List<Map<String, String>> searchParamList, int page, int pageSize) throws Exception {
         Pageable pageable = PageRequest.of(page, pageSize);
-        Specification<Terminal> spec = TerminalSpecification.
-                terminalIdLikeAndMerchantIdLike(searchParamList.get(0).get("terminalId"),
-                        searchParamList.get(0).get("merchantId"));
+        Specification<Merchant> spec = MerchantSpecification.
+                nameLikeAndStatusLike(searchParamList.get(0).get("merchantName"),
+                        searchParamList.get(0).get("status"));
 
-        Page<Terminal> entitiesPage = repository.findAll(spec, pageable);
+        Page<Merchant> entitiesPage = repository.findAll(spec, pageable);
 
         if (entitiesPage.isEmpty()) {
-            throw new NotFoundException("No Terminals found");
+            throw new NotFoundException("No Merchants found");
         }
-        return entitiesPage.map(TerminalMapper::toDto);
+        return entitiesPage.map(MerchantMapper::toDto);
     }
 
     @Override
-    public TerminalResponseDto findById(int id) throws Exception {
-        Terminal entity = repository.findById(id).orElseThrow(() -> new NotFoundException("Terminal not found"));
-        return TerminalMapper.toDto(entity);
+    public MerchantResponseDto findById(int id) throws Exception {
+        Merchant entity = repository.findById(id).orElseThrow(() -> new NotFoundException("Merchant not found"));
+        return MerchantMapper.toDto(entity);
     }
 
     @Override
-    @CacheEvict(value = "terminals", allEntries = true)
-    public TerminalResponseDto deleteById(int id) throws Exception {
+    @CacheEvict(value = "merchants", allEntries = true)
+    public MerchantResponseDto deleteById(int id) throws Exception {
         try {
             ObjectMapper objectMapper = new ObjectMapper();
-            Terminal entity = repository.findById(id).orElseThrow(() -> new NotFoundException("Terminal not found"));
-            TerminalResponseDto responseDto = TerminalMapper.toDto(entity);
+            Merchant entity = repository.findById(id).orElseThrow(() -> new NotFoundException("Merchant not found"));
+            MerchantResponseDto responseDto = MerchantMapper.toDto(entity);
 
             repository.deleteById(id);
             globalAuditEntryRepository.save(new GlobalAuditEntry(resource, UserOperationEnum.DELETE.getValue(),
@@ -111,14 +110,14 @@ public class TerminalDaoImpl implements GenericDao<TerminalResponseDto, Terminal
     }
 
     @Override
-    @CacheEvict(value = "terminals", allEntries = true)
+    @CacheEvict(value = "merchants", allEntries = true)
     public void deleteByIdList(List<Integer> idList) throws Exception {
         try {
             ObjectMapper objectMapper = new ObjectMapper();
             String remoteAdr = request.getRemoteAddr();
 
             idList.stream()
-                    .map((id) -> repository.findById(id).orElseThrow(() -> new NotFoundException("Terminal not found")))
+                    .map((id) -> repository.findById(id).orElseThrow(() -> new NotFoundException("Merchant not found")))
                     .collect(Collectors.toList());
 
             repository.deleteAllByIdInBatch(idList);
@@ -142,8 +141,8 @@ public class TerminalDaoImpl implements GenericDao<TerminalResponseDto, Terminal
     }
 
     @Override
-    @CacheEvict(value = "terminals", allEntries = true)
-    public TerminalResponseDto updateById(int id, TerminalRequestDto requestDto) throws Exception {
+    @CacheEvict(value = "merchants", allEntries = true)
+    public MerchantResponseDto updateById(int id, MerchantRequestDto requestDto) throws Exception {
 
         ObjectMapper objectMapper = new ObjectMapper();
         String remoteAdr = request.getRemoteAddr();
@@ -151,28 +150,49 @@ public class TerminalDaoImpl implements GenericDao<TerminalResponseDto, Terminal
         Map<String, Object> oldDataMap = new HashMap<>();
         Map<String, Object> newDataMap = new HashMap<>();
 
-        Terminal toBeUpdated = repository.findById(id).orElseThrow(() -> new NotFoundException("Terminal not found"));
+        Merchant toBeUpdated = repository.findById(id).orElseThrow(() -> new NotFoundException("Merchant not found"));
 
-        if (!toBeUpdated.getTerminalId().equals(requestDto.getTerminalId())) {
+        if (!toBeUpdated.getMerchantId().equals(requestDto.getMerchantId())) {
             updateRequired = true;
-            oldDataMap.put("terminalId", toBeUpdated.getTerminalId());
-            newDataMap.put("terminalId", requestDto.getTerminalId());
-
-            toBeUpdated.setTerminalId(requestDto.getTerminalId());
-        }
-        if (toBeUpdated.getMerchant().getId() != requestDto.getMerchantId()) {
-            updateRequired = true;
-            oldDataMap.put("merchantId", toBeUpdated.getMerchant().getId());
+            oldDataMap.put("merchantId", toBeUpdated.getMerchantId());
             newDataMap.put("merchantId", requestDto.getMerchantId());
 
-            toBeUpdated.setMerchant(new Merchant(requestDto.getMerchantId()));
+            toBeUpdated.setMerchantId(requestDto.getMerchantId());
         }
-        if (toBeUpdated.getDeviceId() != requestDto.getDeviceId()) {
+        if (toBeUpdated.getMerchantCustomer().getId() != requestDto.getPartnerId()) {
             updateRequired = true;
-            oldDataMap.put("deviceId", toBeUpdated.getDeviceId());
-            newDataMap.put("deviceId", requestDto.getDeviceId());
+            oldDataMap.put("partnerId", toBeUpdated.getMerchantCustomer().getId());
+            newDataMap.put("partnerId", requestDto.getPartnerId());
 
-            toBeUpdated.setDeviceId(requestDto.getDeviceId());
+            toBeUpdated.setMerchantCustomer(new MerchantCustomer(requestDto.getPartnerId()));
+        }
+        if (!toBeUpdated.getName().equals(requestDto.getName())) {
+            updateRequired = true;
+            oldDataMap.put("name", toBeUpdated.getName());
+            newDataMap.put("name", requestDto.getName());
+
+            toBeUpdated.setName(requestDto.getName());
+        }
+        if (!toBeUpdated.getEmail().equals(requestDto.getEmail())) {
+            updateRequired = true;
+            oldDataMap.put("email", toBeUpdated.getEmail());
+            newDataMap.put("email", requestDto.getEmail());
+
+            toBeUpdated.setEmail(requestDto.getEmail());
+        }
+        if (!toBeUpdated.getDistrict().equals(requestDto.getDistrict())) {
+            updateRequired = true;
+            oldDataMap.put("district", toBeUpdated.getDistrict());
+            newDataMap.put("district", requestDto.getDistrict());
+
+            toBeUpdated.setDistrict(requestDto.getDistrict());
+        }
+        if (!toBeUpdated.getProvince().equals(requestDto.getProvince())) {
+            updateRequired = true;
+            oldDataMap.put("province", toBeUpdated.getProvince());
+            newDataMap.put("province", requestDto.getProvince());
+
+            toBeUpdated.setProvince(requestDto.getProvince());
         }
         if (!toBeUpdated.getStatus().getStatusCode().equals(requestDto.getStatus())) {
             updateRequired = true;
@@ -188,7 +208,7 @@ public class TerminalDaoImpl implements GenericDao<TerminalResponseDto, Terminal
                     id, objectMapper.writeValueAsString(oldDataMap), objectMapper.writeValueAsString(newDataMap),
                     remoteAdr));
 
-            return TerminalMapper.toDto(toBeUpdated);
+            return MerchantMapper.toDto(toBeUpdated);
 
         } else {
             throw new NotFoundException("No Changes found");
@@ -196,16 +216,16 @@ public class TerminalDaoImpl implements GenericDao<TerminalResponseDto, Terminal
     }
 
     @Override
-    @CacheEvict(value = "terminals", allEntries = true)
-    public TerminalResponseDto create(TerminalRequestDto requestDto) throws Exception {
+    @CacheEvict(value = "merchants", allEntries = true)
+    public MerchantResponseDto create(MerchantRequestDto requestDto) throws Exception {
 
         ObjectMapper objectMapper = new ObjectMapper();
         String remoteAdr = request.getRemoteAddr();
 
-        Terminal toInsert = TerminalMapper.toModel(requestDto);
+        Merchant toInsert = MerchantMapper.toModel(requestDto);
 
-        Terminal savedEntity = repository.save(toInsert);
-        TerminalResponseDto responseDto = TerminalMapper.toDto(savedEntity);
+        Merchant savedEntity = repository.save(toInsert);
+        MerchantResponseDto responseDto = MerchantMapper.toDto(savedEntity);
         globalAuditEntryRepository.save(new GlobalAuditEntry(resource, UserOperationEnum.CREATE.getValue(),
                 savedEntity.getId(), null, objectMapper.writeValueAsString(responseDto),
                 remoteAdr));
@@ -214,21 +234,21 @@ public class TerminalDaoImpl implements GenericDao<TerminalResponseDto, Terminal
     }
 
     @Override
-    @CacheEvict(value = "terminals", allEntries = true)
-    public List<TerminalResponseDto> createBulk(List<TerminalRequestDto> requestDtoList) throws Exception {
+    @CacheEvict(value = "merchants", allEntries = true)
+    public List<MerchantResponseDto> createBulk(List<MerchantRequestDto> requestDtoList) throws Exception {
 
         ObjectMapper objectMapper = new ObjectMapper();
         String remoteAdr = request.getRemoteAddr();
 
-        List<Terminal> entityList = requestDtoList
+        List<Merchant> entityList = requestDtoList
                 .stream()
-                .map(TerminalMapper::toModel)
+                .map(MerchantMapper::toModel)
                 .collect(Collectors.toList());
 
         return repository.saveAll(entityList)
                 .stream()
                 .map(item -> {
-                    TerminalResponseDto responseDto = TerminalMapper.toDto(item);
+                    MerchantResponseDto responseDto = MerchantMapper.toDto(item);
                     try {
                         globalAuditEntryRepository.save(new GlobalAuditEntry(resource, UserOperationEnum.CREATE.getValue(),
                                 item.getId(), null, objectMapper.writeValueAsString(responseDto),

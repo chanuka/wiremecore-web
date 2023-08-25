@@ -98,14 +98,14 @@ public class DeviceDaoImpl implements GenericDao<DeviceResponseDto,DeviceRequest
         try {
             ObjectMapper objectMapper = new ObjectMapper();
             Device entity = repository.findById(id).orElseThrow(() -> new NotFoundException("Device not found"));
-            DeviceResponseDto deviceResponseDto = DeviceMapper.toDto(entity);
+            DeviceResponseDto responseDto = DeviceMapper.toDto(entity);
 
             repository.deleteById(id);
             globalAuditEntryRepository.save(new GlobalAuditEntry(resource, UserOperationEnum.DELETE.getValue(),
-                    id, objectMapper.writeValueAsString(deviceResponseDto), null,
+                    id, objectMapper.writeValueAsString(responseDto), null,
                     request.getRemoteAddr()));
 
-            return deviceResponseDto;
+            return responseDto;
 
         } catch (Exception rr) {
             throw rr;

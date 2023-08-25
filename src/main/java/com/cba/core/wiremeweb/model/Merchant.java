@@ -3,6 +3,11 @@ package com.cba.core.wiremeweb.model;
 
 
 import jakarta.persistence.*;
+import org.springframework.data.annotation.CreatedBy;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedBy;
+import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.util.Date;
 import java.util.HashSet;
@@ -15,6 +20,7 @@ import java.util.Set;
 @Entity
 @Table(name = "merchant"
 )
+@EntityListeners(AuditingEntityListener.class) // enable entity level auditing for create,modified attributes
 public class Merchant implements java.io.Serializable {
 
 
@@ -22,15 +28,19 @@ public class Merchant implements java.io.Serializable {
     private Bank bank;
     private MerchantCustomer merchantCustomer;
     private Status status;
-    private User userByCreatedBy;
-    private User userByModifiedBy;
+    @CreatedBy
+    private String createdBy;
+    @LastModifiedBy
+    private String modifiedBy;
     private String name;
     private String merchantId;
     private String email;
     private String contactNo;
     private String province;
     private String district;
+    @CreatedDate
     private Date createdAt;
+    @LastModifiedDate
     private Date updatedAt;
     private Set<Terminal> terminals = new HashSet<Terminal>(0);
     private Set<User> users = new HashSet<User>(0);
@@ -42,9 +52,9 @@ public class Merchant implements java.io.Serializable {
         this.id = id;
     }
 
-    public Merchant(MerchantCustomer merchantCustomer, User userByCreatedBy, String name, String merchantId, String email, String province, String district, Date createdAt, Date updatedAt) {
+    public Merchant(MerchantCustomer merchantCustomer, String createdBy, String name, String merchantId, String email, String province, String district, Date createdAt, Date updatedAt) {
         this.merchantCustomer = merchantCustomer;
-        this.userByCreatedBy = userByCreatedBy;
+        this.createdBy = createdBy;
         this.name = name;
         this.merchantId = merchantId;
         this.email = email;
@@ -54,12 +64,12 @@ public class Merchant implements java.io.Serializable {
         this.updatedAt = updatedAt;
     }
 
-    public Merchant(Bank bank, MerchantCustomer merchantCustomer, Status status, User userByCreatedBy, User userByModifiedBy, String name, String merchantId, String email, String contactNo, String province, String district, Date createdAt, Date updatedAt, Set<Terminal> terminals, Set<User> users) {
+    public Merchant(Bank bank, MerchantCustomer merchantCustomer, Status status, String createdBy, String modifiedBy, String name, String merchantId, String email, String contactNo, String province, String district, Date createdAt, Date updatedAt, Set<Terminal> terminals, Set<User> users) {
         this.bank = bank;
         this.merchantCustomer = merchantCustomer;
         this.status = status;
-        this.userByCreatedBy = userByCreatedBy;
-        this.userByModifiedBy = userByModifiedBy;
+        this.createdBy = createdBy;
+        this.modifiedBy = modifiedBy;
         this.name = name;
         this.merchantId = merchantId;
         this.email = email;
@@ -113,24 +123,22 @@ public class Merchant implements java.io.Serializable {
         this.status = status;
     }
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "created_by", nullable = false)
-    public User getUserByCreatedBy() {
-        return this.userByCreatedBy;
+    @Column(name = "created_by", nullable = false, length = 45)
+    public String getCreatedBy() {
+        return this.createdBy;
     }
 
-    public void setUserByCreatedBy(User userByCreatedBy) {
-        this.userByCreatedBy = userByCreatedBy;
+    public void setCreatedBy(String createdBy) {
+        this.createdBy = createdBy;
     }
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "modified_by")
-    public User getUserByModifiedBy() {
-        return this.userByModifiedBy;
+    @Column(name = "modified_by", length = 45)
+    public String getModifiedBy() {
+        return this.modifiedBy;
     }
 
-    public void setUserByModifiedBy(User userByModifiedBy) {
-        this.userByModifiedBy = userByModifiedBy;
+    public void setModifiedBy(String modifiedBy) {
+        this.modifiedBy = modifiedBy;
     }
 
 

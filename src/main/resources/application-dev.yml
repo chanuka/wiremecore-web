@@ -51,6 +51,7 @@ application:
     roles: roles
     terminals: terminals
     partners: partners
+    merchants: merchants
 
 rsa:
   private-key: classpath:certs/private.pem

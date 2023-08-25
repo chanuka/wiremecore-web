@@ -93,14 +93,14 @@ public class RoleDaoImpl implements GenericDao<RoleResponseDto, RoleRequestDto> 
         try {
             ObjectMapper objectMapper = new ObjectMapper();
             Role entity = repository.findById(id).orElseThrow(() -> new NotFoundException("Role not found"));
-            RoleResponseDto roleResponseDto = RoleMapper.toDto(entity);
+            RoleResponseDto responseDto = RoleMapper.toDto(entity);
 
             repository.deleteById(id);
             globalAuditEntryRepository.save(new GlobalAuditEntry(resource, UserOperationEnum.DELETE.getValue(),
-                    id, objectMapper.writeValueAsString(roleResponseDto), null,
+                    id, objectMapper.writeValueAsString(responseDto), null,
                     request.getRemoteAddr()));
 
-            return roleResponseDto;
+            return responseDto;
 
         } catch (Exception rr) {
             throw rr;

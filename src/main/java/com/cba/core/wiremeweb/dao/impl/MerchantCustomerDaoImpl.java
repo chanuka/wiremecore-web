@@ -71,7 +71,7 @@ public class MerchantCustomerDaoImpl implements GenericDao<MerchantCustomerRespo
     public Page<MerchantCustomerResponseDto> findBySearchParamLike(List<Map<String, String>> searchParamList, int page, int pageSize) throws Exception {
         Pageable pageable = PageRequest.of(page, pageSize);
         Specification<MerchantCustomer> spec = MerchantCustomerSpecification.
-                terminalIdLikeAndMerchantIdLike(searchParamList.get(0).get("merchantCustomerName"),
+                nameLikeAndStatusLike(searchParamList.get(0).get("merchantCustomerName"),
                         searchParamList.get(0).get("status"));
 
         Page<MerchantCustomer> entitiesPage = repository.findAll(spec, pageable);
@@ -94,14 +94,14 @@ public class MerchantCustomerDaoImpl implements GenericDao<MerchantCustomerRespo
         try {
             ObjectMapper objectMapper = new ObjectMapper();
             MerchantCustomer entity = repository.findById(id).orElseThrow(() -> new NotFoundException("Merchant Customer not found"));
-            MerchantCustomerResponseDto merchantCustomerResponseDto = MerchantCustomerMapper.toDto(entity);
+            MerchantCustomerResponseDto responseDto = MerchantCustomerMapper.toDto(entity);
 
             repository.deleteById(id);
             globalAuditEntryRepository.save(new GlobalAuditEntry(resource, UserOperationEnum.DELETE.getValue(),
-                    id, objectMapper.writeValueAsString(merchantCustomerResponseDto), null,
+                    id, objectMapper.writeValueAsString(responseDto), null,
                     request.getRemoteAddr()));
 
-            return merchantCustomerResponseDto;
+            return responseDto;
 
         } catch (Exception rr) {
             throw rr;

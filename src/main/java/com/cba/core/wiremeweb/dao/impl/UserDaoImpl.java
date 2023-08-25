@@ -91,14 +91,14 @@ public class UserDaoImpl implements GenericDao<UserResponseDto, UserRequestDto> 
         try {
             ObjectMapper objectMapper = new ObjectMapper();
             User entity = repository.findById(id).orElseThrow(() -> new NotFoundException("User not found"));
-            UserResponseDto userResponseDto = UserMapper.toDto(entity);
+            UserResponseDto responseDto = UserMapper.toDto(entity);
 
             repository.deleteById(id);
             globalAuditEntryRepository.save(new GlobalAuditEntry(resource, UserOperationEnum.DELETE.getValue(),
-                    id, objectMapper.writeValueAsString(userResponseDto), null,
+                    id, objectMapper.writeValueAsString(responseDto), null,
                     request.getRemoteAddr()));
 
-            return userResponseDto;
+            return responseDto;
 
         } catch (Exception rr) {
             throw rr;
