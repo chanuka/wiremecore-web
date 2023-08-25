@@ -1,8 +1,5 @@
 package com.cba.core.wiremeweb.controller.resource;
 
-import com.cba.core.wiremeweb.dto.MerchantCustomerRequestDto;
-import com.cba.core.wiremeweb.dto.MerchantCustomerResponseDto;
-import com.cba.core.wiremeweb.service.GenericService;
 import jakarta.validation.Valid;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;

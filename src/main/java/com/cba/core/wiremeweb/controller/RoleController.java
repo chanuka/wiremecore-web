@@ -5,11 +5,6 @@ import com.cba.core.wiremeweb.dto.RoleRequestDto;
 import com.cba.core.wiremeweb.dto.RoleResponseDto;
 import com.cba.core.wiremeweb.service.GenericService;
 import lombok.RequiredArgsConstructor;
-import org.apache.poi.ss.usermodel.Cell;
-import org.apache.poi.ss.usermodel.Row;
-import org.apache.poi.ss.usermodel.Sheet;
-import org.apache.poi.ss.usermodel.Workbook;
-import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.MessageSource;
@@ -22,7 +17,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import java.io.ByteArrayOutputStream;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -157,43 +151,8 @@ public class RoleController implements GenericResource<RoleResponseDto, RoleRequ
         logger.debug(messageSource.getMessage("ROLE_DOWNLOAD_EXCEL_DEBUG", null, currentLocale));
 
         try {
-            Workbook workbook = new XSSFWorkbook();
-            Sheet sheet = workbook.createSheet("Sheet 1");
 
-            String[] columnHeaders = {"Id", "Role Name", "Status"};
-            Row headerRow = sheet.createRow(0);
-            for (int i = 0; i < columnHeaders.length; i++) {
-                Cell cell = headerRow.createCell(i);
-                cell.setCellValue(columnHeaders[i]);
-            }
-            List<RoleResponseDto> responseDtoList = service.findAll();
-
-            int rowCount = 1;
-
-            for (RoleResponseDto responseDto : responseDtoList) {
-                Row row = sheet.createRow(rowCount++);
-                int columnCount = 0;
-
-                Cell cell = row.createCell(columnCount++);
-                if (responseDto.getId() instanceof Integer) {
-                    cell.setCellValue((Integer) responseDto.getId());
-                }
-                cell = row.createCell(columnCount++);
-                if (responseDto.getRoleName() instanceof String) {
-                    cell.setCellValue((String) responseDto.getRoleName());
-                }
-                cell = row.createCell(columnCount++);
-                if (responseDto.getStatus() instanceof String) {
-                    cell.setCellValue((String) responseDto.getStatus());
-                }
-
-            }
-
-            byte[] excelBytes;
-            try (ByteArrayOutputStream outputStream = new ByteArrayOutputStream()) {
-                workbook.write(outputStream);
-                excelBytes = outputStream.toByteArray();
-            }
+            byte[] excelBytes = service.exportExcelReport();
 
             HttpHeaders httpHeaders = new HttpHeaders();
             httpHeaders.setContentType(MediaType.APPLICATION_OCTET_STREAM);
@@ -217,11 +176,14 @@ public class RoleController implements GenericResource<RoleResponseDto, RoleRequ
         logger.debug(messageSource.getMessage("ROLE_DOWNLOAD_PDF_DEBUG", null, currentLocale));
 
         try {
+
+            byte[] pdfBytes = service.exportPdfReport();
+
             HttpHeaders headers = new HttpHeaders();
             //set the PDF format
             headers.setContentType(MediaType.APPLICATION_PDF);
             headers.setContentDispositionFormData("filename", "role-details.pdf");
-            return new ResponseEntity<byte[]>(service.exportReport(), headers, HttpStatus.OK);
+            return new ResponseEntity<byte[]>(pdfBytes, headers, HttpStatus.OK);
 
         } catch (Exception e) {
             logger.error(e.getMessage());

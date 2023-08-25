@@ -25,5 +25,7 @@ public interface GenericService<T, K> {
 
     public List<T> createBulk(List<K> requestDtoList) throws Exception;
 
-    public byte[] exportReport() throws Exception;
+    public byte[] exportPdfReport() throws Exception;
+
+    public byte[] exportExcelReport() throws Exception;
 }

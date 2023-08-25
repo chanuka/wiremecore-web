@@ -5,11 +5,6 @@ import com.cba.core.wiremeweb.dto.DeviceRequestDto;
 import com.cba.core.wiremeweb.dto.DeviceResponseDto;
 import com.cba.core.wiremeweb.service.GenericService;
 import lombok.RequiredArgsConstructor;
-import org.apache.poi.ss.usermodel.Cell;
-import org.apache.poi.ss.usermodel.Row;
-import org.apache.poi.ss.usermodel.Sheet;
-import org.apache.poi.ss.usermodel.Workbook;
-import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.MessageSource;
@@ -22,7 +17,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import java.io.ByteArrayOutputStream;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -163,51 +157,8 @@ public class DeviceController implements GenericResource<DeviceResponseDto, Devi
         logger.debug(messageSource.getMessage("DEVICE_DOWNLOAD_EXCEL_DEBUG", null, currentLocale));
 
         try {
-            Workbook workbook = new XSSFWorkbook();
-            Sheet sheet = workbook.createSheet("Sheet 1");
 
-            String[] columnHeaders = {"Id", "Serial", "IMEI", "Device Type", "Status"};
-            Row headerRow = sheet.createRow(0);
-            for (int i = 0; i < columnHeaders.length; i++) {
-                Cell cell = headerRow.createCell(i);
-                cell.setCellValue(columnHeaders[i]);
-            }
-            List<DeviceResponseDto> responseDtoist = service.findAll();
-
-            int rowCount = 1;
-
-            for (DeviceResponseDto responseDto : responseDtoist) {
-                Row row = sheet.createRow(rowCount++);
-                int columnCount = 0;
-
-                Cell cell = row.createCell(columnCount++);
-                if (responseDto.getId() instanceof Integer) {
-                    cell.setCellValue((Integer) responseDto.getId());
-                }
-                cell = row.createCell(columnCount++);
-                if (responseDto.getSerialNo() instanceof String) {
-                    cell.setCellValue((String) responseDto.getSerialNo());
-                }
-                cell = row.createCell(columnCount++);
-                if (responseDto.getEmiNo() instanceof String) {
-                    cell.setCellValue((String) responseDto.getEmiNo());
-                }
-                cell = row.createCell(columnCount++);
-                if (responseDto.getDeviceType() instanceof String) {
-                    cell.setCellValue((String) responseDto.getDeviceType());
-                }
-                cell = row.createCell(columnCount++);
-                if (responseDto.getStatus() instanceof String) {
-                    cell.setCellValue((String) responseDto.getStatus());
-                }
-
-            }
-
-            byte[] excelBytes;
-            try (ByteArrayOutputStream outputStream = new ByteArrayOutputStream()) {
-                workbook.write(outputStream);
-                excelBytes = outputStream.toByteArray();
-            }
+            byte[] excelBytes = service.exportExcelReport();
 
             HttpHeaders httpHeaders = new HttpHeaders();
             httpHeaders.setContentType(MediaType.APPLICATION_OCTET_STREAM);
@@ -231,11 +182,14 @@ public class DeviceController implements GenericResource<DeviceResponseDto, Devi
         logger.debug(messageSource.getMessage("DEVICE_DOWNLOAD_PDF_DEBUG", null, currentLocale));
 
         try {
+
+            byte[] pdfBytes = service.exportPdfReport();
+
             HttpHeaders headers = new HttpHeaders();
             //set the PDF format
             headers.setContentType(MediaType.APPLICATION_PDF);
             headers.setContentDispositionFormData("filename", "device-details.pdf");
-            return new ResponseEntity<byte[]>(service.exportReport(), headers, HttpStatus.OK);
+            return new ResponseEntity<byte[]>(pdfBytes, headers, HttpStatus.OK);
 
         } catch (Exception e) {
             logger.error(e.getMessage());

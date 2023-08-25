@@ -5,11 +5,6 @@ import com.cba.core.wiremeweb.dto.UserRequestDto;
 import com.cba.core.wiremeweb.dto.UserResponseDto;
 import com.cba.core.wiremeweb.service.GenericService;
 import lombok.RequiredArgsConstructor;
-import org.apache.poi.ss.usermodel.Cell;
-import org.apache.poi.ss.usermodel.Row;
-import org.apache.poi.ss.usermodel.Sheet;
-import org.apache.poi.ss.usermodel.Workbook;
-import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.MessageSource;
@@ -22,7 +17,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import java.io.ByteArrayOutputStream;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -161,50 +155,8 @@ public class UserController implements GenericResource<UserResponseDto, UserRequ
         logger.debug(messageSource.getMessage("USER_DOWNLOAD_EXCEL_DEBUG", null, currentLocale));
 
         try {
-            Workbook workbook = new XSSFWorkbook();
-            Sheet sheet = workbook.createSheet("Sheet 1");
 
-            String[] columnHeaders = {"Id", "Name", "User Name", "Contact No", "Email"};
-            Row headerRow = sheet.createRow(0);
-            for (int i = 0; i < columnHeaders.length; i++) {
-                Cell cell = headerRow.createCell(i);
-                cell.setCellValue(columnHeaders[i]);
-            }
-            List<UserResponseDto> responseDtoList = service.findAll();
-
-            int rowCount = 1;
-
-            for (UserResponseDto responseDto : responseDtoList) {
-                Row row = sheet.createRow(rowCount++);
-                int columnCount = 0;
-
-                Cell cell = row.createCell(columnCount++);
-                if (responseDto.getId() instanceof Integer) {
-                    cell.setCellValue((Integer) responseDto.getId());
-                }
-                cell = row.createCell(columnCount++);
-                if (responseDto.getName() instanceof String) {
-                    cell.setCellValue((String) responseDto.getName());
-                }
-                cell = row.createCell(columnCount++);
-                if (responseDto.getUserName() instanceof String) {
-                    cell.setCellValue((String) responseDto.getUserName());
-                }
-                cell = row.createCell(columnCount++);
-                if (responseDto.getContactNo() instanceof String) {
-                    cell.setCellValue((String) responseDto.getContactNo());
-                }
-                cell = row.createCell(columnCount++);
-                if (responseDto.getEmail() instanceof String) {
-                    cell.setCellValue((String) responseDto.getEmail());
-                }
-            }
-
-            byte[] excelBytes;
-            try (ByteArrayOutputStream outputStream = new ByteArrayOutputStream()) {
-                workbook.write(outputStream);
-                excelBytes = outputStream.toByteArray();
-            }
+            byte[] excelBytes = service.exportExcelReport();
 
             HttpHeaders httpHeaders = new HttpHeaders();
             httpHeaders.setContentType(MediaType.APPLICATION_OCTET_STREAM);
@@ -228,11 +180,14 @@ public class UserController implements GenericResource<UserResponseDto, UserRequ
         logger.debug(messageSource.getMessage("USER_DOWNLOAD_PDF_DEBUG", null, currentLocale));
 
         try {
+
+            byte[] pdfBytes = service.exportPdfReport();
+
             HttpHeaders headers = new HttpHeaders();
-            //set the PDF format
             headers.setContentType(MediaType.APPLICATION_PDF);
             headers.setContentDispositionFormData("filename", "user-details.pdf");
-            return new ResponseEntity<byte[]>(service.exportReport(), headers, HttpStatus.OK);
+
+            return new ResponseEntity<byte[]>(pdfBytes, headers, HttpStatus.OK);
 
         } catch (Exception e) {
             logger.error(e.getMessage());

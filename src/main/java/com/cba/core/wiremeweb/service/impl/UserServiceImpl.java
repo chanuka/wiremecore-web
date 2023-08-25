@@ -8,10 +8,16 @@ import com.cba.core.wiremeweb.util.UserBean;
 import lombok.RequiredArgsConstructor;
 import net.sf.jasperreports.engine.*;
 import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ResourceUtils;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.util.HashMap;
 import java.util.List;
@@ -70,7 +76,7 @@ public class UserServiceImpl implements GenericService<UserResponseDto, UserRequ
     }
 
     @Override
-    public byte[] exportReport() throws Exception {
+    public byte[] exportPdfReport() throws Exception {
         List<UserResponseDto> responseDtoList = dao.findAll();
         //load file and compile it
         File file = ResourceUtils.getFile("classpath:report/user.jrxml");
@@ -82,5 +88,55 @@ public class UserServiceImpl implements GenericService<UserResponseDto, UserRequ
         JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, parameters, dataSource);
 
         return JasperExportManager.exportReportToPdf(jasperPrint);
+    }
+
+    @Override
+    public byte[] exportExcelReport() throws Exception {
+
+        Workbook workbook = new XSSFWorkbook();
+        Sheet sheet = workbook.createSheet("Sheet 1");
+
+        String[] columnHeaders = {"Id", "Name", "User Name", "Contact No", "Email"};
+        Row headerRow = sheet.createRow(0);
+        for (int i = 0; i < columnHeaders.length; i++) {
+            Cell cell = headerRow.createCell(i);
+            cell.setCellValue(columnHeaders[i]);
+        }
+        List<UserResponseDto> responseDtoList = dao.findAll();
+
+        int rowCount = 1;
+
+        for (UserResponseDto responseDto : responseDtoList) {
+            Row row = sheet.createRow(rowCount++);
+            int columnCount = 0;
+
+            Cell cell = row.createCell(columnCount++);
+            if (responseDto.getId() instanceof Integer) {
+                cell.setCellValue((Integer) responseDto.getId());
+            }
+            cell = row.createCell(columnCount++);
+            if (responseDto.getName() instanceof String) {
+                cell.setCellValue((String) responseDto.getName());
+            }
+            cell = row.createCell(columnCount++);
+            if (responseDto.getUserName() instanceof String) {
+                cell.setCellValue((String) responseDto.getUserName());
+            }
+            cell = row.createCell(columnCount++);
+            if (responseDto.getContactNo() instanceof String) {
+                cell.setCellValue((String) responseDto.getContactNo());
+            }
+            cell = row.createCell(columnCount++);
+            if (responseDto.getEmail() instanceof String) {
+                cell.setCellValue((String) responseDto.getEmail());
+            }
+        }
+
+        byte[] excelBytes;
+        try (ByteArrayOutputStream outputStream = new ByteArrayOutputStream()) {
+            workbook.write(outputStream);
+            excelBytes = outputStream.toByteArray();
+        }
+        return excelBytes;
     }
 }
