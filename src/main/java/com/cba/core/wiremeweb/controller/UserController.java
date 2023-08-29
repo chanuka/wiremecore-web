@@ -1,11 +1,9 @@
 package com.cba.core.wiremeweb.controller;
 
-import com.cba.core.wiremeweb.controller.resource.GenericResource;
 import com.cba.core.wiremeweb.controller.resource.UserResource;
 import com.cba.core.wiremeweb.dto.ChangePasswordRequestDto;
 import com.cba.core.wiremeweb.dto.UserRequestDto;
 import com.cba.core.wiremeweb.dto.UserResponseDto;
-import com.cba.core.wiremeweb.service.GenericService;
 import com.cba.core.wiremeweb.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;

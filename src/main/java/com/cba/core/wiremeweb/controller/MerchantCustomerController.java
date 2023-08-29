@@ -1,9 +1,12 @@
 package com.cba.core.wiremeweb.controller;
 
-import com.cba.core.wiremeweb.controller.resource.GenericResource;
+import com.cba.core.wiremeweb.controller.resource.MerchantCustomerResource;
 import com.cba.core.wiremeweb.dto.MerchantCustomerRequestDto;
 import com.cba.core.wiremeweb.dto.MerchantCustomerResponseDto;
+import com.cba.core.wiremeweb.dto.MerchantRequestDto;
+import com.cba.core.wiremeweb.dto.MerchantResponseDto;
 import com.cba.core.wiremeweb.service.GenericService;
+import com.cba.core.wiremeweb.service.MerchantService;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -24,11 +27,12 @@ import java.util.Map;
 @Component
 @RequiredArgsConstructor
 @RequestMapping("/${application.resource.partners}")
-public class MerchantCustomerController implements GenericResource<MerchantCustomerResponseDto, MerchantCustomerRequestDto> {
+public class MerchantCustomerController implements MerchantCustomerResource<MerchantCustomerResponseDto, MerchantCustomerRequestDto> {
 
     private static final Logger logger = LoggerFactory.getLogger(MerchantCustomerController.class);
 
     private final GenericService<MerchantCustomerResponseDto, MerchantCustomerRequestDto> service;
+    private final MerchantService<MerchantResponseDto, MerchantRequestDto> merchantService;
     private final MessageSource messageSource;
 
     @Override
@@ -64,8 +68,8 @@ public class MerchantCustomerController implements GenericResource<MerchantCusto
         logger.debug(messageSource.getMessage("MERCHANT_CUSTOMER_GET_SEARCH_DEBUG", null, currentLocale));
 
         try {
-            Page<MerchantCustomerResponseDto> responseDtolist = service.findBySearchParamLike(searchParamList, page, pageSize);
-            return ResponseEntity.ok().body(responseDtolist.getContent());
+            Page<MerchantCustomerResponseDto> responseDtoList = service.findBySearchParamLike(searchParamList, page, pageSize);
+            return ResponseEntity.ok().body(responseDtoList.getContent());
         } catch (Exception e) {
             e.printStackTrace();
             logger.error(e.getMessage());
@@ -181,6 +185,20 @@ public class MerchantCustomerController implements GenericResource<MerchantCusto
             headers.setContentDispositionFormData("filename", "Merchant-Customer-details.pdf");
             return new ResponseEntity<byte[]>(pdfBytes, headers, HttpStatus.OK);
 
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+            throw e;
+        }
+    }
+
+    @Override
+    public ResponseEntity<List<MerchantResponseDto>> findMerchantByPartner(int id, int page, int pageSize) throws Exception {
+        Locale currentLocale = LocaleContextHolder.getLocale();
+        logger.debug(messageSource.getMessage("MERCHANT_CUSTOMER_GET_MERCHANTS_DEBUG", null, currentLocale));
+
+        try {
+            Page<MerchantResponseDto> responseDtoList = merchantService.findMerchantsByPartner(id, page, pageSize);
+            return ResponseEntity.ok().body(responseDtoList.getContent());
         } catch (Exception e) {
             logger.error(e.getMessage());
             throw e;

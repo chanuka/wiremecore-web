@@ -1,9 +1,9 @@
 package com.cba.core.wiremeweb.service.impl;
 
-import com.cba.core.wiremeweb.dao.GenericDao;
+import com.cba.core.wiremeweb.dao.MerchantDao;
 import com.cba.core.wiremeweb.dto.MerchantRequestDto;
 import com.cba.core.wiremeweb.dto.MerchantResponseDto;
-import com.cba.core.wiremeweb.service.GenericService;
+import com.cba.core.wiremeweb.service.MerchantService;
 import com.cba.core.wiremeweb.util.UserBean;
 import lombok.RequiredArgsConstructor;
 import net.sf.jasperreports.engine.*;
@@ -25,9 +25,9 @@ import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
-public class MerchantServiceImpl implements GenericService<MerchantResponseDto, MerchantRequestDto> {
+public class MerchantServiceImpl implements MerchantService<MerchantResponseDto, MerchantRequestDto> {
 
-    private final GenericDao<MerchantResponseDto, MerchantRequestDto> dao;
+    private final MerchantDao<MerchantResponseDto, MerchantRequestDto> dao;
     private final UserBean userBean;
 
     @Override
@@ -149,5 +149,10 @@ public class MerchantServiceImpl implements GenericService<MerchantResponseDto, 
             excelBytes = outputStream.toByteArray();
         }
         return excelBytes;
+    }
+
+    @Override
+    public Page<MerchantResponseDto> findMerchantsByPartner(int id, int page, int pageSize) throws Exception {
+        return dao.findMerchantsByPartner(id, page, pageSize);
     }
 }

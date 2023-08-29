@@ -1,6 +1,6 @@
 package com.cba.core.wiremeweb.dao.impl;
 
-import com.cba.core.wiremeweb.dao.GenericDao;
+import com.cba.core.wiremeweb.dao.MerchantDao;
 import com.cba.core.wiremeweb.dto.MerchantRequestDto;
 import com.cba.core.wiremeweb.dto.MerchantResponseDto;
 import com.cba.core.wiremeweb.exception.NotFoundException;
@@ -16,7 +16,6 @@ import com.cba.core.wiremeweb.util.UserBean;
 import com.cba.core.wiremeweb.util.UserOperationEnum;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import jakarta.servlet.http.HttpServletRequest;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -36,7 +35,7 @@ import java.util.stream.Collectors;
 @Component
 @Transactional
 @RequiredArgsConstructor
-public class MerchantDaoImpl implements GenericDao<MerchantResponseDto, MerchantRequestDto> {
+public class MerchantDaoImpl implements MerchantDao<MerchantResponseDto, MerchantRequestDto> {
 
     private final MerchantRepository repository;
     private final GlobalAuditEntryRepository globalAuditEntryRepository;
@@ -257,5 +256,16 @@ public class MerchantDaoImpl implements GenericDao<MerchantResponseDto, Merchant
                     return responseDto;
                 })
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public Page<MerchantResponseDto> findMerchantsByPartner(int id, int page, int pageSize) throws Exception {
+        Pageable pageable = PageRequest.of(page, pageSize);
+
+        Page<Merchant> entitiesPage = repository.findAllByMerchantCustomer_Id(id, pageable);
+        if (entitiesPage.isEmpty()) {
+            throw new NotFoundException("No Merchants found");
+        }
+        return entitiesPage.map(MerchantMapper::toDto);
     }
 }

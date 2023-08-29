@@ -1,6 +1,5 @@
 package com.cba.core.wiremeweb.dao.impl;
 
-import com.cba.core.wiremeweb.dao.GenericDao;
 import com.cba.core.wiremeweb.dao.UserDao;
 import com.cba.core.wiremeweb.dto.ChangePasswordRequestDto;
 import com.cba.core.wiremeweb.dto.UserRequestDto;
@@ -19,7 +18,6 @@ import com.cba.core.wiremeweb.util.UserOperationEnum;
 import com.cba.core.wiremeweb.util.UserTypeEnum;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import jakarta.servlet.http.HttpServletRequest;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
