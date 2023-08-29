@@ -1,9 +1,11 @@
 package com.cba.core.wiremeweb.dao.impl;
 
 import com.cba.core.wiremeweb.dao.GenericDao;
+import com.cba.core.wiremeweb.dao.TerminalDao;
 import com.cba.core.wiremeweb.dto.TerminalRequestDto;
 import com.cba.core.wiremeweb.dto.TerminalResponseDto;
 import com.cba.core.wiremeweb.exception.NotFoundException;
+import com.cba.core.wiremeweb.mapper.MerchantMapper;
 import com.cba.core.wiremeweb.mapper.TerminalMapper;
 import com.cba.core.wiremeweb.model.GlobalAuditEntry;
 import com.cba.core.wiremeweb.model.Merchant;
@@ -35,7 +37,7 @@ import java.util.stream.Collectors;
 @Component
 @Transactional
 @RequiredArgsConstructor
-public class TerminalDaoImpl implements GenericDao<TerminalResponseDto, TerminalRequestDto> {
+public class TerminalDaoImpl implements TerminalDao<TerminalResponseDto, TerminalRequestDto> {
 
     private final TerminalRepository repository;
     private final GlobalAuditEntryRepository globalAuditEntryRepository;
@@ -236,5 +238,16 @@ public class TerminalDaoImpl implements GenericDao<TerminalResponseDto, Terminal
                     return responseDto;
                 })
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public Page<TerminalResponseDto> findTerminalsByMerchant(int id, int page, int pageSize) throws Exception {
+        Pageable pageable = PageRequest.of(page, pageSize);
+
+        Page<Terminal> entitiesPage = repository.findAllByMerchant_Id(id, pageable);
+        if (entitiesPage.isEmpty()) {
+            throw new NotFoundException("No Terminals found");
+        }
+        return entitiesPage.map(TerminalMapper::toDto);
     }
 }

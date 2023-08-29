@@ -11,7 +11,7 @@ import java.util.List;
 public interface MerchantCustomerResource<T, K> extends GenericResource<T, K> {
 
     @GetMapping("/merchants/{id}")
-    ResponseEntity<List<MerchantResponseDto>> findMerchantByPartner(@PathVariable(value = "id") int id,
+    ResponseEntity<List<MerchantResponseDto>> findMerchantsByPartner(@PathVariable(value = "id") int id,
                                                                                    @RequestParam(defaultValue = "0") int page,
                                                                                    @RequestParam(defaultValue = "5") int pageSize) throws Exception;
 }

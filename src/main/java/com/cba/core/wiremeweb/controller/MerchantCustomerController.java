@@ -192,7 +192,7 @@ public class MerchantCustomerController implements MerchantCustomerResource<Merc
     }
 
     @Override
-    public ResponseEntity<List<MerchantResponseDto>> findMerchantByPartner(int id, int page, int pageSize) throws Exception {
+    public ResponseEntity<List<MerchantResponseDto>> findMerchantsByPartner(int id, int page, int pageSize) throws Exception {
         Locale currentLocale = LocaleContextHolder.getLocale();
         logger.debug(messageSource.getMessage("MERCHANT_CUSTOMER_GET_MERCHANTS_DEBUG", null, currentLocale));
 

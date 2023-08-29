@@ -1,9 +1,13 @@
 package com.cba.core.wiremeweb.controller;
 
 import com.cba.core.wiremeweb.controller.resource.GenericResource;
+import com.cba.core.wiremeweb.controller.resource.MerchantResource;
 import com.cba.core.wiremeweb.dto.MerchantRequestDto;
 import com.cba.core.wiremeweb.dto.MerchantResponseDto;
+import com.cba.core.wiremeweb.dto.TerminalRequestDto;
+import com.cba.core.wiremeweb.dto.TerminalResponseDto;
 import com.cba.core.wiremeweb.service.GenericService;
+import com.cba.core.wiremeweb.service.TerminalService;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -24,11 +28,12 @@ import java.util.Map;
 @Component
 @RequiredArgsConstructor
 @RequestMapping("/${application.resource.merchants}")
-public class MerchantController implements GenericResource<MerchantResponseDto, MerchantRequestDto> {
+public class MerchantController implements MerchantResource<MerchantResponseDto, MerchantRequestDto> {
 
     private static final Logger logger = LoggerFactory.getLogger(MerchantController.class);
 
     private final GenericService<MerchantResponseDto, MerchantRequestDto> service;
+    private final TerminalService<TerminalResponseDto, TerminalRequestDto> terminalService;
     private final MessageSource messageSource;
 
     @Override
@@ -180,6 +185,20 @@ public class MerchantController implements GenericResource<MerchantResponseDto, 
             headers.setContentDispositionFormData("filename", "Merchant-details.pdf");
             return new ResponseEntity<byte[]>(pdfBytes, headers, HttpStatus.OK);
 
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+            throw e;
+        }
+    }
+
+    @Override
+    public ResponseEntity<List<TerminalResponseDto>> findTerminalsByMerchant(int id, int page, int pageSize) throws Exception {
+        Locale currentLocale = LocaleContextHolder.getLocale();
+        logger.debug(messageSource.getMessage("MERCHANT_CUSTOMER_GET_MERCHANTS_DEBUG", null, currentLocale));
+
+        try {
+            Page<TerminalResponseDto> responseDtoList = terminalService.findTerminalsByMerchant(id, page, pageSize);
+            return ResponseEntity.ok().body(responseDtoList.getContent());
         } catch (Exception e) {
             logger.error(e.getMessage());
             throw e;

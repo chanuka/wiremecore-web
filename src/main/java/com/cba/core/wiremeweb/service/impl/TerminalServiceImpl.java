@@ -1,9 +1,11 @@
 package com.cba.core.wiremeweb.service.impl;
 
 import com.cba.core.wiremeweb.dao.GenericDao;
+import com.cba.core.wiremeweb.dao.TerminalDao;
 import com.cba.core.wiremeweb.dto.TerminalRequestDto;
 import com.cba.core.wiremeweb.dto.TerminalResponseDto;
 import com.cba.core.wiremeweb.service.GenericService;
+import com.cba.core.wiremeweb.service.TerminalService;
 import com.cba.core.wiremeweb.util.UserBean;
 import lombok.RequiredArgsConstructor;
 import net.sf.jasperreports.engine.*;
@@ -25,9 +27,9 @@ import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
-public class TerminalServiceImpl implements GenericService<TerminalResponseDto, TerminalRequestDto> {
+public class TerminalServiceImpl implements TerminalService<TerminalResponseDto, TerminalRequestDto> {
 
-    private final GenericDao<TerminalResponseDto, TerminalRequestDto> dao;
+    private final TerminalDao<TerminalResponseDto, TerminalRequestDto> dao;
     private final UserBean userBean;
 
     @Override
@@ -140,5 +142,10 @@ public class TerminalServiceImpl implements GenericService<TerminalResponseDto, 
             excelBytes = outputStream.toByteArray();
         }
         return excelBytes;
+    }
+
+    @Override
+    public Page<TerminalResponseDto> findTerminalsByMerchant(int id, int page, int pageSize) throws Exception {
+        return dao.findTerminalsByMerchant(id, page, pageSize);
     }
 }
