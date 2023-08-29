@@ -12,6 +12,7 @@ import com.cba.core.wiremeweb.model.Status;
 import com.cba.core.wiremeweb.repository.GlobalAuditEntryRepository;
 import com.cba.core.wiremeweb.repository.MerchantRepository;
 import com.cba.core.wiremeweb.repository.specification.MerchantSpecification;
+import com.cba.core.wiremeweb.util.UserBean;
 import com.cba.core.wiremeweb.util.UserOperationEnum;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
@@ -39,7 +40,9 @@ public class MerchantDaoImpl implements GenericDao<MerchantResponseDto, Merchant
 
     private final MerchantRepository repository;
     private final GlobalAuditEntryRepository globalAuditEntryRepository;
-    private final HttpServletRequest request;
+    private final ObjectMapper objectMapper;
+    private final UserBean userBean;
+
     @Value("${application.resource.merchants}")
     private String resource;
 
@@ -93,14 +96,13 @@ public class MerchantDaoImpl implements GenericDao<MerchantResponseDto, Merchant
     @CacheEvict(value = "merchants", allEntries = true)
     public MerchantResponseDto deleteById(int id) throws Exception {
         try {
-            ObjectMapper objectMapper = new ObjectMapper();
             Merchant entity = repository.findById(id).orElseThrow(() -> new NotFoundException("Merchant not found"));
             MerchantResponseDto responseDto = MerchantMapper.toDto(entity);
 
             repository.deleteById(id);
             globalAuditEntryRepository.save(new GlobalAuditEntry(resource, UserOperationEnum.DELETE.getValue(),
                     id, objectMapper.writeValueAsString(responseDto), null,
-                    request.getRemoteAddr()));
+                    userBean.getRemoteAdr()));
 
             return responseDto;
 
@@ -113,8 +115,7 @@ public class MerchantDaoImpl implements GenericDao<MerchantResponseDto, Merchant
     @CacheEvict(value = "merchants", allEntries = true)
     public void deleteByIdList(List<Integer> idList) throws Exception {
         try {
-            ObjectMapper objectMapper = new ObjectMapper();
-            String remoteAdr = request.getRemoteAddr();
+            String remoteAdr = userBean.getRemoteAdr();
 
             idList.stream()
                     .map((id) -> repository.findById(id).orElseThrow(() -> new NotFoundException("Merchant not found")))
@@ -144,8 +145,7 @@ public class MerchantDaoImpl implements GenericDao<MerchantResponseDto, Merchant
     @CacheEvict(value = "merchants", allEntries = true)
     public MerchantResponseDto updateById(int id, MerchantRequestDto requestDto) throws Exception {
 
-        ObjectMapper objectMapper = new ObjectMapper();
-        String remoteAdr = request.getRemoteAddr();
+        String remoteAdr = userBean.getRemoteAdr();
         boolean updateRequired = false;
         Map<String, Object> oldDataMap = new HashMap<>();
         Map<String, Object> newDataMap = new HashMap<>();
@@ -219,8 +219,7 @@ public class MerchantDaoImpl implements GenericDao<MerchantResponseDto, Merchant
     @CacheEvict(value = "merchants", allEntries = true)
     public MerchantResponseDto create(MerchantRequestDto requestDto) throws Exception {
 
-        ObjectMapper objectMapper = new ObjectMapper();
-        String remoteAdr = request.getRemoteAddr();
+        String remoteAdr = userBean.getRemoteAdr();
 
         Merchant toInsert = MerchantMapper.toModel(requestDto);
 
@@ -237,8 +236,7 @@ public class MerchantDaoImpl implements GenericDao<MerchantResponseDto, Merchant
     @CacheEvict(value = "merchants", allEntries = true)
     public List<MerchantResponseDto> createBulk(List<MerchantRequestDto> requestDtoList) throws Exception {
 
-        ObjectMapper objectMapper = new ObjectMapper();
-        String remoteAdr = request.getRemoteAddr();
+        String remoteAdr = userBean.getRemoteAdr();
 
         List<Merchant> entityList = requestDtoList
                 .stream()

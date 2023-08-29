@@ -42,7 +42,6 @@ public class AuthTokenVerifyFilter extends OncePerRequestFilter {
     private final TokenBlacklistServiceImpl tokenBlacklistServiceImpl;
     private final MessageSource messageSource;
 
-
     @Override
     protected void doFilterInternal(HttpServletRequest request,
                                     HttpServletResponse response,
@@ -68,6 +67,7 @@ public class AuthTokenVerifyFilter extends OncePerRequestFilter {
             String username = claimsJws.getSubject();
             String validity = claimsJws.getClaimAsString("Validity");
             userBean.setUsername(username); // set user data in request scope for db updating
+            userBean.setRemoteAdr(request.getRemoteAddr()); // set remote address in request scope for db updating
 
             if (!validity.equals(String.valueOf(UserTypeEnum.WEB.getValue()))) {
                 throw new JwtTokenException(token, messageSource.getMessage("GLOBAL_TOKEN_MODULE_ERROR", null, currentLocale));

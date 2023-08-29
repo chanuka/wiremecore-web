@@ -1,9 +1,10 @@
 package com.cba.core.wiremeweb.service.impl;
 
-import com.cba.core.wiremeweb.dao.GenericDao;
+import com.cba.core.wiremeweb.dao.UserDao;
+import com.cba.core.wiremeweb.dto.ChangePasswordRequestDto;
 import com.cba.core.wiremeweb.dto.UserRequestDto;
 import com.cba.core.wiremeweb.dto.UserResponseDto;
-import com.cba.core.wiremeweb.service.GenericService;
+import com.cba.core.wiremeweb.service.UserService;
 import com.cba.core.wiremeweb.util.UserBean;
 import lombok.RequiredArgsConstructor;
 import net.sf.jasperreports.engine.*;
@@ -25,9 +26,9 @@ import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
-public class UserServiceImpl implements GenericService<UserResponseDto, UserRequestDto> {
+public class UserServiceImpl implements UserService<UserResponseDto, UserRequestDto> {
 
-    private final GenericDao<UserResponseDto, UserRequestDto> dao;
+    private final UserDao<UserResponseDto, UserRequestDto> dao;
     private final UserBean userBean;
 
     @Override
@@ -138,5 +139,10 @@ public class UserServiceImpl implements GenericService<UserResponseDto, UserRequ
             excelBytes = outputStream.toByteArray();
         }
         return excelBytes;
+    }
+
+    @Override
+    public String changePassword(ChangePasswordRequestDto requestDto) throws Exception {
+        return dao.changePassword(requestDto, userBean.getUsername());
     }
 }

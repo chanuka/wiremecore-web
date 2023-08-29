@@ -2,6 +2,7 @@ package com.cba.core.wiremeweb.dao.impl;
 
 import com.cba.core.wiremeweb.dao.CustomUserDetailsDao;
 import com.cba.core.wiremeweb.dto.ApplicationUserDto;
+import com.cba.core.wiremeweb.exception.NotFoundException;
 import com.cba.core.wiremeweb.model.User;
 import com.cba.core.wiremeweb.model.UserRole;
 import com.cba.core.wiremeweb.model.UserType;
@@ -28,7 +29,10 @@ public class CustomUserDetailsDaoImpl implements CustomUserDetailsDao {
         try {
             UserType userType = new UserType();
             userType.setId(UserTypeEnum.WEB.getValue()); // only web users are allowed in this module
-            User user = userRepository.findByUserNameAndUserType(userName, userType);
+
+            User user = userRepository.findByUserNameAndUserType(userName, userType).orElseThrow(() -> new NotFoundException("User not found"));
+
+//            User user = userRepository.findByUserNameAndUserType(userName, userType);
 
             Set<SimpleGrantedAuthority> permissions = user.getUserRolesForUserId()
                     .stream()

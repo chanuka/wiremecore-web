@@ -11,5 +11,6 @@ import org.springframework.stereotype.Component;
 public class UserBean {
 
     private String username;
+    private String remoteAdr;
 
 }

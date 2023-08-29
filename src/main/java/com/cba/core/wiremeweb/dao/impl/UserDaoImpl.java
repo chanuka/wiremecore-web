@@ -1,6 +1,8 @@
 package com.cba.core.wiremeweb.dao.impl;
 
 import com.cba.core.wiremeweb.dao.GenericDao;
+import com.cba.core.wiremeweb.dao.UserDao;
+import com.cba.core.wiremeweb.dto.ChangePasswordRequestDto;
 import com.cba.core.wiremeweb.dto.UserRequestDto;
 import com.cba.core.wiremeweb.dto.UserResponseDto;
 import com.cba.core.wiremeweb.exception.NotFoundException;
@@ -8,10 +10,13 @@ import com.cba.core.wiremeweb.mapper.UserMapper;
 import com.cba.core.wiremeweb.model.GlobalAuditEntry;
 import com.cba.core.wiremeweb.model.Status;
 import com.cba.core.wiremeweb.model.User;
+import com.cba.core.wiremeweb.model.UserType;
 import com.cba.core.wiremeweb.repository.GlobalAuditEntryRepository;
 import com.cba.core.wiremeweb.repository.UserRepository;
 import com.cba.core.wiremeweb.repository.specification.UserSpecification;
+import com.cba.core.wiremeweb.util.UserBean;
 import com.cba.core.wiremeweb.util.UserOperationEnum;
+import com.cba.core.wiremeweb.util.UserTypeEnum;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import jakarta.servlet.http.HttpServletRequest;
@@ -24,6 +29,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
 import java.util.HashMap;
@@ -34,11 +40,14 @@ import java.util.stream.Collectors;
 @Component
 @Transactional
 @RequiredArgsConstructor
-public class UserDaoImpl implements GenericDao<UserResponseDto, UserRequestDto> {
+public class UserDaoImpl implements UserDao<UserResponseDto, UserRequestDto> {
 
     private final UserRepository repository;
     private final GlobalAuditEntryRepository globalAuditEntryRepository;
-    private final HttpServletRequest request;
+    private final ObjectMapper objectMapper;
+    private final PasswordEncoder passwordEncoder;
+    private final UserBean userBean;
+
     @Value("${application.resource.users}")
     private String resource;
 
@@ -89,14 +98,13 @@ public class UserDaoImpl implements GenericDao<UserResponseDto, UserRequestDto> 
     @CacheEvict(value = "users", allEntries = true)
     public UserResponseDto deleteById(int id) throws Exception {
         try {
-            ObjectMapper objectMapper = new ObjectMapper();
             User entity = repository.findById(id).orElseThrow(() -> new NotFoundException("User not found"));
             UserResponseDto responseDto = UserMapper.toDto(entity);
 
             repository.deleteById(id);
             globalAuditEntryRepository.save(new GlobalAuditEntry(resource, UserOperationEnum.DELETE.getValue(),
                     id, objectMapper.writeValueAsString(responseDto), null,
-                    request.getRemoteAddr()));
+                    userBean.getRemoteAdr()));
 
             return responseDto;
 
@@ -109,8 +117,7 @@ public class UserDaoImpl implements GenericDao<UserResponseDto, UserRequestDto> 
     @CacheEvict(value = "users", allEntries = true)
     public void deleteByIdList(List<Integer> idList) throws Exception {
         try {
-            ObjectMapper objectMapper = new ObjectMapper();
-            String remoteAdr = request.getRemoteAddr();
+            String remoteAdr = userBean.getRemoteAdr();
 
             idList.stream()
                     .map((id) -> repository.findById(id).orElseThrow(() -> new NotFoundException("User not found")))
@@ -140,8 +147,7 @@ public class UserDaoImpl implements GenericDao<UserResponseDto, UserRequestDto> 
     @CacheEvict(value = "users", allEntries = true)
     public UserResponseDto updateById(int id, UserRequestDto requestDto) throws Exception {
 
-        ObjectMapper objectMapper = new ObjectMapper();
-        String remoteAdr = request.getRemoteAddr();
+        String remoteAdr = userBean.getRemoteAdr();
         boolean updateRequired = false;
         Map<String, Object> oldDataMap = new HashMap<>();
         Map<String, Object> newDataMap = new HashMap<>();
@@ -200,9 +206,7 @@ public class UserDaoImpl implements GenericDao<UserResponseDto, UserRequestDto> 
     @Override
     @CacheEvict(value = "users", allEntries = true)
     public UserResponseDto create(UserRequestDto requestDto) throws Exception {
-        ObjectMapper objectMapper = new ObjectMapper();
-        String remoteAdr = request.getRemoteAddr();
-
+        String remoteAdr = userBean.getRemoteAdr();
 
         User toInsert = UserMapper.toModel(requestDto);
 
@@ -219,8 +223,7 @@ public class UserDaoImpl implements GenericDao<UserResponseDto, UserRequestDto> 
     @CacheEvict(value = "users", allEntries = true)
     public List<UserResponseDto> createBulk(List<UserRequestDto> requestDtoList) throws Exception {
 
-        ObjectMapper objectMapper = new ObjectMapper();
-        String remoteAdr = request.getRemoteAddr();
+        String remoteAdr = userBean.getRemoteAdr();
 
         List<User> entityList = requestDtoList
                 .stream()
@@ -241,5 +244,33 @@ public class UserDaoImpl implements GenericDao<UserResponseDto, UserRequestDto> 
                     return responseDto;
                 })
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public String changePassword(ChangePasswordRequestDto requestDto, String userName) throws Exception {
+        try {
+            Map<String, Object> map = new HashMap<>();
+
+            UserType userType = new UserType();
+            userType.setId(UserTypeEnum.WEB.getValue());
+
+            User entity = repository.findByUserNameAndUserType(userName, userType).orElseThrow(() -> new NotFoundException("User not found"));
+//            UserResponseDto responseDto = UserMapper.toDto(entity);
+
+            entity.setPassword(passwordEncoder.encode(requestDto.getNewPassword()));
+            repository.saveAndFlush(entity);
+
+            map.put("password", "xxxxxxxx");
+            String maskValue = objectMapper.writeValueAsString(map);
+
+            globalAuditEntryRepository.save(new GlobalAuditEntry(resource, UserOperationEnum.UPDATE.getValue(),
+                    entity.getId(), maskValue, maskValue,
+                    userBean.getRemoteAdr()));
+
+            return "success";
+
+        } catch (Exception rr) {
+            throw rr;
+        }
     }
 }

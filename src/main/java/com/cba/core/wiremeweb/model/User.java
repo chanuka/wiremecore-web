@@ -3,7 +3,9 @@ package com.cba.core.wiremeweb.model;
 
 
 import jakarta.persistence.*;
+import org.springframework.data.annotation.CreatedBy;
 import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedBy;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
@@ -36,8 +38,10 @@ public class User implements java.io.Serializable {
     private Date lastLoginTime;
     private int loginAttempt;
     private String sessionId;
-    private int createdBy;
-    private Integer modifiedBy;
+    @CreatedBy
+    private String createdBy;
+    @LastModifiedBy
+    private String modifiedBy;
     @CreatedDate
     private Date createdAt;
     @LastModifiedDate
@@ -57,7 +61,7 @@ public class User implements java.io.Serializable {
     }
 
 
-    public User(String name, String userName, String password, int loginAttempt, int createdBy, Date createdAt, Date updatedAt) {
+    public User(String name, String userName, String password, int loginAttempt, String createdBy, Date createdAt, Date updatedAt) {
         this.name = name;
         this.userName = userName;
         this.password = password;
@@ -67,7 +71,7 @@ public class User implements java.io.Serializable {
         this.updatedAt = updatedAt;
     }
 
-    public User(Device device, Merchant merchant, MerchantCustomer merchantCustomer, Status status, UserType userType, String name, String userName, String password, String email, String contactNo, Date lastLoginTime, int loginAttempt, String sessionId, int createdBy, Integer modifiedBy, Date createdAt, Date updatedAt, Set<Permission> permissionsForModifiedBy, Set<UserRole> userRolesForCreatedBy, Set<DeviceConfig> deviceConfigsForModifiedBy, Set<TokenRefresh> refreshTokens, Set<DeviceConfig> deviceConfigsForCreatedBy, Set<UserRole> userRolesForUserId, Set<OnetimePassword> onetimePasswords, Set<Permission> permissionsForCreatedBy, Set<UserConfig> userConfigs, Set<UserRole> userRolesForModifiedBy) {
+    public User(Device device, Merchant merchant, MerchantCustomer merchantCustomer, Status status, UserType userType, String name, String userName, String password, String email, String contactNo, Date lastLoginTime, int loginAttempt, String sessionId, String createdBy, String modifiedBy, Date createdAt, Date updatedAt, Set<Permission> permissionsForModifiedBy, Set<UserRole> userRolesForCreatedBy, Set<DeviceConfig> deviceConfigsForModifiedBy, Set<TokenRefresh> refreshTokens, Set<DeviceConfig> deviceConfigsForCreatedBy, Set<UserRole> userRolesForUserId, Set<OnetimePassword> onetimePasswords, Set<Permission> permissionsForCreatedBy, Set<UserConfig> userConfigs, Set<UserRole> userRolesForModifiedBy) {
         this.device = device;
         this.merchant = merchant;
         this.merchantCustomer = merchantCustomer;
@@ -238,22 +242,22 @@ public class User implements java.io.Serializable {
     }
 
 
-    @Column(name = "created_by", nullable = false)
-    public int getCreatedBy() {
+    @Column(name = "created_by", nullable = false, length = 45)
+    public String getCreatedBy() {
         return this.createdBy;
     }
 
-    public void setCreatedBy(int createdBy) {
+    public void setCreatedBy(String createdBy) {
         this.createdBy = createdBy;
     }
 
 
-    @Column(name = "modified_by")
-    public Integer getModifiedBy() {
+    @Column(name = "modified_by", length = 45)
+    public String getModifiedBy() {
         return this.modifiedBy;
     }
 
-    public void setModifiedBy(Integer modifiedBy) {
+    public void setModifiedBy(String modifiedBy) {
         this.modifiedBy = modifiedBy;
     }
 

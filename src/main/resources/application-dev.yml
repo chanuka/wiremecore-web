@@ -1,10 +1,10 @@
 spring:
-  cache:
-    redis:
-      host: localhost
-      port: 6379
-#      time-to-live: 100S
-    type: redis
+#  cache:
+#    redis:
+#      host: localhost
+#      port: 6379
+##      time-to-live: 100S
+#    type: redis
   messages:
     basename: messages
     encoding: UTF-8
@@ -13,6 +13,7 @@ spring:
       ddl-auto: validate
     properties:
       hibernate:
+        show_sql: true
         jdbc:
           batch_size: 50
   datasource:
@@ -42,7 +43,7 @@ application:
   jwt:
     secretKey: securesecuresecuresecuresecuresecuresecuresecuresecuresecuresecure
     tokenPrefix: Bearer
-    tokenExpirationAfterMillis: 84400000 # Token is issued for a Day, has to change once go live
+    tokenExpirationAfterMillis: 604800000       #86400000,3600000,60,000  Token is issued for a week, has to change once go live
   refresh:
     tokenExpirationAfterMillis: 120000
   resource:

@@ -12,6 +12,7 @@ import com.cba.core.wiremeweb.model.Terminal;
 import com.cba.core.wiremeweb.repository.GlobalAuditEntryRepository;
 import com.cba.core.wiremeweb.repository.TerminalRepository;
 import com.cba.core.wiremeweb.repository.specification.TerminalSpecification;
+import com.cba.core.wiremeweb.util.UserBean;
 import com.cba.core.wiremeweb.util.UserOperationEnum;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
@@ -39,7 +40,9 @@ public class TerminalDaoImpl implements GenericDao<TerminalResponseDto, Terminal
 
     private final TerminalRepository repository;
     private final GlobalAuditEntryRepository globalAuditEntryRepository;
-    private final HttpServletRequest request;
+    private final ObjectMapper objectMapper;
+    private final UserBean userBean;
+
     @Value("${application.resource.terminals}")
     private String resource;
 
@@ -94,14 +97,13 @@ public class TerminalDaoImpl implements GenericDao<TerminalResponseDto, Terminal
     @CacheEvict(value = "terminals", allEntries = true)
     public TerminalResponseDto deleteById(int id) throws Exception {
         try {
-            ObjectMapper objectMapper = new ObjectMapper();
             Terminal entity = repository.findById(id).orElseThrow(() -> new NotFoundException("Terminal not found"));
             TerminalResponseDto responseDto = TerminalMapper.toDto(entity);
 
             repository.deleteById(id);
             globalAuditEntryRepository.save(new GlobalAuditEntry(resource, UserOperationEnum.DELETE.getValue(),
                     id, objectMapper.writeValueAsString(responseDto), null,
-                    request.getRemoteAddr()));
+                    userBean.getRemoteAdr()));
 
             return responseDto;
 
@@ -114,8 +116,7 @@ public class TerminalDaoImpl implements GenericDao<TerminalResponseDto, Terminal
     @CacheEvict(value = "terminals", allEntries = true)
     public void deleteByIdList(List<Integer> idList) throws Exception {
         try {
-            ObjectMapper objectMapper = new ObjectMapper();
-            String remoteAdr = request.getRemoteAddr();
+            String remoteAdr = userBean.getRemoteAdr();
 
             idList.stream()
                     .map((id) -> repository.findById(id).orElseThrow(() -> new NotFoundException("Terminal not found")))
@@ -145,8 +146,7 @@ public class TerminalDaoImpl implements GenericDao<TerminalResponseDto, Terminal
     @CacheEvict(value = "terminals", allEntries = true)
     public TerminalResponseDto updateById(int id, TerminalRequestDto requestDto) throws Exception {
 
-        ObjectMapper objectMapper = new ObjectMapper();
-        String remoteAdr = request.getRemoteAddr();
+        String remoteAdr = userBean.getRemoteAdr();
         boolean updateRequired = false;
         Map<String, Object> oldDataMap = new HashMap<>();
         Map<String, Object> newDataMap = new HashMap<>();
@@ -199,8 +199,7 @@ public class TerminalDaoImpl implements GenericDao<TerminalResponseDto, Terminal
     @CacheEvict(value = "terminals", allEntries = true)
     public TerminalResponseDto create(TerminalRequestDto requestDto) throws Exception {
 
-        ObjectMapper objectMapper = new ObjectMapper();
-        String remoteAdr = request.getRemoteAddr();
+        String remoteAdr = userBean.getRemoteAdr();
 
         Terminal toInsert = TerminalMapper.toModel(requestDto);
 
@@ -217,8 +216,7 @@ public class TerminalDaoImpl implements GenericDao<TerminalResponseDto, Terminal
     @CacheEvict(value = "terminals", allEntries = true)
     public List<TerminalResponseDto> createBulk(List<TerminalRequestDto> requestDtoList) throws Exception {
 
-        ObjectMapper objectMapper = new ObjectMapper();
-        String remoteAdr = request.getRemoteAddr();
+        String remoteAdr = userBean.getRemoteAdr();
 
         List<Terminal> entityList = requestDtoList
                 .stream()

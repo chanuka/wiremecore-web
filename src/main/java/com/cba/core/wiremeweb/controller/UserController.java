@@ -1,9 +1,12 @@
 package com.cba.core.wiremeweb.controller;
 
 import com.cba.core.wiremeweb.controller.resource.GenericResource;
+import com.cba.core.wiremeweb.controller.resource.UserResource;
+import com.cba.core.wiremeweb.dto.ChangePasswordRequestDto;
 import com.cba.core.wiremeweb.dto.UserRequestDto;
 import com.cba.core.wiremeweb.dto.UserResponseDto;
 import com.cba.core.wiremeweb.service.GenericService;
+import com.cba.core.wiremeweb.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -24,11 +27,11 @@ import java.util.Map;
 @Component
 @RequiredArgsConstructor
 @RequestMapping("/${application.resource.users}")
-public class UserController implements GenericResource<UserResponseDto, UserRequestDto> {
+public class UserController implements UserResource<UserResponseDto, UserRequestDto> {
 
     private static final Logger logger = LoggerFactory.getLogger(UserController.class);
 
-    private final GenericService<UserResponseDto, UserRequestDto> service;
+    private final UserService<UserResponseDto, UserRequestDto> service;
     private final MessageSource messageSource;
 
     @Override
@@ -92,12 +95,12 @@ public class UserController implements GenericResource<UserResponseDto, UserRequ
     }
 
     @Override
-    public ResponseEntity<UserResponseDto> updateOne(int id, UserRequestDto userRequestDto) throws Exception {
+    public ResponseEntity<UserResponseDto> updateOne(int id, UserRequestDto requestDto) throws Exception {
 
         Locale currentLocale = LocaleContextHolder.getLocale();// works only when as local statement
         logger.debug(messageSource.getMessage("USER_UPDATE_ONE_DEBUG", null, currentLocale));
         try {
-            UserResponseDto responseDto = service.updateById(id, userRequestDto);
+            UserResponseDto responseDto = service.updateById(id, requestDto);
             return ResponseEntity.ok().body(responseDto);
         } catch (Exception e) {
             logger.error(e.getMessage());
@@ -106,12 +109,12 @@ public class UserController implements GenericResource<UserResponseDto, UserRequ
     }
 
     @Override
-    public ResponseEntity<UserResponseDto> createOne(UserRequestDto userRequestDto) throws Exception {
+    public ResponseEntity<UserResponseDto> createOne(UserRequestDto requestDto) throws Exception {
 
         Locale currentLocale = LocaleContextHolder.getLocale();// works only when as local statement
         logger.debug(messageSource.getMessage("USER_CREATE_ONE_DEBUG", null, currentLocale));
         try {
-            UserResponseDto responseDto = service.create(userRequestDto);
+            UserResponseDto responseDto = service.create(requestDto);
             return ResponseEntity.ok().body(responseDto);
         } catch (Exception e) {
             logger.error(e.getMessage());
@@ -188,6 +191,21 @@ public class UserController implements GenericResource<UserResponseDto, UserRequ
             headers.setContentDispositionFormData("filename", "user-details.pdf");
 
             return new ResponseEntity<byte[]>(pdfBytes, headers, HttpStatus.OK);
+
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+            throw e;
+        }
+    }
+
+    @Override
+    public ResponseEntity<String> changePassword(ChangePasswordRequestDto requestDto) throws Exception {
+        Locale currentLocale = LocaleContextHolder.getLocale();// works only when as local statement
+        logger.debug(messageSource.getMessage("USER_CHANGE_PASSWORD_DEBUG", null, currentLocale));
+
+        try {
+            service.changePassword(requestDto);
+            return ResponseEntity.ok().body(messageSource.getMessage("USER_CHANGE_PASSWORD_SUCCESS", null, currentLocale));
 
         } catch (Exception e) {
             logger.error(e.getMessage());

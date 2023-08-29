@@ -11,6 +11,7 @@ import com.cba.core.wiremeweb.model.Status;
 import com.cba.core.wiremeweb.repository.GlobalAuditEntryRepository;
 import com.cba.core.wiremeweb.repository.RoleRepository;
 import com.cba.core.wiremeweb.repository.specification.RoleSpecification;
+import com.cba.core.wiremeweb.util.UserBean;
 import com.cba.core.wiremeweb.util.UserOperationEnum;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
@@ -38,7 +39,9 @@ public class RoleDaoImpl implements GenericDao<RoleResponseDto, RoleRequestDto> 
 
     private final RoleRepository repository;
     private final GlobalAuditEntryRepository globalAuditEntryRepository;
-    private final HttpServletRequest request;
+    private final ObjectMapper objectMapper;
+    private final UserBean userBean;
+
     @Value("${application.resource.roles}")
     private String resource;
 
@@ -91,14 +94,13 @@ public class RoleDaoImpl implements GenericDao<RoleResponseDto, RoleRequestDto> 
     @CacheEvict(value = "roles", allEntries = true)
     public RoleResponseDto deleteById(int id) throws Exception {
         try {
-            ObjectMapper objectMapper = new ObjectMapper();
             Role entity = repository.findById(id).orElseThrow(() -> new NotFoundException("Role not found"));
             RoleResponseDto responseDto = RoleMapper.toDto(entity);
 
             repository.deleteById(id);
             globalAuditEntryRepository.save(new GlobalAuditEntry(resource, UserOperationEnum.DELETE.getValue(),
                     id, objectMapper.writeValueAsString(responseDto), null,
-                    request.getRemoteAddr()));
+                    userBean.getRemoteAdr()));
 
             return responseDto;
 
@@ -111,8 +113,7 @@ public class RoleDaoImpl implements GenericDao<RoleResponseDto, RoleRequestDto> 
     @CacheEvict(value = "roles", allEntries = true)
     public void deleteByIdList(List<Integer> idList) throws Exception {
         try {
-            ObjectMapper objectMapper = new ObjectMapper();
-            String remoteAdr = request.getRemoteAddr();
+            String remoteAdr = userBean.getRemoteAdr();
 
             idList.stream()
                     .map((id) -> repository.findById(id).orElseThrow(() -> new NotFoundException("Role not found")))
@@ -142,8 +143,7 @@ public class RoleDaoImpl implements GenericDao<RoleResponseDto, RoleRequestDto> 
     @CacheEvict(value = "roles", allEntries = true)
     public RoleResponseDto updateById(int id, RoleRequestDto requestDto) throws Exception {
 
-        ObjectMapper objectMapper = new ObjectMapper();
-        String remoteAdr = request.getRemoteAddr();
+        String remoteAdr = userBean.getRemoteAdr();
         boolean updateRequired = false;
         Map<String, Object> oldDataMap = new HashMap<>();
         Map<String, Object> newDataMap = new HashMap<>();
@@ -157,7 +157,7 @@ public class RoleDaoImpl implements GenericDao<RoleResponseDto, RoleRequestDto> 
 
             toBeUpdated.setRoleName(requestDto.getRoleName());
         }
-        if (!toBeUpdated.getStatus().equals(requestDto.getStatus())) {
+        if (!toBeUpdated.getStatus().getStatusCode().equals(requestDto.getStatus())) {
             updateRequired = true;
             oldDataMap.put("status", toBeUpdated.getStatus().getStatusCode());
             newDataMap.put("status", requestDto.getStatus());
@@ -182,9 +182,7 @@ public class RoleDaoImpl implements GenericDao<RoleResponseDto, RoleRequestDto> 
     @CacheEvict(value = "roles", allEntries = true)
     public RoleResponseDto create(RoleRequestDto requestDto) throws Exception {
 
-        ObjectMapper objectMapper = new ObjectMapper();
-        String remoteAdr = request.getRemoteAddr();
-
+        String remoteAdr = userBean.getRemoteAdr();
 
         Role toInsert = RoleMapper.toModel(requestDto);
 
@@ -201,8 +199,7 @@ public class RoleDaoImpl implements GenericDao<RoleResponseDto, RoleRequestDto> 
     @CacheEvict(value = "roles", allEntries = true)
     public List<RoleResponseDto> createBulk(List<RoleRequestDto> requestDtoList) throws Exception {
 
-        ObjectMapper objectMapper = new ObjectMapper();
-        String remoteAdr = request.getRemoteAddr();
+        String remoteAdr = userBean.getRemoteAdr();
 
         List<Role> entityList = requestDtoList
                 .stream()

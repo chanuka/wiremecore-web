@@ -11,6 +11,7 @@ import com.cba.core.wiremeweb.model.Status;
 import com.cba.core.wiremeweb.repository.DeviceRepository;
 import com.cba.core.wiremeweb.repository.GlobalAuditEntryRepository;
 import com.cba.core.wiremeweb.repository.specification.DeviceSpecification;
+import com.cba.core.wiremeweb.util.UserBean;
 import com.cba.core.wiremeweb.util.UserOperationEnum;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
@@ -34,14 +35,15 @@ import java.util.stream.Collectors;
 @Component
 @Transactional
 @RequiredArgsConstructor
-public class DeviceDaoImpl implements GenericDao<DeviceResponseDto,DeviceRequestDto> {
+public class DeviceDaoImpl implements GenericDao<DeviceResponseDto, DeviceRequestDto> {
 
     private final DeviceRepository repository;
     private final GlobalAuditEntryRepository globalAuditEntryRepository;
-    private final HttpServletRequest request;
+    private final ObjectMapper objectMapper;
+    private final UserBean userBean;
+
     @Value("${application.resource.devices}")
     private String resource;
-
 
     @Override
     @Cacheable("devices")
@@ -76,7 +78,7 @@ public class DeviceDaoImpl implements GenericDao<DeviceResponseDto,DeviceRequest
                 searchParamList.get(0).get("serialNumber"),
                 searchParamList.get(0).get("deviceType"));
 
-        Page<Device> entitiesPage = repository.findAll(spec,pageable);
+        Page<Device> entitiesPage = repository.findAll(spec, pageable);
 
         if (entitiesPage.isEmpty()) {
             throw new NotFoundException("No Devices found");
@@ -96,14 +98,13 @@ public class DeviceDaoImpl implements GenericDao<DeviceResponseDto,DeviceRequest
     @CacheEvict(value = "devices", allEntries = true)
     public DeviceResponseDto deleteById(int id) throws Exception {
         try {
-            ObjectMapper objectMapper = new ObjectMapper();
             Device entity = repository.findById(id).orElseThrow(() -> new NotFoundException("Device not found"));
             DeviceResponseDto responseDto = DeviceMapper.toDto(entity);
 
             repository.deleteById(id);
             globalAuditEntryRepository.save(new GlobalAuditEntry(resource, UserOperationEnum.DELETE.getValue(),
                     id, objectMapper.writeValueAsString(responseDto), null,
-                    request.getRemoteAddr()));
+                    userBean.getRemoteAdr()));
 
             return responseDto;
 
@@ -117,7 +118,7 @@ public class DeviceDaoImpl implements GenericDao<DeviceResponseDto,DeviceRequest
     public void deleteByIdList(List<Integer> idList) throws Exception {
         try {
             ObjectMapper objectMapper = new ObjectMapper();
-            String remoteAdr = request.getRemoteAddr();
+            String remoteAdr = userBean.getRemoteAdr();
 
             idList.stream()
                     .map((id) -> repository.findById(id).orElseThrow(() -> new NotFoundException("Device not found")))
@@ -147,8 +148,7 @@ public class DeviceDaoImpl implements GenericDao<DeviceResponseDto,DeviceRequest
     @CacheEvict(value = "devices", allEntries = true)
     public DeviceResponseDto updateById(int id, DeviceRequestDto requestDto) throws Exception {
 
-        ObjectMapper objectMapper = new ObjectMapper();
-        String remoteAdr = request.getRemoteAddr();
+        String remoteAdr = userBean.getRemoteAdr();
         boolean updateRequired = false;
         Map<String, Object> oldDataMap = new HashMap<>();
         Map<String, Object> newDataMap = new HashMap<>();
@@ -202,9 +202,7 @@ public class DeviceDaoImpl implements GenericDao<DeviceResponseDto,DeviceRequest
     @CacheEvict(value = "devices", allEntries = true)
     public DeviceResponseDto create(DeviceRequestDto requestDto) throws Exception {
 
-        ObjectMapper objectMapper = new ObjectMapper();
-        String remoteAdr = request.getRemoteAddr();
-
+        String remoteAdr = userBean.getRemoteAdr();
 
         Device toInsert = DeviceMapper.toModel(requestDto);
         toInsert.setStatus(new Status(requestDto.getStatus()));
@@ -222,8 +220,7 @@ public class DeviceDaoImpl implements GenericDao<DeviceResponseDto,DeviceRequest
     @CacheEvict(value = "devices", allEntries = true)
     public List<DeviceResponseDto> createBulk(List<DeviceRequestDto> requestDtoList) throws Exception {
 
-        ObjectMapper objectMapper = new ObjectMapper();
-        String remoteAdr = request.getRemoteAddr();
+        String remoteAdr = userBean.getRemoteAdr();
 
         List<Device> entityList = requestDtoList
                 .stream()

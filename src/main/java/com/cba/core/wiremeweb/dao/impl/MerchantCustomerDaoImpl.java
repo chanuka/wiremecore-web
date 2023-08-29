@@ -11,6 +11,7 @@ import com.cba.core.wiremeweb.model.Status;
 import com.cba.core.wiremeweb.repository.GlobalAuditEntryRepository;
 import com.cba.core.wiremeweb.repository.MerchantCustomerRepository;
 import com.cba.core.wiremeweb.repository.specification.MerchantCustomerSpecification;
+import com.cba.core.wiremeweb.util.UserBean;
 import com.cba.core.wiremeweb.util.UserOperationEnum;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
@@ -38,7 +39,9 @@ public class MerchantCustomerDaoImpl implements GenericDao<MerchantCustomerRespo
 
     private final MerchantCustomerRepository repository;
     private final GlobalAuditEntryRepository globalAuditEntryRepository;
-    private final HttpServletRequest request;
+    private final ObjectMapper objectMapper;
+    private final UserBean userBean;
+
     @Value("${application.resource.partners}")
     private String resource;
 
@@ -92,14 +95,13 @@ public class MerchantCustomerDaoImpl implements GenericDao<MerchantCustomerRespo
     @CacheEvict(value = "partners", allEntries = true)
     public MerchantCustomerResponseDto deleteById(int id) throws Exception {
         try {
-            ObjectMapper objectMapper = new ObjectMapper();
             MerchantCustomer entity = repository.findById(id).orElseThrow(() -> new NotFoundException("Merchant Customer not found"));
             MerchantCustomerResponseDto responseDto = MerchantCustomerMapper.toDto(entity);
 
             repository.deleteById(id);
             globalAuditEntryRepository.save(new GlobalAuditEntry(resource, UserOperationEnum.DELETE.getValue(),
                     id, objectMapper.writeValueAsString(responseDto), null,
-                    request.getRemoteAddr()));
+                    userBean.getRemoteAdr()));
 
             return responseDto;
 
@@ -112,8 +114,7 @@ public class MerchantCustomerDaoImpl implements GenericDao<MerchantCustomerRespo
     @CacheEvict(value = "partners", allEntries = true)
     public void deleteByIdList(List<Integer> idList) throws Exception {
         try {
-            ObjectMapper objectMapper = new ObjectMapper();
-            String remoteAdr = request.getRemoteAddr();
+            String remoteAdr = userBean.getRemoteAdr();
 
             idList.stream()
                     .map((id) -> repository.findById(id).orElseThrow(() -> new NotFoundException("Merchant Customer not found")))
@@ -143,8 +144,7 @@ public class MerchantCustomerDaoImpl implements GenericDao<MerchantCustomerRespo
     @CacheEvict(value = "partners", allEntries = true)
     public MerchantCustomerResponseDto updateById(int id, MerchantCustomerRequestDto requestDto) throws Exception {
 
-        ObjectMapper objectMapper = new ObjectMapper();
-        String remoteAdr = request.getRemoteAddr();
+        String remoteAdr = userBean.getRemoteAdr();
         boolean updateRequired = false;
         Map<String, Object> oldDataMap = new HashMap<>();
         Map<String, Object> newDataMap = new HashMap<>();
@@ -203,8 +203,7 @@ public class MerchantCustomerDaoImpl implements GenericDao<MerchantCustomerRespo
     @Override
     @CacheEvict(value = "partners", allEntries = true)
     public MerchantCustomerResponseDto create(MerchantCustomerRequestDto requestDto) throws Exception {
-        ObjectMapper objectMapper = new ObjectMapper();
-        String remoteAdr = request.getRemoteAddr();
+        String remoteAdr = userBean.getRemoteAdr();
 
         MerchantCustomer toInsert = MerchantCustomerMapper.toModel(requestDto);
 
@@ -220,8 +219,7 @@ public class MerchantCustomerDaoImpl implements GenericDao<MerchantCustomerRespo
     @Override
     @CacheEvict(value = "partners", allEntries = true)
     public List<MerchantCustomerResponseDto> createBulk(List<MerchantCustomerRequestDto> requestDtoList) throws Exception {
-        ObjectMapper objectMapper = new ObjectMapper();
-        String remoteAdr = request.getRemoteAddr();
+        String remoteAdr = userBean.getRemoteAdr();
 
         List<MerchantCustomer> entityList = requestDtoList
                 .stream()
