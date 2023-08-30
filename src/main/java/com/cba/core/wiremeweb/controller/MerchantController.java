@@ -41,8 +41,8 @@ public class MerchantController implements MerchantResource<MerchantResponseDto,
         Locale currentLocale = LocaleContextHolder.getLocale();
         logger.debug(messageSource.getMessage("MERCHANT_GET_ALL_DEBUG", null, currentLocale));
         try {
-            Page<MerchantResponseDto> responseDtolist = service.findAll(page, pageSize);
-            return ResponseEntity.ok().body(responseDtolist.getContent());
+            Page<MerchantResponseDto> responseDtoList = service.findAll(page, pageSize);
+            return ResponseEntity.ok().body(responseDtoList.getContent());
         } catch (Exception e) {
             logger.error(e.getMessage());
             throw e;

@@ -53,6 +53,7 @@ application:
     terminals: terminals
     partners: partners
     merchants: merchants
+    resources: resources
 
 rsa:
   private-key: classpath:certs/private.pem
