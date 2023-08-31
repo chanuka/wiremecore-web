@@ -3,6 +3,11 @@ package com.cba.core.wiremeweb.model;
 
 
 import jakarta.persistence.*;
+import org.springframework.data.annotation.CreatedBy;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedBy;
+import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.util.Date;
 
@@ -13,44 +18,27 @@ import java.util.Date;
 @Entity
 @Table(name = "user_role"
 )
+@EntityListeners(AuditingEntityListener.class) // enable entity level auditing for create,modified attributes
 public class UserRole implements java.io.Serializable {
-
 
     private int id;
     private Role role;
-    private User userByCreatedBy;
     private User userByUserId;
-    private User userByModifiedBy;
+    @CreatedBy
+    private String createdBy;
+    @LastModifiedBy
+    private String modifiedBy;
+    @CreatedDate
     private Date createdAt;
+    @LastModifiedDate
     private Date updatedAt;
     private Status status;
 
     public UserRole() {
     }
 
-
-    public UserRole(int id, Role role, User userByCreatedBy, User userByUserId, Date createdAt, Date updatedAt, Status status) {
-        this.id = id;
-        this.role = role;
-        this.userByCreatedBy = userByCreatedBy;
-        this.userByUserId = userByUserId;
-        this.createdAt = createdAt;
-        this.updatedAt = updatedAt;
-        this.status = status;
-    }
-
-    public UserRole(int id, Role role, User userByCreatedBy, User userByUserId, User userByModifiedBy, Date createdAt, Date updatedAt, Status status) {
-        this.id = id;
-        this.role = role;
-        this.userByCreatedBy = userByCreatedBy;
-        this.userByUserId = userByUserId;
-        this.userByModifiedBy = userByModifiedBy;
-        this.createdAt = createdAt;
-        this.updatedAt = updatedAt;
-        this.status = status;
-    }
-
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", unique = true, nullable = false)
     public int getId() {
         return this.id;
@@ -71,16 +59,6 @@ public class UserRole implements java.io.Serializable {
     }
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "created_by", nullable = false)
-    public User getUserByCreatedBy() {
-        return this.userByCreatedBy;
-    }
-
-    public void setUserByCreatedBy(User userByCreatedBy) {
-        this.userByCreatedBy = userByCreatedBy;
-    }
-
-    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
     public User getUserByUserId() {
         return this.userByUserId;
@@ -90,14 +68,22 @@ public class UserRole implements java.io.Serializable {
         this.userByUserId = userByUserId;
     }
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "modified_by")
-    public User getUserByModifiedBy() {
-        return this.userByModifiedBy;
+    @Column(name = "created_by", nullable = false, length = 45)
+    public String getCreatedBy() {
+        return this.createdBy;
     }
 
-    public void setUserByModifiedBy(User userByModifiedBy) {
-        this.userByModifiedBy = userByModifiedBy;
+    public void setCreatedBy(String createdBy) {
+        this.createdBy = createdBy;
+    }
+
+    @Column(name = "modified_by", length = 45)
+    public String getModifiedBy() {
+        return this.modifiedBy;
+    }
+
+    public void setModifiedBy(String modifiedBy) {
+        this.modifiedBy = modifiedBy;
     }
 
     @Temporal(TemporalType.TIMESTAMP)
@@ -120,7 +106,6 @@ public class UserRole implements java.io.Serializable {
         this.updatedAt = updatedAt;
     }
 
-
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "status", nullable = false)
     public Status getStatus() {
@@ -130,7 +115,6 @@ public class UserRole implements java.io.Serializable {
     public void setStatus(Status status) {
         this.status = status;
     }
-
 
 }
 

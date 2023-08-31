@@ -68,8 +68,8 @@ public class UserController implements UserResource<UserResponseDto, UserRequest
         logger.debug(messageSource.getMessage("USER_GET_SEARCH_DEBUG", null, currentLocale));
 
         try {
-            Page<UserResponseDto> responseDtolist = service.findBySearchParamLike(searchParamList, page, pageSize);
-            return ResponseEntity.ok().body(responseDtolist.getContent());
+            Page<UserResponseDto> responseDtoList = service.findBySearchParamLike(searchParamList, page, pageSize);
+            return ResponseEntity.ok().body(responseDtoList.getContent());
         } catch (Exception e) {
             logger.error(e.getMessage());
             throw e;

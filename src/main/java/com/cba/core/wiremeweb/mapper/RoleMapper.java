@@ -7,18 +7,18 @@ import com.cba.core.wiremeweb.model.Status;
 
 public class RoleMapper {
 
-    public static RoleResponseDto toDto(Role role) {
-        RoleResponseDto roleResponseDto = new RoleResponseDto();
-        roleResponseDto.setRoleName(role.getRoleName());
-        roleResponseDto.setStatus(role.getStatus().getStatusCode());
-        roleResponseDto.setId(role.getId());
-        return roleResponseDto;
+    public static RoleResponseDto toDto(Role entity) {
+        RoleResponseDto responseDto = new RoleResponseDto();
+        responseDto.setRoleName(entity.getRoleName());
+        responseDto.setStatus(entity.getStatus().getStatusCode());
+        responseDto.setId(entity.getId());
+        return responseDto;
     }
 
-    public static Role toModel(RoleRequestDto roleRequestDto) {
-        Role role = new Role();
-        role.setRoleName(roleRequestDto.getRoleName());
-        role.setStatus(new Status(roleRequestDto.getStatus()));
-        return role;
+    public static Role toModel(RoleRequestDto requestDto) {
+        Role entity = new Role();
+        entity.setRoleName(requestDto.getRoleName());
+        entity.setStatus(new Status(requestDto.getStatus()));
+        return entity;
     }
 }

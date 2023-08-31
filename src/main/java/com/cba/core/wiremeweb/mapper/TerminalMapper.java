@@ -8,22 +8,22 @@ import com.cba.core.wiremeweb.model.Terminal;
 
 public class TerminalMapper {
 
-    public static TerminalResponseDto toDto(Terminal terminal) {
-        TerminalResponseDto terminalResponseDto = new TerminalResponseDto();
-        terminalResponseDto.setTerminalId(terminal.getTerminalId());
-        terminalResponseDto.setDeviceId(terminal.getDeviceId());
-        terminalResponseDto.setMerchantId(terminal.getMerchant().getId());
-        terminalResponseDto.setStatus(terminal.getStatus().getStatusCode());
-        terminalResponseDto.setId(terminal.getId());
-        return terminalResponseDto;
+    public static TerminalResponseDto toDto(Terminal entity) {
+        TerminalResponseDto responseDto = new TerminalResponseDto();
+        responseDto.setTerminalId(entity.getTerminalId());
+        responseDto.setDeviceId(entity.getDeviceId());
+        responseDto.setMerchantId(entity.getMerchant().getId());
+        responseDto.setStatus(entity.getStatus().getStatusCode());
+        responseDto.setId(entity.getId());
+        return responseDto;
     }
 
-    public static Terminal toModel(TerminalRequestDto terminalRequestDto) {
-        Terminal terminal = new Terminal();
-        terminal.setTerminalId(terminalRequestDto.getTerminalId());
-        terminal.setMerchant(new Merchant(terminalRequestDto.getMerchantId()));
-        terminal.setStatus(new Status(terminalRequestDto.getStatus()));
-        terminal.setDeviceId(terminalRequestDto.getDeviceId());
-        return terminal;
+    public static Terminal toModel(TerminalRequestDto requestDto) {
+        Terminal entity = new Terminal();
+        entity.setTerminalId(requestDto.getTerminalId());
+        entity.setMerchant(new Merchant(requestDto.getMerchantId()));
+        entity.setStatus(new Status(requestDto.getStatus()));
+        entity.setDeviceId(requestDto.getDeviceId());
+        return entity;
     }
 }

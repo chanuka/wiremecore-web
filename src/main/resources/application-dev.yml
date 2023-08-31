@@ -54,6 +54,7 @@ application:
     partners: partners
     merchants: merchants
     resources: resources
+    userroles: userroles
 
 rsa:
   private-key: classpath:certs/private.pem

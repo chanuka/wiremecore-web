@@ -7,24 +7,24 @@ import com.cba.core.wiremeweb.model.Status;
 
 public class MerchantCustomerMapper {
 
-    public static MerchantCustomerResponseDto toDto(MerchantCustomer merchantCustomer) {
-        MerchantCustomerResponseDto merchantCustomerResponseDto = new MerchantCustomerResponseDto();
-        merchantCustomerResponseDto.setName(merchantCustomer.getName());
-        merchantCustomerResponseDto.setAddress(merchantCustomer.getAddress());
-        merchantCustomerResponseDto.setContactNo(merchantCustomer.getContactNo());
-        merchantCustomerResponseDto.setEmail(merchantCustomer.getEmail());
-        merchantCustomerResponseDto.setStatus(merchantCustomer.getStatus().getStatusCode());
-        merchantCustomerResponseDto.setId(merchantCustomer.getId());
-        return merchantCustomerResponseDto;
+    public static MerchantCustomerResponseDto toDto(MerchantCustomer entity) {
+        MerchantCustomerResponseDto responseDto = new MerchantCustomerResponseDto();
+        responseDto.setName(entity.getName());
+        responseDto.setAddress(entity.getAddress());
+        responseDto.setContactNo(entity.getContactNo());
+        responseDto.setEmail(entity.getEmail());
+        responseDto.setStatus(entity.getStatus().getStatusCode());
+        responseDto.setId(entity.getId());
+        return responseDto;
     }
 
-    public static MerchantCustomer toModel(MerchantCustomerRequestDto merchantCustomerRequestDto) {
-        MerchantCustomer merchantCustomer = new MerchantCustomer();
-        merchantCustomer.setName(merchantCustomerRequestDto.getName());
-        merchantCustomer.setAddress(merchantCustomerRequestDto.getAddress());
-        merchantCustomer.setStatus(new Status(merchantCustomerRequestDto.getStatus()));
-        merchantCustomer.setContactNo(merchantCustomerRequestDto.getContactNo());
-        merchantCustomer.setEmail(merchantCustomerRequestDto.getEmail());
-        return merchantCustomer;
+    public static MerchantCustomer toModel(MerchantCustomerRequestDto requestDto) {
+        MerchantCustomer entity = new MerchantCustomer();
+        entity.setName(requestDto.getName());
+        entity.setAddress(requestDto.getAddress());
+        entity.setStatus(new Status(requestDto.getStatus()));
+        entity.setContactNo(requestDto.getContactNo());
+        entity.setEmail(requestDto.getEmail());
+        return entity;
     }
 }

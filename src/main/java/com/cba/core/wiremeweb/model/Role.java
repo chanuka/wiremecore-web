@@ -41,6 +41,9 @@ public class Role implements java.io.Serializable {
     public Role() {
     }
 
+    public Role(Integer roleId) {
+        this.id = roleId;
+    }
 
     public Role(Status status, String createdBy, Date createdAt, Date updatedAt) {
         this.status = status;

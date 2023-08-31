@@ -47,7 +47,6 @@ public class User implements java.io.Serializable {
     @LastModifiedDate
     private Date updatedAt;
     private Set<Permission> permissionsForModifiedBy = new HashSet<Permission>(0);
-    private Set<UserRole> userRolesForCreatedBy = new HashSet<UserRole>(0);
     private Set<DeviceConfig> deviceConfigsForModifiedBy = new HashSet<DeviceConfig>(0);
     private Set<TokenRefresh> refreshTokens = new HashSet<TokenRefresh>(0);
     private Set<DeviceConfig> deviceConfigsForCreatedBy = new HashSet<DeviceConfig>(0);
@@ -55,11 +54,13 @@ public class User implements java.io.Serializable {
     private Set<OnetimePassword> onetimePasswords = new HashSet<OnetimePassword>(0);
     private Set<Permission> permissionsForCreatedBy = new HashSet<Permission>(0);
     private Set<UserConfig> userConfigs = new HashSet<UserConfig>(0);
-    private Set<UserRole> userRolesForModifiedBy = new HashSet<UserRole>(0);
 
     public User() {
     }
 
+    public User(Integer userId) {
+        this.id = userId;
+    }
 
     public User(String name, String userName, String password, int loginAttempt, String createdBy, Date createdAt, Date updatedAt) {
         this.name = name;
@@ -71,7 +72,7 @@ public class User implements java.io.Serializable {
         this.updatedAt = updatedAt;
     }
 
-    public User(Device device, Merchant merchant, MerchantCustomer merchantCustomer, Status status, UserType userType, String name, String userName, String password, String email, String contactNo, Date lastLoginTime, int loginAttempt, String sessionId, String createdBy, String modifiedBy, Date createdAt, Date updatedAt, Set<Permission> permissionsForModifiedBy, Set<UserRole> userRolesForCreatedBy, Set<DeviceConfig> deviceConfigsForModifiedBy, Set<TokenRefresh> refreshTokens, Set<DeviceConfig> deviceConfigsForCreatedBy, Set<UserRole> userRolesForUserId, Set<OnetimePassword> onetimePasswords, Set<Permission> permissionsForCreatedBy, Set<UserConfig> userConfigs, Set<UserRole> userRolesForModifiedBy) {
+    public User(Device device, Merchant merchant, MerchantCustomer merchantCustomer, Status status, UserType userType, String name, String userName, String password, String email, String contactNo, Date lastLoginTime, int loginAttempt, String sessionId, String createdBy, String modifiedBy, Date createdAt, Date updatedAt, Set<Permission> permissionsForModifiedBy, Set<DeviceConfig> deviceConfigsForModifiedBy, Set<TokenRefresh> refreshTokens, Set<DeviceConfig> deviceConfigsForCreatedBy, Set<UserRole> userRolesForUserId, Set<OnetimePassword> onetimePasswords, Set<Permission> permissionsForCreatedBy, Set<UserConfig> userConfigs) {
         this.device = device;
         this.merchant = merchant;
         this.merchantCustomer = merchantCustomer;
@@ -90,7 +91,6 @@ public class User implements java.io.Serializable {
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
         this.permissionsForModifiedBy = permissionsForModifiedBy;
-        this.userRolesForCreatedBy = userRolesForCreatedBy;
         this.deviceConfigsForModifiedBy = deviceConfigsForModifiedBy;
         this.refreshTokens = refreshTokens;
         this.deviceConfigsForCreatedBy = deviceConfigsForCreatedBy;
@@ -98,7 +98,6 @@ public class User implements java.io.Serializable {
         this.onetimePasswords = onetimePasswords;
         this.permissionsForCreatedBy = permissionsForCreatedBy;
         this.userConfigs = userConfigs;
-        this.userRolesForModifiedBy = userRolesForModifiedBy;
     }
 
     @Id
@@ -290,15 +289,6 @@ public class User implements java.io.Serializable {
         this.permissionsForModifiedBy = permissionsForModifiedBy;
     }
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "userByCreatedBy")
-    public Set<UserRole> getUserRolesForCreatedBy() {
-        return this.userRolesForCreatedBy;
-    }
-
-    public void setUserRolesForCreatedBy(Set<UserRole> userRolesForCreatedBy) {
-        this.userRolesForCreatedBy = userRolesForCreatedBy;
-    }
-
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "userByModifiedBy")
     public Set<DeviceConfig> getDeviceConfigsForModifiedBy() {
         return this.deviceConfigsForModifiedBy;
@@ -361,16 +351,6 @@ public class User implements java.io.Serializable {
     public void setUserConfigs(Set<UserConfig> userConfigs) {
         this.userConfigs = userConfigs;
     }
-
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "userByModifiedBy")
-    public Set<UserRole> getUserRolesForModifiedBy() {
-        return this.userRolesForModifiedBy;
-    }
-
-    public void setUserRolesForModifiedBy(Set<UserRole> userRolesForModifiedBy) {
-        this.userRolesForModifiedBy = userRolesForModifiedBy;
-    }
-
 
 }
 

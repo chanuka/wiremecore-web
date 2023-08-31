@@ -8,22 +8,22 @@ import com.cba.core.wiremeweb.model.Status;
 public class DeviceMapper {
 
     public static DeviceResponseDto toDto(Device device) {
-        DeviceResponseDto deviceResponseDto = new DeviceResponseDto();
-        deviceResponseDto.setDeviceType(device.getDeviceType());
-        deviceResponseDto.setEmiNo(device.getEmiNo());
-        deviceResponseDto.setId(device.getId());
-        deviceResponseDto.setSerialNo(device.getSerialNo());
-        deviceResponseDto.setStatus(device.getStatus().getStatusCode());
-        return deviceResponseDto;
+        DeviceResponseDto responseDto = new DeviceResponseDto();
+        responseDto.setDeviceType(device.getDeviceType());
+        responseDto.setEmiNo(device.getEmiNo());
+        responseDto.setId(device.getId());
+        responseDto.setSerialNo(device.getSerialNo());
+        responseDto.setStatus(device.getStatus().getStatusCode());
+        return responseDto;
     }
 
     public static Device toModel(DeviceRequestDto deviceRequestDto) {
-        Device device = new Device();
-        device.setDeviceType(deviceRequestDto.getDeviceType());
-        device.setEmiNo(deviceRequestDto.getEmiNo());
-        device.setSerialNo(deviceRequestDto.getSerialNo());
+        Device entity = new Device();
+        entity.setDeviceType(deviceRequestDto.getDeviceType());
+        entity.setEmiNo(deviceRequestDto.getEmiNo());
+        entity.setSerialNo(deviceRequestDto.getSerialNo());
         Status status = new Status(deviceRequestDto.getStatus());
-        device.setStatus(status);
-        return device;
+        entity.setStatus(status);
+        return entity;
     }
 }

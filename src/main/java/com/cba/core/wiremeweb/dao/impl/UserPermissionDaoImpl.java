@@ -33,10 +33,9 @@ public class UserPermissionDaoImpl implements UserPermissionDao {
     }
 
     @Override
-    @Cacheable("permissions")
+//    @Cacheable("permissions")
     public List<PermissionResponseDto> findAllByRole(String username) throws SQLException {
         Iterable<Permission> irt = userPermissionRepository.findAllByRole(username);
-        System.out.println("ddddddddddddd");
         List<PermissionResponseDto> result =
                 StreamSupport.stream(irt.spliterator(), false)
                         .map(UserPermissionMapper::toDto)
