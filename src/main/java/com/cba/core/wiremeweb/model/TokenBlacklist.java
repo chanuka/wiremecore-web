@@ -17,12 +17,6 @@ public class TokenBlacklist implements java.io.Serializable {
     public TokenBlacklist() {
     }
 
-    public TokenBlacklist(Long id, String token, Instant expiration) {
-        this.id = id;
-        this.token = token;
-        this.expiration = expiration;
-    }
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", unique = true, nullable = false)

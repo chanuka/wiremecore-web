@@ -15,7 +15,6 @@ import java.util.Date;
 )
 public class Permission implements java.io.Serializable {
 
-
     private Integer id;
     private Resource resource;
     private Role role;
@@ -29,26 +28,6 @@ public class Permission implements java.io.Serializable {
     private Date updatedAt;
 
     public Permission() {
-    }
-
-
-    public Permission(User userByCreatedBy, Date createdAt, Date updatedAt) {
-        this.userByCreatedBy = userByCreatedBy;
-        this.createdAt = createdAt;
-        this.updatedAt = updatedAt;
-    }
-
-    public Permission(Resource resource, Role role, User userByModifiedBy, User userByCreatedBy, Byte created, Byte readd, Byte updated, Byte deleted, Date createdAt, Date updatedAt) {
-        this.resource = resource;
-        this.role = role;
-        this.userByModifiedBy = userByModifiedBy;
-        this.userByCreatedBy = userByCreatedBy;
-        this.created = created;
-        this.readd = readd;
-        this.updated = updated;
-        this.deleted = deleted;
-        this.createdAt = createdAt;
-        this.updatedAt = updatedAt;
     }
 
     @Id
@@ -102,7 +81,6 @@ public class Permission implements java.io.Serializable {
         this.userByCreatedBy = userByCreatedBy;
     }
 
-
     @Column(name = "created")
     public Byte getCreated() {
         return this.created;
@@ -111,7 +89,6 @@ public class Permission implements java.io.Serializable {
     public void setCreated(Byte created) {
         this.created = created;
     }
-
 
     @Column(name = "readd")
     public Byte getReadd() {
@@ -122,7 +99,6 @@ public class Permission implements java.io.Serializable {
         this.readd = readd;
     }
 
-
     @Column(name = "updated")
     public Byte getUpdated() {
         return this.updated;
@@ -131,7 +107,6 @@ public class Permission implements java.io.Serializable {
     public void setUpdated(Byte updated) {
         this.updated = updated;
     }
-
 
     @Column(name = "deleted")
     public Byte getDeleted() {
@@ -161,7 +136,6 @@ public class Permission implements java.io.Serializable {
     public void setUpdatedAt(Date updatedAt) {
         this.updatedAt = updatedAt;
     }
-
 
 }
 

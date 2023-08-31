@@ -16,7 +16,6 @@ import java.util.Set;
 )
 public class Status implements java.io.Serializable {
 
-
     private String statusCode;
     private String statusDescription;
     private String statusCategory;
@@ -38,29 +37,8 @@ public class Status implements java.io.Serializable {
     public Status() {
     }
 
-
     public Status(String statusCode) {
         this.statusCode = statusCode;
-    }
-
-    public Status(String statusCode, String statusDescription, String statusCategory, Set<Bank> banks, Set<DeviceConfig> deviceConfigs, Set<TransactionType> transactionTypes, Set<Merchant> merchants, Set<MerchantCustomer> merchantCustomers, Set<SettlementInfo> settlementInfos, Set<Terminal> terminals, Set<TransactionSwitch> transactionSwitches, Set<CardType> cardTypes, Set<Device> devices, Set<User> users, Set<Role> roles, Set<UserRole> userRoles, Set<UserType> userTypes) {
-        this.statusCode = statusCode;
-        this.statusDescription = statusDescription;
-        this.statusCategory = statusCategory;
-        this.banks = banks;
-        this.deviceConfigs = deviceConfigs;
-        this.transactionTypes = transactionTypes;
-        this.merchants = merchants;
-        this.merchantCustomers = merchantCustomers;
-        this.settlementInfos = settlementInfos;
-        this.terminals = terminals;
-        this.transactionSwitches = transactionSwitches;
-        this.cardTypes = cardTypes;
-        this.devices = devices;
-        this.users = users;
-        this.roles = roles;
-        this.userRoles = userRoles;
-        this.userTypes = userTypes;
     }
 
     @Id
@@ -73,7 +51,6 @@ public class Status implements java.io.Serializable {
         this.statusCode = statusCode;
     }
 
-
     @Column(name = "status_description", length = 100)
     public String getStatusDescription() {
         return this.statusDescription;
@@ -82,7 +59,6 @@ public class Status implements java.io.Serializable {
     public void setStatusDescription(String statusDescription) {
         this.statusDescription = statusDescription;
     }
-
 
     @Column(name = "status_category", length = 10)
     public String getStatusCategory() {

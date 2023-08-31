@@ -23,7 +23,6 @@ import java.util.Set;
 @EntityListeners(AuditingEntityListener.class) // enable entity level auditing for create,modified attributes
 public class Merchant implements java.io.Serializable {
 
-
     private Integer id;
     private Bank bank;
     private MerchantCustomer merchantCustomer;
@@ -50,36 +49,6 @@ public class Merchant implements java.io.Serializable {
 
     public Merchant(Integer id) {
         this.id = id;
-    }
-
-    public Merchant(MerchantCustomer merchantCustomer, String createdBy, String name, String merchantId, String email, String province, String district, Date createdAt, Date updatedAt) {
-        this.merchantCustomer = merchantCustomer;
-        this.createdBy = createdBy;
-        this.name = name;
-        this.merchantId = merchantId;
-        this.email = email;
-        this.province = province;
-        this.district = district;
-        this.createdAt = createdAt;
-        this.updatedAt = updatedAt;
-    }
-
-    public Merchant(Bank bank, MerchantCustomer merchantCustomer, Status status, String createdBy, String modifiedBy, String name, String merchantId, String email, String contactNo, String province, String district, Date createdAt, Date updatedAt, Set<Terminal> terminals, Set<User> users) {
-        this.bank = bank;
-        this.merchantCustomer = merchantCustomer;
-        this.status = status;
-        this.createdBy = createdBy;
-        this.modifiedBy = modifiedBy;
-        this.name = name;
-        this.merchantId = merchantId;
-        this.email = email;
-        this.contactNo = contactNo;
-        this.province = province;
-        this.district = district;
-        this.createdAt = createdAt;
-        this.updatedAt = updatedAt;
-        this.terminals = terminals;
-        this.users = users;
     }
 
     @Id
@@ -141,7 +110,6 @@ public class Merchant implements java.io.Serializable {
         this.modifiedBy = modifiedBy;
     }
 
-
     @Column(name = "name", nullable = false, length = 50)
     public String getName() {
         return this.name;
@@ -150,7 +118,6 @@ public class Merchant implements java.io.Serializable {
     public void setName(String name) {
         this.name = name;
     }
-
 
     @Column(name = "merchant_id", nullable = false, length = 16)
     public String getMerchantId() {
@@ -161,7 +128,6 @@ public class Merchant implements java.io.Serializable {
         this.merchantId = merchantId;
     }
 
-
     @Column(name = "email", nullable = false, length = 40)
     public String getEmail() {
         return this.email;
@@ -170,7 +136,6 @@ public class Merchant implements java.io.Serializable {
     public void setEmail(String email) {
         this.email = email;
     }
-
 
     @Column(name = "contact_no", length = 15)
     public String getContactNo() {
@@ -181,7 +146,6 @@ public class Merchant implements java.io.Serializable {
         this.contactNo = contactNo;
     }
 
-
     @Column(name = "province", nullable = false, length = 30)
     public String getProvince() {
         return this.province;
@@ -190,7 +154,6 @@ public class Merchant implements java.io.Serializable {
     public void setProvince(String province) {
         this.province = province;
     }
-
 
     @Column(name = "district", nullable = false, length = 30)
     public String getDistrict() {
@@ -238,7 +201,6 @@ public class Merchant implements java.io.Serializable {
     public void setUsers(Set<User> users) {
         this.users = users;
     }
-
 
 }
 

@@ -15,7 +15,6 @@ import java.util.Date;
 )
 public class DeviceConfig implements java.io.Serializable {
 
-
     private int id;
     private Device device;
     private Status status;
@@ -27,18 +26,6 @@ public class DeviceConfig implements java.io.Serializable {
     private Date updatedAt;
 
     public DeviceConfig() {
-    }
-
-    public DeviceConfig(int id, Device device, Status status, User userByModifiedBy, User userByCreatedBy, String configType, String config, Date createdAt, Date updatedAt) {
-        this.id = id;
-        this.device = device;
-        this.status = status;
-        this.userByModifiedBy = userByModifiedBy;
-        this.userByCreatedBy = userByCreatedBy;
-        this.configType = configType;
-        this.config = config;
-        this.createdAt = createdAt;
-        this.updatedAt = updatedAt;
     }
 
     @Id
@@ -91,7 +78,6 @@ public class DeviceConfig implements java.io.Serializable {
         this.userByCreatedBy = userByCreatedBy;
     }
 
-
     @Column(name = "config_type", nullable = false, length = 30)
     public String getConfigType() {
         return this.configType;
@@ -100,7 +86,6 @@ public class DeviceConfig implements java.io.Serializable {
     public void setConfigType(String configType) {
         this.configType = configType;
     }
-
 
     @Column(name = "config", nullable = false, length = 65535, columnDefinition = "TEXT")
     public String getConfig() {
@@ -130,7 +115,6 @@ public class DeviceConfig implements java.io.Serializable {
     public void setUpdatedAt(Date updatedAt) {
         this.updatedAt = updatedAt;
     }
-
 
 }
 

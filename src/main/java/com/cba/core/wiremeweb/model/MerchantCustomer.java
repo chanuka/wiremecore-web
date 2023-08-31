@@ -23,7 +23,6 @@ import java.util.Set;
 @EntityListeners(AuditingEntityListener.class) // enable entity level auditing for create,modified attributes
 public class MerchantCustomer implements java.io.Serializable {
 
-
     private int id;
     private Status status;
     private String name;
@@ -48,32 +47,6 @@ public class MerchantCustomer implements java.io.Serializable {
         this.id = id;
     }
 
-    public MerchantCustomer(int id, String name, String address, String email, String contactNo, String createdBy, Date createdAt, Date updatedAt) {
-        this.id = id;
-        this.name = name;
-        this.address = address;
-        this.email = email;
-        this.contactNo = contactNo;
-        this.createdBy = createdBy;
-        this.createdAt = createdAt;
-        this.updatedAt = updatedAt;
-    }
-
-    public MerchantCustomer(int id, Status status, String name, String address, String email, String contactNo, String createdBy, String modifiedBy, Date createdAt, Date updatedAt, Set<User> users, Set<Merchant> merchants) {
-        this.id = id;
-        this.status = status;
-        this.name = name;
-        this.address = address;
-        this.email = email;
-        this.contactNo = contactNo;
-        this.createdBy = createdBy;
-        this.modifiedBy = modifiedBy;
-        this.createdAt = createdAt;
-        this.updatedAt = updatedAt;
-        this.users = users;
-        this.merchants = merchants;
-    }
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", unique = true, nullable = false)
@@ -85,7 +58,6 @@ public class MerchantCustomer implements java.io.Serializable {
         this.id = id;
     }
 
-
     @Column(name = "name", nullable = false, length = 50)
     public String getName() {
         return this.name;
@@ -94,7 +66,6 @@ public class MerchantCustomer implements java.io.Serializable {
     public void setName(String name) {
         this.name = name;
     }
-
 
     @Column(name = "address", nullable = false, length = 150)
     public String getAddress() {
@@ -105,7 +76,6 @@ public class MerchantCustomer implements java.io.Serializable {
         this.address = address;
     }
 
-
     @Column(name = "email", nullable = false, length = 50)
     public String getEmail() {
         return this.email;
@@ -114,7 +84,6 @@ public class MerchantCustomer implements java.io.Serializable {
     public void setEmail(String email) {
         this.email = email;
     }
-
 
     @Column(name = "contact_no", nullable = false, length = 15)
     public String getContactNo() {
@@ -125,7 +94,6 @@ public class MerchantCustomer implements java.io.Serializable {
         this.contactNo = contactNo;
     }
 
-
     @Column(name = "created_by", nullable = false, length = 45)
     public String getCreatedBy() {
         return this.createdBy;
@@ -134,7 +102,6 @@ public class MerchantCustomer implements java.io.Serializable {
     public void setCreatedBy(String createdBy) {
         this.createdBy = createdBy;
     }
-
 
     @Column(name = "modified_by", length = 45)
     public String getModifiedBy() {

@@ -23,7 +23,6 @@ import java.util.Set;
 @EntityListeners(AuditingEntityListener.class) // enable entity level auditing for create,modified attributes
 public class Role implements java.io.Serializable {
 
-
     private Integer id;
     private Status status;
     private String roleName;
@@ -43,24 +42,6 @@ public class Role implements java.io.Serializable {
 
     public Role(Integer roleId) {
         this.id = roleId;
-    }
-
-    public Role(Status status, String createdBy, Date createdAt, Date updatedAt) {
-        this.status = status;
-        this.createdBy = createdBy;
-        this.createdAt = createdAt;
-        this.updatedAt = updatedAt;
-    }
-
-    public Role(Status status, String roleName, String createdBy, String modifiedBy, Date createdAt, Date updatedAt, Set<Permission> permissions, Set<UserRole> userRoles) {
-        this.status = status;
-        this.roleName = roleName;
-        this.createdBy = createdBy;
-        this.modifiedBy = modifiedBy;
-        this.createdAt = createdAt;
-        this.updatedAt = updatedAt;
-        this.permissions = permissions;
-        this.userRoles = userRoles;
     }
 
     @Id
@@ -84,7 +65,6 @@ public class Role implements java.io.Serializable {
         this.status = status;
     }
 
-
     @Column(name = "role_name", length = 45)
     public String getRoleName() {
         return this.roleName;
@@ -94,7 +74,6 @@ public class Role implements java.io.Serializable {
         this.roleName = roleName;
     }
 
-
     @Column(name = "created_by", nullable = false, length = 45)
     public String getCreatedBy() {
         return this.createdBy;
@@ -103,7 +82,6 @@ public class Role implements java.io.Serializable {
     public void setCreatedBy(String createdBy) {
         this.createdBy = createdBy;
     }
-
 
     @Column(name = "modified_by", length = 45)
     public String getModifiedBy() {
@@ -151,8 +129,6 @@ public class Role implements java.io.Serializable {
     public void setUserRoles(Set<UserRole> userRoles) {
         this.userRoles = userRoles;
     }
-
-
 }
 
 

@@ -23,7 +23,6 @@ import java.util.Set;
 @EntityListeners(AuditingEntityListener.class) // enable entity level auditing for create,modified attributes
 public class Terminal implements java.io.Serializable {
 
-
     private Integer id;
     private Merchant merchant;
     private Status status;
@@ -40,28 +39,6 @@ public class Terminal implements java.io.Serializable {
     private Set<SettlementInfo> settlementInfos = new HashSet<SettlementInfo>(0);
 
     public Terminal() {
-    }
-
-
-    public Terminal(Merchant merchant, Status status, String userByCreatedBy, String terminalId, Date createdAt, Date updatedAt) {
-        this.merchant = merchant;
-        this.status = status;
-        this.userByCreatedBy = userByCreatedBy;
-        this.terminalId = terminalId;
-        this.createdAt = createdAt;
-        this.updatedAt = updatedAt;
-    }
-
-    public Terminal(Merchant merchant, Status status, String userByModifiedBy, String userByCreatedBy, String terminalId, Integer deviceId, Date createdAt, Date updatedAt, Set<SettlementInfo> settlementInfos) {
-        this.merchant = merchant;
-        this.status = status;
-        this.userByModifiedBy = userByModifiedBy;
-        this.userByCreatedBy = userByCreatedBy;
-        this.terminalId = terminalId;
-        this.deviceId = deviceId;
-        this.createdAt = createdAt;
-        this.updatedAt = updatedAt;
-        this.settlementInfos = settlementInfos;
     }
 
     @Id
@@ -113,7 +90,6 @@ public class Terminal implements java.io.Serializable {
         this.userByCreatedBy = userByCreatedBy;
     }
 
-
     @Column(name = "terminal_id", nullable = false, length = 9)
     public String getTerminalId() {
         return this.terminalId;
@@ -122,7 +98,6 @@ public class Terminal implements java.io.Serializable {
     public void setTerminalId(String terminalId) {
         this.terminalId = terminalId;
     }
-
 
     @Column(name = "device_id")
     public Integer getDeviceId() {
@@ -161,7 +136,6 @@ public class Terminal implements java.io.Serializable {
     public void setSettlementInfos(Set<SettlementInfo> settlementInfos) {
         this.settlementInfos = settlementInfos;
     }
-
 
 }
 

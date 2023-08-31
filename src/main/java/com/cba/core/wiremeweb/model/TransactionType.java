@@ -16,26 +16,12 @@ import java.util.Set;
 )
 public class TransactionType implements java.io.Serializable {
 
-
     private String tranType;
     private Status status;
     private String description;
     private Set<TransactionSwitch> transactionSwitches = new HashSet<TransactionSwitch>(0);
 
     public TransactionType() {
-    }
-
-
-    public TransactionType(String tranType, Status status) {
-        this.tranType = tranType;
-        this.status = status;
-    }
-
-    public TransactionType(String tranType, Status status, String description, Set<TransactionSwitch> transactionSwitches) {
-        this.tranType = tranType;
-        this.status = status;
-        this.description = description;
-        this.transactionSwitches = transactionSwitches;
     }
 
     @Id
@@ -58,7 +44,6 @@ public class TransactionType implements java.io.Serializable {
         this.status = status;
     }
 
-
     @Column(name = "description", length = 100)
     public String getDescription() {
         return this.description;
@@ -76,7 +61,6 @@ public class TransactionType implements java.io.Serializable {
     public void setTransactionSwitches(Set<TransactionSwitch> transactionSwitches) {
         this.transactionSwitches = transactionSwitches;
     }
-
 
 }
 

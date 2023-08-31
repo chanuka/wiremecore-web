@@ -13,7 +13,6 @@ import jakarta.persistence.*;
 )
 public class FailedSubmission implements java.io.Serializable {
 
-
     private int id;
     private Subscription subscription;
     private int currentRetry;
@@ -23,26 +22,6 @@ public class FailedSubmission implements java.io.Serializable {
     private String cause;
 
     public FailedSubmission() {
-    }
-
-
-    public FailedSubmission(int id, int currentRetry, String record, String resource, String event, String cause) {
-        this.id = id;
-        this.currentRetry = currentRetry;
-        this.record = record;
-        this.resource = resource;
-        this.event = event;
-        this.cause = cause;
-    }
-
-    public FailedSubmission(int id, Subscription subscription, int currentRetry, String record, String resource, String event, String cause) {
-        this.id = id;
-        this.subscription = subscription;
-        this.currentRetry = currentRetry;
-        this.record = record;
-        this.resource = resource;
-        this.event = event;
-        this.cause = cause;
     }
 
     @Id
@@ -65,7 +44,6 @@ public class FailedSubmission implements java.io.Serializable {
         this.subscription = subscription;
     }
 
-
     @Column(name = "current_retry", nullable = false)
     public int getCurrentRetry() {
         return this.currentRetry;
@@ -74,7 +52,6 @@ public class FailedSubmission implements java.io.Serializable {
     public void setCurrentRetry(int currentRetry) {
         this.currentRetry = currentRetry;
     }
-
 
     @Column(name = "record", nullable = false, length = 65535, columnDefinition = "TEXT")
     public String getRecord() {
@@ -85,7 +62,6 @@ public class FailedSubmission implements java.io.Serializable {
         this.record = record;
     }
 
-
     @Column(name = "resource", nullable = false, length = 20)
     public String getResource() {
         return this.resource;
@@ -94,7 +70,6 @@ public class FailedSubmission implements java.io.Serializable {
     public void setResource(String resource) {
         this.resource = resource;
     }
-
 
     @Column(name = "event", nullable = false, length = 20)
     public String getEvent() {
@@ -105,7 +80,6 @@ public class FailedSubmission implements java.io.Serializable {
         this.event = event;
     }
 
-
     @Column(name = "cause", nullable = false, length = 20)
     public String getCause() {
         return this.cause;
@@ -114,7 +88,6 @@ public class FailedSubmission implements java.io.Serializable {
     public void setCause(String cause) {
         this.cause = cause;
     }
-
 
 }
 

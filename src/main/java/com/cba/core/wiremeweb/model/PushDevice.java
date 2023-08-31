@@ -16,25 +16,12 @@ import java.util.Set;
 )
 public class PushDevice implements java.io.Serializable {
 
-
     private Long id;
     private Device device;
     private String pushId;
     private Set<PushdeviceOperation> pushdeviceOperations = new HashSet<PushdeviceOperation>(0);
 
     public PushDevice() {
-    }
-
-
-    public PushDevice(Device device, String pushId) {
-        this.device = device;
-        this.pushId = pushId;
-    }
-
-    public PushDevice(Device device, String pushId, Set<PushdeviceOperation> pushdeviceOperations) {
-        this.device = device;
-        this.pushId = pushId;
-        this.pushdeviceOperations = pushdeviceOperations;
     }
 
     @Id
@@ -58,7 +45,6 @@ public class PushDevice implements java.io.Serializable {
         this.device = device;
     }
 
-
     @Column(name = "push_id", nullable = false, length = 100)
     public String getPushId() {
         return this.pushId;
@@ -76,7 +62,6 @@ public class PushDevice implements java.io.Serializable {
     public void setPushdeviceOperations(Set<PushdeviceOperation> pushdeviceOperations) {
         this.pushdeviceOperations = pushdeviceOperations;
     }
-
 
 }
 

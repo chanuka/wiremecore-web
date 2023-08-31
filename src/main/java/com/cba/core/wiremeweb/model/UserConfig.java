@@ -15,7 +15,6 @@ import java.util.Date;
 )
 public class UserConfig implements java.io.Serializable {
 
-
     private Integer id;
     private User user;
     private String configType;
@@ -24,21 +23,6 @@ public class UserConfig implements java.io.Serializable {
     private Date updatedAt;
 
     public UserConfig() {
-    }
-
-
-    public UserConfig(String configType, Date createdAt, Date updatedAt) {
-        this.configType = configType;
-        this.createdAt = createdAt;
-        this.updatedAt = updatedAt;
-    }
-
-    public UserConfig(User user, String configType, String config, Date createdAt, Date updatedAt) {
-        this.user = user;
-        this.configType = configType;
-        this.config = config;
-        this.createdAt = createdAt;
-        this.updatedAt = updatedAt;
     }
 
     @Id
@@ -62,7 +46,6 @@ public class UserConfig implements java.io.Serializable {
         this.user = user;
     }
 
-
     @Column(name = "config_type", nullable = false, length = 20)
     public String getConfigType() {
         return this.configType;
@@ -71,7 +54,6 @@ public class UserConfig implements java.io.Serializable {
     public void setConfigType(String configType) {
         this.configType = configType;
     }
-
 
     @Column(name = "config", length = 65535, columnDefinition = "TEXT")
     public String getConfig() {
@@ -101,7 +83,6 @@ public class UserConfig implements java.io.Serializable {
     public void setUpdatedAt(Date updatedAt) {
         this.updatedAt = updatedAt;
     }
-
 
 }
 

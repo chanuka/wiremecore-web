@@ -14,7 +14,6 @@ import java.util.Date;
 )
 public class ApplicationSignature implements java.io.Serializable {
 
-
     private Integer id;
     private String appVersion;
     private String appSignature;
@@ -23,21 +22,6 @@ public class ApplicationSignature implements java.io.Serializable {
     private Date createdAt;
 
     public ApplicationSignature() {
-    }
-
-
-    public ApplicationSignature(String appVersion, String appSignature, String packagefileSignature) {
-        this.appVersion = appVersion;
-        this.appSignature = appSignature;
-        this.packagefileSignature = packagefileSignature;
-    }
-
-    public ApplicationSignature(String appVersion, String appSignature, String packagefileSignature, Integer sysfileSize, Date createdAt) {
-        this.appVersion = appVersion;
-        this.appSignature = appSignature;
-        this.packagefileSignature = packagefileSignature;
-        this.sysfileSize = sysfileSize;
-        this.createdAt = createdAt;
     }
 
     @Id
@@ -51,7 +35,6 @@ public class ApplicationSignature implements java.io.Serializable {
         this.id = id;
     }
 
-
     @Column(name = "app_version", nullable = false, length = 10)
     public String getAppVersion() {
         return this.appVersion;
@@ -60,7 +43,6 @@ public class ApplicationSignature implements java.io.Serializable {
     public void setAppVersion(String appVersion) {
         this.appVersion = appVersion;
     }
-
 
     @Column(name = "app_signature", nullable = false, length = 65535, columnDefinition = "TEXT")
     public String getAppSignature() {
@@ -71,7 +53,6 @@ public class ApplicationSignature implements java.io.Serializable {
         this.appSignature = appSignature;
     }
 
-
     @Column(name = "packagefile_signature", nullable = false, length = 65535, columnDefinition = "TEXT")
     public String getPackagefileSignature() {
         return this.packagefileSignature;
@@ -80,7 +61,6 @@ public class ApplicationSignature implements java.io.Serializable {
     public void setPackagefileSignature(String packagefileSignature) {
         this.packagefileSignature = packagefileSignature;
     }
-
 
     @Column(name = "sysfile_size")
     public Integer getSysfileSize() {
@@ -100,7 +80,6 @@ public class ApplicationSignature implements java.io.Serializable {
     public void setCreatedAt(Date createdAt) {
         this.createdAt = createdAt;
     }
-
 
 }
 

@@ -17,7 +17,6 @@ import java.util.Set;
 )
 public class Resource implements java.io.Serializable {
 
-
     private Integer id;
     private String name;
     private Date createdAt;
@@ -26,20 +25,6 @@ public class Resource implements java.io.Serializable {
     private Set<Permission> permissions = new HashSet<Permission>(0);
 
     public Resource() {
-    }
-
-
-    public Resource(Date createdAt, Date updatedAt) {
-        this.createdAt = createdAt;
-        this.updatedAt = updatedAt;
-    }
-
-    public Resource(String name, Date createdAt, Date updatedAt, Set<Subscription> subscriptions, Set<Permission> permissions) {
-        this.name = name;
-        this.createdAt = createdAt;
-        this.updatedAt = updatedAt;
-        this.subscriptions = subscriptions;
-        this.permissions = permissions;
     }
 
     @Id
@@ -52,7 +37,6 @@ public class Resource implements java.io.Serializable {
     public void setId(Integer id) {
         this.id = id;
     }
-
 
     @Column(name = "name", length = 20)
     public String getName() {
@@ -103,7 +87,6 @@ public class Resource implements java.io.Serializable {
     public void setPermissions(Set<Permission> permissions) {
         this.permissions = permissions;
     }
-
 
 }
 

@@ -23,7 +23,6 @@ import java.util.Set;
 @EntityListeners(AuditingEntityListener.class) // enable entity level auditing for create,modified attributes
 public class User implements java.io.Serializable {
 
-
     private Integer id;
     private Device device;
     private Merchant merchant;
@@ -60,44 +59,6 @@ public class User implements java.io.Serializable {
 
     public User(Integer userId) {
         this.id = userId;
-    }
-
-    public User(String name, String userName, String password, int loginAttempt, String createdBy, Date createdAt, Date updatedAt) {
-        this.name = name;
-        this.userName = userName;
-        this.password = password;
-        this.loginAttempt = loginAttempt;
-        this.createdBy = createdBy;
-        this.createdAt = createdAt;
-        this.updatedAt = updatedAt;
-    }
-
-    public User(Device device, Merchant merchant, MerchantCustomer merchantCustomer, Status status, UserType userType, String name, String userName, String password, String email, String contactNo, Date lastLoginTime, int loginAttempt, String sessionId, String createdBy, String modifiedBy, Date createdAt, Date updatedAt, Set<Permission> permissionsForModifiedBy, Set<DeviceConfig> deviceConfigsForModifiedBy, Set<TokenRefresh> refreshTokens, Set<DeviceConfig> deviceConfigsForCreatedBy, Set<UserRole> userRolesForUserId, Set<OnetimePassword> onetimePasswords, Set<Permission> permissionsForCreatedBy, Set<UserConfig> userConfigs) {
-        this.device = device;
-        this.merchant = merchant;
-        this.merchantCustomer = merchantCustomer;
-        this.status = status;
-        this.userType = userType;
-        this.name = name;
-        this.userName = userName;
-        this.password = password;
-        this.email = email;
-        this.contactNo = contactNo;
-        this.lastLoginTime = lastLoginTime;
-        this.loginAttempt = loginAttempt;
-        this.sessionId = sessionId;
-        this.createdBy = createdBy;
-        this.modifiedBy = modifiedBy;
-        this.createdAt = createdAt;
-        this.updatedAt = updatedAt;
-        this.permissionsForModifiedBy = permissionsForModifiedBy;
-        this.deviceConfigsForModifiedBy = deviceConfigsForModifiedBy;
-        this.refreshTokens = refreshTokens;
-        this.deviceConfigsForCreatedBy = deviceConfigsForCreatedBy;
-        this.userRolesForUserId = userRolesForUserId;
-        this.onetimePasswords = onetimePasswords;
-        this.permissionsForCreatedBy = permissionsForCreatedBy;
-        this.userConfigs = userConfigs;
     }
 
     @Id
@@ -170,7 +131,6 @@ public class User implements java.io.Serializable {
         this.name = name;
     }
 
-
     @Column(name = "user_name", nullable = false, length = 45)
     public String getUserName() {
         return this.userName;
@@ -190,7 +150,6 @@ public class User implements java.io.Serializable {
         this.password = password;
     }
 
-
     @Column(name = "email", length = 50)
     public String getEmail() {
         return this.email;
@@ -199,7 +158,6 @@ public class User implements java.io.Serializable {
     public void setEmail(String email) {
         this.email = email;
     }
-
 
     @Column(name = "contact_no", length = 12)
     public String getContactNo() {
@@ -220,7 +178,6 @@ public class User implements java.io.Serializable {
         this.lastLoginTime = lastLoginTime;
     }
 
-
     @Column(name = "login_attempt", nullable = false)
     public int getLoginAttempt() {
         return this.loginAttempt;
@@ -229,7 +186,6 @@ public class User implements java.io.Serializable {
     public void setLoginAttempt(int loginAttempt) {
         this.loginAttempt = loginAttempt;
     }
-
 
     @Column(name = "session_id")
     public String getSessionId() {
@@ -240,7 +196,6 @@ public class User implements java.io.Serializable {
         this.sessionId = sessionId;
     }
 
-
     @Column(name = "created_by", nullable = false, length = 45)
     public String getCreatedBy() {
         return this.createdBy;
@@ -249,7 +204,6 @@ public class User implements java.io.Serializable {
     public void setCreatedBy(String createdBy) {
         this.createdBy = createdBy;
     }
-
 
     @Column(name = "modified_by", length = 45)
     public String getModifiedBy() {

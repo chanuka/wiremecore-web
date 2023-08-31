@@ -16,21 +16,10 @@ import jakarta.persistence.Table;
 )
 public class StatusCategory implements java.io.Serializable {
 
-
     private String categoryCode;
     private String description;
 
     public StatusCategory() {
-    }
-
-
-    public StatusCategory(String categoryCode) {
-        this.categoryCode = categoryCode;
-    }
-
-    public StatusCategory(String categoryCode, String description) {
-        this.categoryCode = categoryCode;
-        this.description = description;
     }
 
     @Id
@@ -43,7 +32,6 @@ public class StatusCategory implements java.io.Serializable {
         this.categoryCode = categoryCode;
     }
 
-
     @Column(name = "description", length = 100)
     public String getDescription() {
         return this.description;
@@ -52,7 +40,6 @@ public class StatusCategory implements java.io.Serializable {
     public void setDescription(String description) {
         this.description = description;
     }
-
 
 }
 

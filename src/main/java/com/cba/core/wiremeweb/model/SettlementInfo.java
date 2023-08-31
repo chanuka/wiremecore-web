@@ -15,7 +15,6 @@ import java.util.Date;
 )
 public class SettlementInfo implements java.io.Serializable {
 
-
     private Long id;
     private Status status;
     private Terminal terminal;
@@ -24,14 +23,6 @@ public class SettlementInfo implements java.io.Serializable {
     private Date dateTime;
 
     public SettlementInfo() {
-    }
-
-    public SettlementInfo(Status status, Terminal terminal, TransactionCore transactionCore, long batchId, Date dateTime) {
-        this.status = status;
-        this.terminal = terminal;
-        this.transactionCore = transactionCore;
-        this.batchId = batchId;
-        this.dateTime = dateTime;
     }
 
     @Id
@@ -75,7 +66,6 @@ public class SettlementInfo implements java.io.Serializable {
         this.transactionCore = transactionCore;
     }
 
-
     @Column(name = "batch_id", nullable = false)
     public long getBatchId() {
         return this.batchId;
@@ -94,7 +84,6 @@ public class SettlementInfo implements java.io.Serializable {
     public void setDateTime(Date dateTime) {
         this.dateTime = dateTime;
     }
-
 
 }
 

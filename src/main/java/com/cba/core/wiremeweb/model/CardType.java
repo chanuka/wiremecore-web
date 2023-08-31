@@ -15,7 +15,6 @@ import java.util.Date;
 )
 public class CardType implements java.io.Serializable {
 
-
     private String cardLabel;
     private Status status;
     private String description;
@@ -23,22 +22,6 @@ public class CardType implements java.io.Serializable {
     private Date updatedAt;
 
     public CardType() {
-    }
-
-
-    public CardType(String cardLabel, Status status, Date createdAt, Date updatedAt) {
-        this.cardLabel = cardLabel;
-        this.status = status;
-        this.createdAt = createdAt;
-        this.updatedAt = updatedAt;
-    }
-
-    public CardType(String cardLabel, Status status, String description, Date createdAt, Date updatedAt) {
-        this.cardLabel = cardLabel;
-        this.status = status;
-        this.description = description;
-        this.createdAt = createdAt;
-        this.updatedAt = updatedAt;
     }
 
     @Id
@@ -60,7 +43,6 @@ public class CardType implements java.io.Serializable {
     public void setStatus(Status status) {
         this.status = status;
     }
-
 
     @Column(name = "description", length = 100)
     public String getDescription() {
@@ -90,7 +72,6 @@ public class CardType implements java.io.Serializable {
     public void setUpdatedAt(Date updatedAt) {
         this.updatedAt = updatedAt;
     }
-
 
 }
 

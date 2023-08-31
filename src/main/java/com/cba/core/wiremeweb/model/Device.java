@@ -44,33 +44,6 @@ public class Device implements java.io.Serializable {
     public Device() {
     }
 
-
-    public Device(Status status, String userByCreatedBy, String userByModifiedBy, String serialNo, String emiNo, String deviceType, Date createdAt, Date updatedAt) {
-        this.status = status;
-        this.userByCreatedBy = userByCreatedBy;
-        this.userByModifiedBy = userByModifiedBy;
-        this.serialNo = serialNo;
-        this.emiNo = emiNo;
-        this.deviceType = deviceType;
-        this.createdAt = createdAt;
-        this.updatedAt = updatedAt;
-    }
-
-    public Device(Status status, String userByCreatedBy, String userByModifiedBy, String serialNo, String emiNo, String deviceType, String uniqueId, Date createdAt, Date updatedAt, Set<PushDevice> pushDevices, Set<DeviceConfig> deviceConfigs, Set<User> users) {
-        this.status = status;
-        this.userByCreatedBy = userByCreatedBy;
-        this.userByModifiedBy = userByModifiedBy;
-        this.serialNo = serialNo;
-        this.emiNo = emiNo;
-        this.deviceType = deviceType;
-        this.uniqueId = uniqueId;
-        this.createdAt = createdAt;
-        this.updatedAt = updatedAt;
-        this.pushDevices = pushDevices;
-        this.deviceConfigs = deviceConfigs;
-        this.users = users;
-    }
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", unique = true, nullable = false)
@@ -110,7 +83,6 @@ public class Device implements java.io.Serializable {
         this.userByModifiedBy = userByModifiedBy;
     }
 
-
     @Column(name = "serial_no", nullable = false, length = 150)
     public String getSerialNo() {
         return this.serialNo;
@@ -119,7 +91,6 @@ public class Device implements java.io.Serializable {
     public void setSerialNo(String serialNo) {
         this.serialNo = serialNo;
     }
-
 
     @Column(name = "emi_no", nullable = false, length = 50)
     public String getEmiNo() {
@@ -130,7 +101,6 @@ public class Device implements java.io.Serializable {
         this.emiNo = emiNo;
     }
 
-
     @Column(name = "device_type", nullable = false, length = 20)
     public String getDeviceType() {
         return this.deviceType;
@@ -139,7 +109,6 @@ public class Device implements java.io.Serializable {
     public void setDeviceType(String deviceType) {
         this.deviceType = deviceType;
     }
-
 
     @Column(name = "unique_id")
     public String getUniqueId() {

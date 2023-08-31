@@ -16,7 +16,6 @@ import java.util.Set;
 )
 public class Subscription implements java.io.Serializable {
 
-
     private Integer id;
     private ConsumingService consumingService;
     private String callbackurl;
@@ -27,22 +26,6 @@ public class Subscription implements java.io.Serializable {
     private Set<Resource> resources = new HashSet<Resource>(0);
 
     public Subscription() {
-    }
-
-
-    public Subscription(String callbackurl, int retrycount) {
-        this.callbackurl = callbackurl;
-        this.retrycount = retrycount;
-    }
-
-    public Subscription(ConsumingService consumingService, String callbackurl, int retrycount, String mailonsuccess, String mailonfaliure, Set<FailedSubmission> failedSubmissions, Set<Resource> resources) {
-        this.consumingService = consumingService;
-        this.callbackurl = callbackurl;
-        this.retrycount = retrycount;
-        this.mailonsuccess = mailonsuccess;
-        this.mailonfaliure = mailonfaliure;
-        this.failedSubmissions = failedSubmissions;
-        this.resources = resources;
     }
 
     @Id
@@ -76,7 +59,6 @@ public class Subscription implements java.io.Serializable {
         this.callbackurl = callbackurl;
     }
 
-
     @Column(name = "retrycount", nullable = false)
     public int getRetrycount() {
         return this.retrycount;
@@ -86,7 +68,6 @@ public class Subscription implements java.io.Serializable {
         this.retrycount = retrycount;
     }
 
-
     @Column(name = "mailonsuccess", length = 65535, columnDefinition = "TEXT")
     public String getMailonsuccess() {
         return this.mailonsuccess;
@@ -95,7 +76,6 @@ public class Subscription implements java.io.Serializable {
     public void setMailonsuccess(String mailonsuccess) {
         this.mailonsuccess = mailonsuccess;
     }
-
 
     @Column(name = "mailonfaliure", length = 65535, columnDefinition = "TEXT")
     public String getMailonfaliure() {
@@ -126,7 +106,6 @@ public class Subscription implements java.io.Serializable {
     public void setResources(Set<Resource> resources) {
         this.resources = resources;
     }
-
 
 }
 

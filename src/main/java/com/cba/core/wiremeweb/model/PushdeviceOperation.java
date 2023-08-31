@@ -15,7 +15,6 @@ import java.util.Date;
 )
 public class PushdeviceOperation implements java.io.Serializable {
 
-
     private Long id;
     private Operation operation;
     private PushDevice pushDevice;
@@ -25,24 +24,6 @@ public class PushdeviceOperation implements java.io.Serializable {
     private String pushData;
 
     public PushdeviceOperation() {
-    }
-
-
-    public PushdeviceOperation(Operation operation, PushDevice pushDevice, String status, Date createdAt, Date modifiedAt) {
-        this.operation = operation;
-        this.pushDevice = pushDevice;
-        this.status = status;
-        this.createdAt = createdAt;
-        this.modifiedAt = modifiedAt;
-    }
-
-    public PushdeviceOperation(Operation operation, PushDevice pushDevice, String status, Date createdAt, Date modifiedAt, String pushData) {
-        this.operation = operation;
-        this.pushDevice = pushDevice;
-        this.status = status;
-        this.createdAt = createdAt;
-        this.modifiedAt = modifiedAt;
-        this.pushData = pushData;
     }
 
     @Id
@@ -76,7 +57,6 @@ public class PushdeviceOperation implements java.io.Serializable {
         this.pushDevice = pushDevice;
     }
 
-
     @Column(name = "status", nullable = false, length = 10)
     public String getStatus() {
         return this.status;
@@ -106,7 +86,6 @@ public class PushdeviceOperation implements java.io.Serializable {
         this.modifiedAt = modifiedAt;
     }
 
-
     @Column(name = "push_data", length = 100)
     public String getPushData() {
         return this.pushData;
@@ -115,7 +94,6 @@ public class PushdeviceOperation implements java.io.Serializable {
     public void setPushData(String pushData) {
         this.pushData = pushData;
     }
-
 
 }
 

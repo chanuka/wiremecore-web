@@ -17,7 +17,6 @@ import java.util.Set;
 )
 public class Operation implements java.io.Serializable {
 
-
     private long id;
     private String operationCode;
     private String description;
@@ -27,24 +26,6 @@ public class Operation implements java.io.Serializable {
     private Set<PushdeviceOperation> pushdeviceOperations = new HashSet<PushdeviceOperation>(0);
 
     public Operation() {
-    }
-
-
-    public Operation(long id, String operationCode, Date createdAt, String status) {
-        this.id = id;
-        this.operationCode = operationCode;
-        this.createdAt = createdAt;
-        this.status = status;
-    }
-
-    public Operation(long id, String operationCode, String description, Date createdAt, Date modifiedAt, String status, Set<PushdeviceOperation> pushdeviceOperations) {
-        this.id = id;
-        this.operationCode = operationCode;
-        this.description = description;
-        this.createdAt = createdAt;
-        this.modifiedAt = modifiedAt;
-        this.status = status;
-        this.pushdeviceOperations = pushdeviceOperations;
     }
 
     @Id
@@ -57,7 +38,6 @@ public class Operation implements java.io.Serializable {
         this.id = id;
     }
 
-
     @Column(name = "operation_code", nullable = false, length = 10)
     public String getOperationCode() {
         return this.operationCode;
@@ -66,7 +46,6 @@ public class Operation implements java.io.Serializable {
     public void setOperationCode(String operationCode) {
         this.operationCode = operationCode;
     }
-
 
     @Column(name = "description", length = 100)
     public String getDescription() {
@@ -97,7 +76,6 @@ public class Operation implements java.io.Serializable {
         this.modifiedAt = modifiedAt;
     }
 
-
     @Column(name = "status", nullable = false, length = 10)
     public String getStatus() {
         return this.status;
@@ -115,7 +93,6 @@ public class Operation implements java.io.Serializable {
     public void setPushdeviceOperations(Set<PushdeviceOperation> pushdeviceOperations) {
         this.pushdeviceOperations = pushdeviceOperations;
     }
-
 
 }
 

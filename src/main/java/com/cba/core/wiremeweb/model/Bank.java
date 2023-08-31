@@ -16,7 +16,6 @@ import java.util.Set;
 )
 public class Bank implements java.io.Serializable {
 
-
     private String bankCode;
     private Status status;
     private String bankName;
@@ -26,23 +25,6 @@ public class Bank implements java.io.Serializable {
     private Set<TransactionSwitch> transactionSwitches = new HashSet<TransactionSwitch>(0);
 
     public Bank() {
-    }
-
-
-    public Bank(String bankCode, Status status, String bankName) {
-        this.bankCode = bankCode;
-        this.status = status;
-        this.bankName = bankName;
-    }
-
-    public Bank(String bankCode, Status status, String bankName, String bankUrll, String bankNii, Set<Merchant> merchants, Set<TransactionSwitch> transactionSwitches) {
-        this.bankCode = bankCode;
-        this.status = status;
-        this.bankName = bankName;
-        this.bankUrll = bankUrll;
-        this.bankNii = bankNii;
-        this.merchants = merchants;
-        this.transactionSwitches = transactionSwitches;
     }
 
     @Id
@@ -65,7 +47,6 @@ public class Bank implements java.io.Serializable {
         this.status = status;
     }
 
-
     @Column(name = "bank_name", nullable = false, length = 100)
     public String getBankName() {
         return this.bankName;
@@ -75,7 +56,6 @@ public class Bank implements java.io.Serializable {
         this.bankName = bankName;
     }
 
-
     @Column(name = "bank_urll", length = 100)
     public String getBankUrll() {
         return this.bankUrll;
@@ -84,7 +64,6 @@ public class Bank implements java.io.Serializable {
     public void setBankUrll(String bankUrll) {
         this.bankUrll = bankUrll;
     }
-
 
     @Column(name = "bank_nii", length = 100)
     public String getBankNii() {
@@ -112,7 +91,6 @@ public class Bank implements java.io.Serializable {
     public void setTransactionSwitches(Set<TransactionSwitch> transactionSwitches) {
         this.transactionSwitches = transactionSwitches;
     }
-
 
 }
 

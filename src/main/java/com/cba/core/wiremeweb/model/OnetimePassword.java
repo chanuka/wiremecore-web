@@ -15,24 +15,12 @@ import java.util.Date;
 )
 public class OnetimePassword implements java.io.Serializable {
 
-
     private Integer id;
     private User user;
     private int value;
     private Date expireson;
 
     public OnetimePassword() {
-    }
-
-
-    public OnetimePassword(int value) {
-        this.value = value;
-    }
-
-    public OnetimePassword(User user, int value, Date expireson) {
-        this.user = user;
-        this.value = value;
-        this.expireson = expireson;
     }
 
     @Id
@@ -56,7 +44,6 @@ public class OnetimePassword implements java.io.Serializable {
         this.user = user;
     }
 
-
     @Column(name = "value", nullable = false)
     public int getValue() {
         return this.value;
@@ -75,7 +62,6 @@ public class OnetimePassword implements java.io.Serializable {
     public void setExpireson(Date expireson) {
         this.expireson = expireson;
     }
-
 
 }
 

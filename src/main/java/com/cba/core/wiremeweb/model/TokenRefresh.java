@@ -16,25 +16,12 @@ import java.time.Instant;
 )
 public class TokenRefresh implements java.io.Serializable {
 
-
     private Integer id;
     private User user;
     private Instant expiryDate;
     private String token;
 
     public TokenRefresh() {
-    }
-
-
-    public TokenRefresh(Instant expiryDate, String token) {
-        this.expiryDate = expiryDate;
-        this.token = token;
-    }
-
-    public TokenRefresh(User user, Instant expiryDate, String token) {
-        this.user = user;
-        this.expiryDate = expiryDate;
-        this.token = token;
     }
 
     @Id
@@ -68,7 +55,6 @@ public class TokenRefresh implements java.io.Serializable {
         this.expiryDate = expiryDate;
     }
 
-
     @Column(name = "token", unique = true, nullable = false)
     public String getToken() {
         return this.token;
@@ -77,7 +63,6 @@ public class TokenRefresh implements java.io.Serializable {
     public void setToken(String token) {
         this.token = token;
     }
-
 
 }
 

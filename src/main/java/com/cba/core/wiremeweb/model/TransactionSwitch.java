@@ -15,7 +15,6 @@ import java.util.Date;
 )
 public class TransactionSwitch implements java.io.Serializable {
 
-
     private Long id;
     private Bank bank;
     private Status status;
@@ -94,97 +93,6 @@ public class TransactionSwitch implements java.io.Serializable {
     public TransactionSwitch() {
     }
 
-
-    public TransactionSwitch(TransactionType transactionType, String sessionId, String mti, String processingCode, String traceNo, String terminalId, boolean settlementStatus, String serialNumber, String imeiNumber, Date createdAt, Date updatedAt) {
-        this.transactionType = transactionType;
-        this.sessionId = sessionId;
-        this.mti = mti;
-        this.processingCode = processingCode;
-        this.traceNo = traceNo;
-        this.terminalId = terminalId;
-        this.settlementStatus = settlementStatus;
-        this.serialNumber = serialNumber;
-        this.imeiNumber = imeiNumber;
-        this.createdAt = createdAt;
-        this.updatedAt = updatedAt;
-    }
-
-    public TransactionSwitch(Bank bank, Status status, TransactionType transactionType, String sessionId, String mti, String pan, String processingCode, String tranAmount, String settleAmount, String cardHolderBillAmount, String transmissionDate, String cardHolderBillingFeeAmount, String conversionRateSettlement, String conversionRateBilling, String traceNo, String localTranTime, String localTranDate, String expireDate, String settlementDate, String currencyConversionDate, String captureDate, String merchantType, String acqInstituteCountryCode, String panExtCountryCode, String fwdInstitiuteCountryCode, String entryMode, String panSeqNo, String nii, String conditionCode, String captureCode, String authIdLength, String tranFee, String settleFee, String tranProcessingFee, String settlementProcessingFee, String acqInstituteIdCode, String forwardInstituteIdCode, String extPan, String trackTwoData, String trackThreeData, String retrevalReferenceNo, String authCode, String responseCode, String serviceRestrictionCode, String terminalId, String merchantId, String cardAcceptanceLocation, String adnitionalResponseData, String field46, String field47, String field48, String transactionCurrencyCode, String trackOneData, String settlementCurrencyCode, String cardHolderBillingCurrencyCode, String secRelatedInfo, String additionAmount, String emvData, String field56, String field57, String field58, String field59, String field60, String field61, String field62, String field63, String macData, boolean settlementStatus, String cardLabel, String serialNumber, String imeiNumber, Date createdAt, Date updatedAt) {
-        this.bank = bank;
-        this.status = status;
-        this.transactionType = transactionType;
-        this.sessionId = sessionId;
-        this.mti = mti;
-        this.pan = pan;
-        this.processingCode = processingCode;
-        this.tranAmount = tranAmount;
-        this.settleAmount = settleAmount;
-        this.cardHolderBillAmount = cardHolderBillAmount;
-        this.transmissionDate = transmissionDate;
-        this.cardHolderBillingFeeAmount = cardHolderBillingFeeAmount;
-        this.conversionRateSettlement = conversionRateSettlement;
-        this.conversionRateBilling = conversionRateBilling;
-        this.traceNo = traceNo;
-        this.localTranTime = localTranTime;
-        this.localTranDate = localTranDate;
-        this.expireDate = expireDate;
-        this.settlementDate = settlementDate;
-        this.currencyConversionDate = currencyConversionDate;
-        this.captureDate = captureDate;
-        this.merchantType = merchantType;
-        this.acqInstituteCountryCode = acqInstituteCountryCode;
-        this.panExtCountryCode = panExtCountryCode;
-        this.fwdInstitiuteCountryCode = fwdInstitiuteCountryCode;
-        this.entryMode = entryMode;
-        this.panSeqNo = panSeqNo;
-        this.nii = nii;
-        this.conditionCode = conditionCode;
-        this.captureCode = captureCode;
-        this.authIdLength = authIdLength;
-        this.tranFee = tranFee;
-        this.settleFee = settleFee;
-        this.tranProcessingFee = tranProcessingFee;
-        this.settlementProcessingFee = settlementProcessingFee;
-        this.acqInstituteIdCode = acqInstituteIdCode;
-        this.forwardInstituteIdCode = forwardInstituteIdCode;
-        this.extPan = extPan;
-        this.trackTwoData = trackTwoData;
-        this.trackThreeData = trackThreeData;
-        this.retrevalReferenceNo = retrevalReferenceNo;
-        this.authCode = authCode;
-        this.responseCode = responseCode;
-        this.serviceRestrictionCode = serviceRestrictionCode;
-        this.terminalId = terminalId;
-        this.merchantId = merchantId;
-        this.cardAcceptanceLocation = cardAcceptanceLocation;
-        this.adnitionalResponseData = adnitionalResponseData;
-        this.field46 = field46;
-        this.field47 = field47;
-        this.field48 = field48;
-        this.transactionCurrencyCode = transactionCurrencyCode;
-        this.trackOneData = trackOneData;
-        this.settlementCurrencyCode = settlementCurrencyCode;
-        this.cardHolderBillingCurrencyCode = cardHolderBillingCurrencyCode;
-        this.secRelatedInfo = secRelatedInfo;
-        this.additionAmount = additionAmount;
-        this.emvData = emvData;
-        this.field56 = field56;
-        this.field57 = field57;
-        this.field58 = field58;
-        this.field59 = field59;
-        this.field60 = field60;
-        this.field61 = field61;
-        this.field62 = field62;
-        this.field63 = field63;
-        this.macData = macData;
-        this.settlementStatus = settlementStatus;
-        this.cardLabel = cardLabel;
-        this.serialNumber = serialNumber;
-        this.imeiNumber = imeiNumber;
-        this.createdAt = createdAt;
-        this.updatedAt = updatedAt;
-    }
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", unique = true, nullable = false)
@@ -226,7 +134,6 @@ public class TransactionSwitch implements java.io.Serializable {
         this.transactionType = transactionType;
     }
 
-
     @Column(name = "session_id", nullable = false, length = 100)
     public String getSessionId() {
         return this.sessionId;
@@ -235,7 +142,6 @@ public class TransactionSwitch implements java.io.Serializable {
     public void setSessionId(String sessionId) {
         this.sessionId = sessionId;
     }
-
 
     @Column(name = "mti", nullable = false, length = 4)
     public String getMti() {
@@ -246,7 +152,6 @@ public class TransactionSwitch implements java.io.Serializable {
         this.mti = mti;
     }
 
-
     @Column(name = "pan", length = 512)
     public String getPan() {
         return this.pan;
@@ -255,7 +160,6 @@ public class TransactionSwitch implements java.io.Serializable {
     public void setPan(String pan) {
         this.pan = pan;
     }
-
 
     @Column(name = "processing_code", nullable = false, length = 6)
     public String getProcessingCode() {
@@ -266,7 +170,6 @@ public class TransactionSwitch implements java.io.Serializable {
         this.processingCode = processingCode;
     }
 
-
     @Column(name = "tran_amount", length = 12)
     public String getTranAmount() {
         return this.tranAmount;
@@ -275,7 +178,6 @@ public class TransactionSwitch implements java.io.Serializable {
     public void setTranAmount(String tranAmount) {
         this.tranAmount = tranAmount;
     }
-
 
     @Column(name = "settle_amount", length = 12)
     public String getSettleAmount() {
@@ -286,7 +188,6 @@ public class TransactionSwitch implements java.io.Serializable {
         this.settleAmount = settleAmount;
     }
 
-
     @Column(name = "card_holder_bill_amount", length = 12)
     public String getCardHolderBillAmount() {
         return this.cardHolderBillAmount;
@@ -295,7 +196,6 @@ public class TransactionSwitch implements java.io.Serializable {
     public void setCardHolderBillAmount(String cardHolderBillAmount) {
         this.cardHolderBillAmount = cardHolderBillAmount;
     }
-
 
     @Column(name = "transmission_date", length = 10)
     public String getTransmissionDate() {
@@ -306,7 +206,6 @@ public class TransactionSwitch implements java.io.Serializable {
         this.transmissionDate = transmissionDate;
     }
 
-
     @Column(name = "card_holder_billing_fee_amount", length = 8)
     public String getCardHolderBillingFeeAmount() {
         return this.cardHolderBillingFeeAmount;
@@ -315,7 +214,6 @@ public class TransactionSwitch implements java.io.Serializable {
     public void setCardHolderBillingFeeAmount(String cardHolderBillingFeeAmount) {
         this.cardHolderBillingFeeAmount = cardHolderBillingFeeAmount;
     }
-
 
     @Column(name = "conversion_rate_settlement", length = 8)
     public String getConversionRateSettlement() {
@@ -326,7 +224,6 @@ public class TransactionSwitch implements java.io.Serializable {
         this.conversionRateSettlement = conversionRateSettlement;
     }
 
-
     @Column(name = "conversion_rate_billing", length = 8)
     public String getConversionRateBilling() {
         return this.conversionRateBilling;
@@ -335,7 +232,6 @@ public class TransactionSwitch implements java.io.Serializable {
     public void setConversionRateBilling(String conversionRateBilling) {
         this.conversionRateBilling = conversionRateBilling;
     }
-
 
     @Column(name = "trace_no", nullable = false, length = 6)
     public String getTraceNo() {
@@ -346,7 +242,6 @@ public class TransactionSwitch implements java.io.Serializable {
         this.traceNo = traceNo;
     }
 
-
     @Column(name = "local_tran_time", length = 6)
     public String getLocalTranTime() {
         return this.localTranTime;
@@ -355,7 +250,6 @@ public class TransactionSwitch implements java.io.Serializable {
     public void setLocalTranTime(String localTranTime) {
         this.localTranTime = localTranTime;
     }
-
 
     @Column(name = "local_tran_date", length = 4)
     public String getLocalTranDate() {
@@ -366,7 +260,6 @@ public class TransactionSwitch implements java.io.Serializable {
         this.localTranDate = localTranDate;
     }
 
-
     @Column(name = "expire_date", length = 256)
     public String getExpireDate() {
         return this.expireDate;
@@ -375,7 +268,6 @@ public class TransactionSwitch implements java.io.Serializable {
     public void setExpireDate(String expireDate) {
         this.expireDate = expireDate;
     }
-
 
     @Column(name = "settlement_date", length = 4)
     public String getSettlementDate() {
@@ -386,7 +278,6 @@ public class TransactionSwitch implements java.io.Serializable {
         this.settlementDate = settlementDate;
     }
 
-
     @Column(name = "currency_conversion_date", length = 4)
     public String getCurrencyConversionDate() {
         return this.currencyConversionDate;
@@ -395,7 +286,6 @@ public class TransactionSwitch implements java.io.Serializable {
     public void setCurrencyConversionDate(String currencyConversionDate) {
         this.currencyConversionDate = currencyConversionDate;
     }
-
 
     @Column(name = "capture_date", length = 4)
     public String getCaptureDate() {
@@ -406,7 +296,6 @@ public class TransactionSwitch implements java.io.Serializable {
         this.captureDate = captureDate;
     }
 
-
     @Column(name = "merchant_type", length = 4)
     public String getMerchantType() {
         return this.merchantType;
@@ -415,7 +304,6 @@ public class TransactionSwitch implements java.io.Serializable {
     public void setMerchantType(String merchantType) {
         this.merchantType = merchantType;
     }
-
 
     @Column(name = "acq_institute_country_code", length = 3)
     public String getAcqInstituteCountryCode() {
@@ -426,7 +314,6 @@ public class TransactionSwitch implements java.io.Serializable {
         this.acqInstituteCountryCode = acqInstituteCountryCode;
     }
 
-
     @Column(name = "pan_ext_country_code", length = 3)
     public String getPanExtCountryCode() {
         return this.panExtCountryCode;
@@ -435,7 +322,6 @@ public class TransactionSwitch implements java.io.Serializable {
     public void setPanExtCountryCode(String panExtCountryCode) {
         this.panExtCountryCode = panExtCountryCode;
     }
-
 
     @Column(name = "fwd_institiute_country_code", length = 3)
     public String getFwdInstitiuteCountryCode() {
@@ -446,7 +332,6 @@ public class TransactionSwitch implements java.io.Serializable {
         this.fwdInstitiuteCountryCode = fwdInstitiuteCountryCode;
     }
 
-
     @Column(name = "entry_mode", length = 3)
     public String getEntryMode() {
         return this.entryMode;
@@ -455,7 +340,6 @@ public class TransactionSwitch implements java.io.Serializable {
     public void setEntryMode(String entryMode) {
         this.entryMode = entryMode;
     }
-
 
     @Column(name = "pan_seq_no", length = 3)
     public String getPanSeqNo() {
@@ -466,7 +350,6 @@ public class TransactionSwitch implements java.io.Serializable {
         this.panSeqNo = panSeqNo;
     }
 
-
     @Column(name = "nii", length = 3)
     public String getNii() {
         return this.nii;
@@ -475,7 +358,6 @@ public class TransactionSwitch implements java.io.Serializable {
     public void setNii(String nii) {
         this.nii = nii;
     }
-
 
     @Column(name = "condition_code", length = 2)
     public String getConditionCode() {
@@ -486,7 +368,6 @@ public class TransactionSwitch implements java.io.Serializable {
         this.conditionCode = conditionCode;
     }
 
-
     @Column(name = "capture_code", length = 2)
     public String getCaptureCode() {
         return this.captureCode;
@@ -495,7 +376,6 @@ public class TransactionSwitch implements java.io.Serializable {
     public void setCaptureCode(String captureCode) {
         this.captureCode = captureCode;
     }
-
 
     @Column(name = "auth_id_length", length = 1)
     public String getAuthIdLength() {
@@ -506,7 +386,6 @@ public class TransactionSwitch implements java.io.Serializable {
         this.authIdLength = authIdLength;
     }
 
-
     @Column(name = "tran_fee", length = 12)
     public String getTranFee() {
         return this.tranFee;
@@ -515,7 +394,6 @@ public class TransactionSwitch implements java.io.Serializable {
     public void setTranFee(String tranFee) {
         this.tranFee = tranFee;
     }
-
 
     @Column(name = "settle_fee", length = 12)
     public String getSettleFee() {
@@ -526,7 +404,6 @@ public class TransactionSwitch implements java.io.Serializable {
         this.settleFee = settleFee;
     }
 
-
     @Column(name = "tran_processing_fee", length = 12)
     public String getTranProcessingFee() {
         return this.tranProcessingFee;
@@ -535,7 +412,6 @@ public class TransactionSwitch implements java.io.Serializable {
     public void setTranProcessingFee(String tranProcessingFee) {
         this.tranProcessingFee = tranProcessingFee;
     }
-
 
     @Column(name = "settlement_processing_fee", length = 12)
     public String getSettlementProcessingFee() {
@@ -546,7 +422,6 @@ public class TransactionSwitch implements java.io.Serializable {
         this.settlementProcessingFee = settlementProcessingFee;
     }
 
-
     @Column(name = "acq_institute_id_code", length = 14)
     public String getAcqInstituteIdCode() {
         return this.acqInstituteIdCode;
@@ -555,7 +430,6 @@ public class TransactionSwitch implements java.io.Serializable {
     public void setAcqInstituteIdCode(String acqInstituteIdCode) {
         this.acqInstituteIdCode = acqInstituteIdCode;
     }
-
 
     @Column(name = "forward_institute_id_code", length = 14)
     public String getForwardInstituteIdCode() {
@@ -566,7 +440,6 @@ public class TransactionSwitch implements java.io.Serializable {
         this.forwardInstituteIdCode = forwardInstituteIdCode;
     }
 
-
     @Column(name = "ext_pan", length = 30)
     public String getExtPan() {
         return this.extPan;
@@ -575,7 +448,6 @@ public class TransactionSwitch implements java.io.Serializable {
     public void setExtPan(String extPan) {
         this.extPan = extPan;
     }
-
 
     @Column(name = "track_two_data", length = 256)
     public String getTrackTwoData() {
@@ -586,7 +458,6 @@ public class TransactionSwitch implements java.io.Serializable {
         this.trackTwoData = trackTwoData;
     }
 
-
     @Column(name = "track_three_data", length = 110)
     public String getTrackThreeData() {
         return this.trackThreeData;
@@ -595,7 +466,6 @@ public class TransactionSwitch implements java.io.Serializable {
     public void setTrackThreeData(String trackThreeData) {
         this.trackThreeData = trackThreeData;
     }
-
 
     @Column(name = "retreval_reference_no", length = 12)
     public String getRetrevalReferenceNo() {
@@ -606,7 +476,6 @@ public class TransactionSwitch implements java.io.Serializable {
         this.retrevalReferenceNo = retrevalReferenceNo;
     }
 
-
     @Column(name = "auth_code", length = 6)
     public String getAuthCode() {
         return this.authCode;
@@ -615,7 +484,6 @@ public class TransactionSwitch implements java.io.Serializable {
     public void setAuthCode(String authCode) {
         this.authCode = authCode;
     }
-
 
     @Column(name = "response_code", length = 3)
     public String getResponseCode() {
@@ -626,7 +494,6 @@ public class TransactionSwitch implements java.io.Serializable {
         this.responseCode = responseCode;
     }
 
-
     @Column(name = "service_restriction_code", length = 3)
     public String getServiceRestrictionCode() {
         return this.serviceRestrictionCode;
@@ -635,7 +502,6 @@ public class TransactionSwitch implements java.io.Serializable {
     public void setServiceRestrictionCode(String serviceRestrictionCode) {
         this.serviceRestrictionCode = serviceRestrictionCode;
     }
-
 
     @Column(name = "terminal_id", nullable = false, length = 8)
     public String getTerminalId() {
@@ -646,7 +512,6 @@ public class TransactionSwitch implements java.io.Serializable {
         this.terminalId = terminalId;
     }
 
-
     @Column(name = "merchant_id", length = 15)
     public String getMerchantId() {
         return this.merchantId;
@@ -655,7 +520,6 @@ public class TransactionSwitch implements java.io.Serializable {
     public void setMerchantId(String merchantId) {
         this.merchantId = merchantId;
     }
-
 
     @Column(name = "card_acceptance_location", length = 40)
     public String getCardAcceptanceLocation() {
@@ -666,7 +530,6 @@ public class TransactionSwitch implements java.io.Serializable {
         this.cardAcceptanceLocation = cardAcceptanceLocation;
     }
 
-
     @Column(name = "adnitional_response_data", length = 30)
     public String getAdnitionalResponseData() {
         return this.adnitionalResponseData;
@@ -675,7 +538,6 @@ public class TransactionSwitch implements java.io.Serializable {
     public void setAdnitionalResponseData(String adnitionalResponseData) {
         this.adnitionalResponseData = adnitionalResponseData;
     }
-
 
     @Column(name = "field_46", length = 999)
     public String getField46() {
@@ -686,7 +548,6 @@ public class TransactionSwitch implements java.io.Serializable {
         this.field46 = field46;
     }
 
-
     @Column(name = "field_47", length = 999)
     public String getField47() {
         return this.field47;
@@ -695,7 +556,6 @@ public class TransactionSwitch implements java.io.Serializable {
     public void setField47(String field47) {
         this.field47 = field47;
     }
-
 
     @Column(name = "field_48", length = 999)
     public String getField48() {
@@ -706,7 +566,6 @@ public class TransactionSwitch implements java.io.Serializable {
         this.field48 = field48;
     }
 
-
     @Column(name = "transaction_currency_code", length = 3)
     public String getTransactionCurrencyCode() {
         return this.transactionCurrencyCode;
@@ -715,7 +574,6 @@ public class TransactionSwitch implements java.io.Serializable {
     public void setTransactionCurrencyCode(String transactionCurrencyCode) {
         this.transactionCurrencyCode = transactionCurrencyCode;
     }
-
 
     @Column(name = "track_one_data", length = 100)
     public String getTrackOneData() {
@@ -726,7 +584,6 @@ public class TransactionSwitch implements java.io.Serializable {
         this.trackOneData = trackOneData;
     }
 
-
     @Column(name = "settlement_currency_code", length = 3)
     public String getSettlementCurrencyCode() {
         return this.settlementCurrencyCode;
@@ -735,7 +592,6 @@ public class TransactionSwitch implements java.io.Serializable {
     public void setSettlementCurrencyCode(String settlementCurrencyCode) {
         this.settlementCurrencyCode = settlementCurrencyCode;
     }
-
 
     @Column(name = "card_holder_billing_currency_code", length = 3)
     public String getCardHolderBillingCurrencyCode() {
@@ -746,7 +602,6 @@ public class TransactionSwitch implements java.io.Serializable {
         this.cardHolderBillingCurrencyCode = cardHolderBillingCurrencyCode;
     }
 
-
     @Column(name = "sec_related_info", length = 16)
     public String getSecRelatedInfo() {
         return this.secRelatedInfo;
@@ -755,7 +610,6 @@ public class TransactionSwitch implements java.io.Serializable {
     public void setSecRelatedInfo(String secRelatedInfo) {
         this.secRelatedInfo = secRelatedInfo;
     }
-
 
     @Column(name = "addition_amount", length = 125)
     public String getAdditionAmount() {
@@ -766,7 +620,6 @@ public class TransactionSwitch implements java.io.Serializable {
         this.additionAmount = additionAmount;
     }
 
-
     @Column(name = "emv_data", length = 1024)
     public String getEmvData() {
         return this.emvData;
@@ -775,7 +628,6 @@ public class TransactionSwitch implements java.io.Serializable {
     public void setEmvData(String emvData) {
         this.emvData = emvData;
     }
-
 
     @Column(name = "field_56", length = 999)
     public String getField56() {
@@ -786,7 +638,6 @@ public class TransactionSwitch implements java.io.Serializable {
         this.field56 = field56;
     }
 
-
     @Column(name = "field_57", length = 999)
     public String getField57() {
         return this.field57;
@@ -795,7 +646,6 @@ public class TransactionSwitch implements java.io.Serializable {
     public void setField57(String field57) {
         this.field57 = field57;
     }
-
 
     @Column(name = "field_58", length = 59)
     public String getField58() {
@@ -806,7 +656,6 @@ public class TransactionSwitch implements java.io.Serializable {
         this.field58 = field58;
     }
 
-
     @Column(name = "field_59", length = 999)
     public String getField59() {
         return this.field59;
@@ -815,7 +664,6 @@ public class TransactionSwitch implements java.io.Serializable {
     public void setField59(String field59) {
         this.field59 = field59;
     }
-
 
     @Column(name = "field_60", length = 999)
     public String getField60() {
@@ -826,7 +674,6 @@ public class TransactionSwitch implements java.io.Serializable {
         this.field60 = field60;
     }
 
-
     @Column(name = "field_61", length = 999)
     public String getField61() {
         return this.field61;
@@ -835,7 +682,6 @@ public class TransactionSwitch implements java.io.Serializable {
     public void setField61(String field61) {
         this.field61 = field61;
     }
-
 
     @Column(name = "field_62", length = 999)
     public String getField62() {
@@ -846,7 +692,6 @@ public class TransactionSwitch implements java.io.Serializable {
         this.field62 = field62;
     }
 
-
     @Column(name = "field_63", length = 999)
     public String getField63() {
         return this.field63;
@@ -855,7 +700,6 @@ public class TransactionSwitch implements java.io.Serializable {
     public void setField63(String field63) {
         this.field63 = field63;
     }
-
 
     @Column(name = "mac_data", length = 32)
     public String getMacData() {
@@ -866,7 +710,6 @@ public class TransactionSwitch implements java.io.Serializable {
         this.macData = macData;
     }
 
-
     @Column(name = "settlement_status", nullable = false)
     public boolean isSettlementStatus() {
         return this.settlementStatus;
@@ -875,7 +718,6 @@ public class TransactionSwitch implements java.io.Serializable {
     public void setSettlementStatus(boolean settlementStatus) {
         this.settlementStatus = settlementStatus;
     }
-
 
     @Column(name = "card_label", length = 100)
     public String getCardLabel() {
@@ -886,7 +728,6 @@ public class TransactionSwitch implements java.io.Serializable {
         this.cardLabel = cardLabel;
     }
 
-
     @Column(name = "serial_number", nullable = false, length = 100)
     public String getSerialNumber() {
         return this.serialNumber;
@@ -895,7 +736,6 @@ public class TransactionSwitch implements java.io.Serializable {
     public void setSerialNumber(String serialNumber) {
         this.serialNumber = serialNumber;
     }
-
 
     @Column(name = "imei_number", nullable = false, length = 100)
     public String getImeiNumber() {
@@ -925,8 +765,7 @@ public class TransactionSwitch implements java.io.Serializable {
     public void setUpdatedAt(Date updatedAt) {
         this.updatedAt = updatedAt;
     }
-
-
+    
 }
 
 

@@ -17,7 +17,6 @@ import java.util.Set;
 )
 public class TransactionCore implements java.io.Serializable {
 
-
     private Integer id;
     private String originId;
     private String paymentMode;
@@ -51,48 +50,6 @@ public class TransactionCore implements java.io.Serializable {
     public TransactionCore() {
     }
 
-
-    public TransactionCore(String originId, String paymentMode, int amount, String currency, Date dateTime, Date createdAt, Date updatedAt) {
-        this.originId = originId;
-        this.paymentMode = paymentMode;
-        this.amount = amount;
-        this.currency = currency;
-        this.dateTime = dateTime;
-        this.createdAt = createdAt;
-        this.updatedAt = updatedAt;
-    }
-
-    public TransactionCore(String originId, String paymentMode, String custMobile, String tranType, String cardLabel, String terminalId, Integer traceNo, Integer invoiceNo, int amount, String currency, Integer batchNo, String pan, Date dateTime, String expDate, String nii, String rrn, String authCode, String signData, Integer tipAmount, String entryMode, String dccCurrency, Integer dccTranAmount, Boolean issettled, Integer settledMethod, Date createdAt, Date updatedAt, String merchantId, Set<SettlementInfo> settlementInfos) {
-        this.originId = originId;
-        this.paymentMode = paymentMode;
-        this.custMobile = custMobile;
-        this.tranType = tranType;
-        this.cardLabel = cardLabel;
-        this.terminalId = terminalId;
-        this.traceNo = traceNo;
-        this.invoiceNo = invoiceNo;
-        this.amount = amount;
-        this.currency = currency;
-        this.batchNo = batchNo;
-        this.pan = pan;
-        this.dateTime = dateTime;
-        this.expDate = expDate;
-        this.nii = nii;
-        this.rrn = rrn;
-        this.authCode = authCode;
-        this.signData = signData;
-        this.tipAmount = tipAmount;
-        this.entryMode = entryMode;
-        this.dccCurrency = dccCurrency;
-        this.dccTranAmount = dccTranAmount;
-        this.issettled = issettled;
-        this.settledMethod = settledMethod;
-        this.createdAt = createdAt;
-        this.updatedAt = updatedAt;
-        this.merchantId = merchantId;
-        this.settlementInfos = settlementInfos;
-    }
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", unique = true, nullable = false)
@@ -104,7 +61,6 @@ public class TransactionCore implements java.io.Serializable {
         this.id = id;
     }
 
-
     @Column(name = "origin_id", nullable = false, length = 65)
     public String getOriginId() {
         return this.originId;
@@ -113,7 +69,6 @@ public class TransactionCore implements java.io.Serializable {
     public void setOriginId(String originId) {
         this.originId = originId;
     }
-
 
     @Column(name = "payment_mode", nullable = false, length = 10)
     public String getPaymentMode() {
@@ -124,7 +79,6 @@ public class TransactionCore implements java.io.Serializable {
         this.paymentMode = paymentMode;
     }
 
-
     @Column(name = "cust_mobile", length = 12)
     public String getCustMobile() {
         return this.custMobile;
@@ -133,7 +87,6 @@ public class TransactionCore implements java.io.Serializable {
     public void setCustMobile(String custMobile) {
         this.custMobile = custMobile;
     }
-
 
     @Column(name = "tran_type", length = 10)
     public String getTranType() {
@@ -144,7 +97,6 @@ public class TransactionCore implements java.io.Serializable {
         this.tranType = tranType;
     }
 
-
     @Column(name = "card_label", length = 20)
     public String getCardLabel() {
         return this.cardLabel;
@@ -153,7 +105,6 @@ public class TransactionCore implements java.io.Serializable {
     public void setCardLabel(String cardLabel) {
         this.cardLabel = cardLabel;
     }
-
 
     @Column(name = "terminal_id", length = 9)
     public String getTerminalId() {
@@ -164,7 +115,6 @@ public class TransactionCore implements java.io.Serializable {
         this.terminalId = terminalId;
     }
 
-
     @Column(name = "trace_no")
     public Integer getTraceNo() {
         return this.traceNo;
@@ -173,7 +123,6 @@ public class TransactionCore implements java.io.Serializable {
     public void setTraceNo(Integer traceNo) {
         this.traceNo = traceNo;
     }
-
 
     @Column(name = "invoice_no")
     public Integer getInvoiceNo() {
@@ -184,7 +133,6 @@ public class TransactionCore implements java.io.Serializable {
         this.invoiceNo = invoiceNo;
     }
 
-
     @Column(name = "amount", nullable = false)
     public int getAmount() {
         return this.amount;
@@ -193,7 +141,6 @@ public class TransactionCore implements java.io.Serializable {
     public void setAmount(int amount) {
         this.amount = amount;
     }
-
 
     @Column(name = "currency", nullable = false, length = 6)
     public String getCurrency() {
@@ -204,7 +151,6 @@ public class TransactionCore implements java.io.Serializable {
         this.currency = currency;
     }
 
-
     @Column(name = "batch_no")
     public Integer getBatchNo() {
         return this.batchNo;
@@ -213,7 +159,6 @@ public class TransactionCore implements java.io.Serializable {
     public void setBatchNo(Integer batchNo) {
         this.batchNo = batchNo;
     }
-
 
     @Column(name = "pan", length = 25)
     public String getPan() {
@@ -234,7 +179,6 @@ public class TransactionCore implements java.io.Serializable {
         this.dateTime = dateTime;
     }
 
-
     @Column(name = "exp_date", length = 5)
     public String getExpDate() {
         return this.expDate;
@@ -243,7 +187,6 @@ public class TransactionCore implements java.io.Serializable {
     public void setExpDate(String expDate) {
         this.expDate = expDate;
     }
-
 
     @Column(name = "nii", length = 5)
     public String getNii() {
@@ -254,7 +197,6 @@ public class TransactionCore implements java.io.Serializable {
         this.nii = nii;
     }
 
-
     @Column(name = "rrn", length = 20)
     public String getRrn() {
         return this.rrn;
@@ -263,7 +205,6 @@ public class TransactionCore implements java.io.Serializable {
     public void setRrn(String rrn) {
         this.rrn = rrn;
     }
-
 
     @Column(name = "auth_code", length = 20)
     public String getAuthCode() {
@@ -274,7 +215,6 @@ public class TransactionCore implements java.io.Serializable {
         this.authCode = authCode;
     }
 
-
     @Column(name = "sign_data", length = 10000)
     public String getSignData() {
         return this.signData;
@@ -283,7 +223,6 @@ public class TransactionCore implements java.io.Serializable {
     public void setSignData(String signData) {
         this.signData = signData;
     }
-
 
     @Column(name = "tip_amount")
     public Integer getTipAmount() {
@@ -294,7 +233,6 @@ public class TransactionCore implements java.io.Serializable {
         this.tipAmount = tipAmount;
     }
 
-
     @Column(name = "entry_mode")
     public String getEntryMode() {
         return this.entryMode;
@@ -303,7 +241,6 @@ public class TransactionCore implements java.io.Serializable {
     public void setEntryMode(String entryMode) {
         this.entryMode = entryMode;
     }
-
 
     @Column(name = "dcc_currency")
     public String getDccCurrency() {
@@ -314,7 +251,6 @@ public class TransactionCore implements java.io.Serializable {
         this.dccCurrency = dccCurrency;
     }
 
-
     @Column(name = "dcc_tran_amount")
     public Integer getDccTranAmount() {
         return this.dccTranAmount;
@@ -324,7 +260,6 @@ public class TransactionCore implements java.io.Serializable {
         this.dccTranAmount = dccTranAmount;
     }
 
-
     @Column(name = "issettled")
     public Boolean getIssettled() {
         return this.issettled;
@@ -333,7 +268,6 @@ public class TransactionCore implements java.io.Serializable {
     public void setIssettled(Boolean issettled) {
         this.issettled = issettled;
     }
-
 
     @Column(name = "settled_method")
     public Integer getSettledMethod() {
@@ -364,7 +298,6 @@ public class TransactionCore implements java.io.Serializable {
         this.updatedAt = updatedAt;
     }
 
-
     @Column(name = "merchant_id", length = 16)
     public String getMerchantId() {
         return this.merchantId;
@@ -382,7 +315,6 @@ public class TransactionCore implements java.io.Serializable {
     public void setSettlementInfos(Set<SettlementInfo> settlementInfos) {
         this.settlementInfos = settlementInfos;
     }
-
 
 }
 

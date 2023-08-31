@@ -16,14 +16,12 @@ import java.util.Set;
 )
 public class ConsumingService implements java.io.Serializable {
 
-
     private Integer id;
     private String serviceName;
     private Set<Subscription> subscriptions = new HashSet<Subscription>(0);
 
     public ConsumingService() {
     }
-
 
     public ConsumingService(String serviceName) {
         this.serviceName = serviceName;
@@ -45,7 +43,6 @@ public class ConsumingService implements java.io.Serializable {
         this.id = id;
     }
 
-
     @Column(name = "service_name", nullable = false)
     public String getServiceName() {
         return this.serviceName;
@@ -63,7 +60,6 @@ public class ConsumingService implements java.io.Serializable {
     public void setSubscriptions(Set<Subscription> subscriptions) {
         this.subscriptions = subscriptions;
     }
-
 
 }
 

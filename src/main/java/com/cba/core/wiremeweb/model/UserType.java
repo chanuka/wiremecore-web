@@ -9,6 +9,7 @@ import java.util.Set;
 @Table(name = "user_type"
 )
 public class UserType implements java.io.Serializable {
+
     private Integer id;
     private Status status;
     private String typeName;
@@ -19,12 +20,6 @@ public class UserType implements java.io.Serializable {
 
     public UserType(Integer id) {
         this.id = id;
-    }
-
-    public UserType(Status status, String typeName, Set<User> users) {
-        this.status = status;
-        this.typeName = typeName;
-        this.users = users;
     }
 
     @Id
