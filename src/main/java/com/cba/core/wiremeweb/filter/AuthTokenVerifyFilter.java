@@ -4,7 +4,7 @@ import com.cba.core.wiremeweb.config.JwtConfig;
 import com.cba.core.wiremeweb.dto.PermissionResponseDto;
 import com.cba.core.wiremeweb.exception.JwtTokenException;
 import com.cba.core.wiremeweb.service.impl.TokenBlacklistServiceImpl;
-import com.cba.core.wiremeweb.service.impl.UserPermissionServiceImpl;
+import com.cba.core.wiremeweb.service.impl.PermissionServiceImpl;
 import com.cba.core.wiremeweb.util.JwtUtils;
 import com.cba.core.wiremeweb.util.UserBean;
 import com.cba.core.wiremeweb.util.UserTypeEnum;
@@ -36,7 +36,7 @@ public class AuthTokenVerifyFilter extends OncePerRequestFilter {
 
     private final JwtConfig jwtConfig;
     private final JwtUtils jwtUtils;
-    private final UserPermissionServiceImpl userPermissionServiceImpl;
+    private final PermissionServiceImpl permissionServiceImpl;
     private final JwtDecoder decoder;
     private final UserBean userBean;
     private final TokenBlacklistServiceImpl tokenBlacklistServiceImpl;
@@ -80,15 +80,15 @@ public class AuthTokenVerifyFilter extends OncePerRequestFilter {
             String[] resourceArray = request.getRequestURI().split("\\/");
             boolean access = false;
             String method = request.getMethod();
-            List<PermissionResponseDto> permissionDtoList = userPermissionServiceImpl.findAllByRole(username);
+            List<PermissionResponseDto> permissionResponseDtoList = permissionServiceImpl.findAllPermissionsByUser(username);
 
-            access = permissionDtoList.stream()
-                    .filter(permission -> permission.getResource().equals(resourceArray[2]))
+            access = permissionResponseDtoList.stream()
+                    .filter(permission -> permission.getResourceName().equals(resourceArray[2]))
                     .anyMatch(permission -> (
-                            (method.equals("GET") && permission.isReadd()) ||
-                                    (method.equals("POST") && permission.isCreated()) ||
-                                    (method.equals("PUT") && permission.isUpdated()) ||
-                                    (method.equals("DELETE") && permission.isDeleted())
+                            (method.equals("GET") && (permission.getReadd() != 0)) ||
+                            (method.equals("POST") && (permission.getCreated() != 0)) ||
+                            (method.equals("PUT") && (permission.getUpdated() != 0) ||
+                            (method.equals("DELETE") && (permission.getDeleted() != 0)))
                     ));
 
             if (!access) {

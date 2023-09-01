@@ -128,11 +128,11 @@ public class UserRoleDaoImpl implements GenericDao<UserRoleResponseDto, UserRole
     @CacheEvict(value = "userroles", allEntries = true)
     public UserRoleResponseDto updateById(int id, UserRoleRequestDto requestDto) throws Exception {
 
+        UserRole toBeUpdated = repository.findById(id).orElseThrow(() -> new NotFoundException("User Role not found"));
+
         boolean updateRequired = false;
         Map<String, Object> oldDataMap = new HashMap<>();
         Map<String, Object> newDataMap = new HashMap<>();
-
-        UserRole toBeUpdated = repository.findById(id).orElseThrow(() -> new NotFoundException("User Role not found"));
 
         if (toBeUpdated.getUserByUserId().getId() != requestDto.getUserId()) {
             updateRequired = true;

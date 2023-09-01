@@ -114,8 +114,6 @@ public class MerchantDaoImpl implements MerchantDao<MerchantResponseDto, Merchan
     @CacheEvict(value = "merchants", allEntries = true)
     public void deleteByIdList(List<Integer> idList) throws Exception {
         try {
-            String remoteAdr = userBean.getRemoteAdr();
-
             idList.stream()
                     .map((id) -> repository.findById(id).orElseThrow(() -> new NotFoundException("Merchant not found")))
                     .collect(Collectors.toList());
@@ -129,7 +127,7 @@ public class MerchantDaoImpl implements MerchantDao<MerchantResponseDto, Merchan
                         try {
                             globalAuditEntryRepository.save(new GlobalAuditEntry(resource, UserOperationEnum.DELETE.getValue(),
                                     item, objectMapper.writeValueAsString(objectNode), null,
-                                    remoteAdr));
+                                    userBean.getRemoteAdr()));
                         } catch (Exception e) {
                             throw new RuntimeException("Exception occurred for Auditing: ");// only unchecked exception can be passed
                         }
@@ -144,12 +142,11 @@ public class MerchantDaoImpl implements MerchantDao<MerchantResponseDto, Merchan
     @CacheEvict(value = "merchants", allEntries = true)
     public MerchantResponseDto updateById(int id, MerchantRequestDto requestDto) throws Exception {
 
-        String remoteAdr = userBean.getRemoteAdr();
+        Merchant toBeUpdated = repository.findById(id).orElseThrow(() -> new NotFoundException("Merchant not found"));
+
         boolean updateRequired = false;
         Map<String, Object> oldDataMap = new HashMap<>();
         Map<String, Object> newDataMap = new HashMap<>();
-
-        Merchant toBeUpdated = repository.findById(id).orElseThrow(() -> new NotFoundException("Merchant not found"));
 
         if (!toBeUpdated.getMerchantId().equals(requestDto.getMerchantId())) {
             updateRequired = true;
@@ -205,7 +202,7 @@ public class MerchantDaoImpl implements MerchantDao<MerchantResponseDto, Merchan
             repository.saveAndFlush(toBeUpdated);
             globalAuditEntryRepository.save(new GlobalAuditEntry(resource, UserOperationEnum.UPDATE.getValue(),
                     id, objectMapper.writeValueAsString(oldDataMap), objectMapper.writeValueAsString(newDataMap),
-                    remoteAdr));
+                    userBean.getRemoteAdr()));
 
             return MerchantMapper.toDto(toBeUpdated);
 
@@ -218,15 +215,13 @@ public class MerchantDaoImpl implements MerchantDao<MerchantResponseDto, Merchan
     @CacheEvict(value = "merchants", allEntries = true)
     public MerchantResponseDto create(MerchantRequestDto requestDto) throws Exception {
 
-        String remoteAdr = userBean.getRemoteAdr();
-
         Merchant toInsert = MerchantMapper.toModel(requestDto);
 
         Merchant savedEntity = repository.save(toInsert);
         MerchantResponseDto responseDto = MerchantMapper.toDto(savedEntity);
         globalAuditEntryRepository.save(new GlobalAuditEntry(resource, UserOperationEnum.CREATE.getValue(),
                 savedEntity.getId(), null, objectMapper.writeValueAsString(responseDto),
-                remoteAdr));
+                userBean.getRemoteAdr()));
 
         return responseDto;
     }
@@ -234,8 +229,6 @@ public class MerchantDaoImpl implements MerchantDao<MerchantResponseDto, Merchan
     @Override
     @CacheEvict(value = "merchants", allEntries = true)
     public List<MerchantResponseDto> createBulk(List<MerchantRequestDto> requestDtoList) throws Exception {
-
-        String remoteAdr = userBean.getRemoteAdr();
 
         List<Merchant> entityList = requestDtoList
                 .stream()
@@ -249,7 +242,7 @@ public class MerchantDaoImpl implements MerchantDao<MerchantResponseDto, Merchan
                     try {
                         globalAuditEntryRepository.save(new GlobalAuditEntry(resource, UserOperationEnum.CREATE.getValue(),
                                 item.getId(), null, objectMapper.writeValueAsString(responseDto),
-                                remoteAdr));
+                                userBean.getRemoteAdr()));
                     } catch (Exception e) {
                         throw new RuntimeException("Exception occurred in Auditing: ");// only unchecked exception can be passed
                     }

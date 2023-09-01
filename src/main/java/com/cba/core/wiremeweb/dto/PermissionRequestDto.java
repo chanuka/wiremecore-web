@@ -5,17 +5,16 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 
+import java.io.Serializable;
+
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString
-public class PermissionResponseDto implements java.io.Serializable {
+public class PermissionRequestDto implements Serializable {
 
-    private Integer id;
     private Integer roleId;
-    private String roleName;
     private Integer resourceId;
-    private String resourceName;
     private Integer readd;
     private Integer created;
     private Integer updated;

@@ -55,6 +55,7 @@ application:
     merchants: merchants
     resources: resources
     userroles: userroles
+    permissions: permissions
 
 rsa:
   private-key: classpath:certs/private.pem

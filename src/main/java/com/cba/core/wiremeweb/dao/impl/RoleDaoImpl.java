@@ -112,7 +112,6 @@ public class RoleDaoImpl implements GenericDao<RoleResponseDto, RoleRequestDto> 
     @CacheEvict(value = "roles", allEntries = true)
     public void deleteByIdList(List<Integer> idList) throws Exception {
         try {
-            String remoteAdr = userBean.getRemoteAdr();
 
             idList.stream()
                     .map((id) -> repository.findById(id).orElseThrow(() -> new NotFoundException("Role not found")))
@@ -127,7 +126,7 @@ public class RoleDaoImpl implements GenericDao<RoleResponseDto, RoleRequestDto> 
                         try {
                             globalAuditEntryRepository.save(new GlobalAuditEntry(resource, UserOperationEnum.DELETE.getValue(),
                                     item, objectMapper.writeValueAsString(objectNode), null,
-                                    remoteAdr));
+                                    userBean.getRemoteAdr()));
                         } catch (Exception e) {
                             throw new RuntimeException("Exception occurred for Auditing: ");// only unchecked exception can be passed
                         }
@@ -142,12 +141,11 @@ public class RoleDaoImpl implements GenericDao<RoleResponseDto, RoleRequestDto> 
     @CacheEvict(value = "roles", allEntries = true)
     public RoleResponseDto updateById(int id, RoleRequestDto requestDto) throws Exception {
 
-        String remoteAdr = userBean.getRemoteAdr();
+        Role toBeUpdated = repository.findById(id).orElseThrow(() -> new NotFoundException("Role not found"));
+
         boolean updateRequired = false;
         Map<String, Object> oldDataMap = new HashMap<>();
         Map<String, Object> newDataMap = new HashMap<>();
-
-        Role toBeUpdated = repository.findById(id).orElseThrow(() -> new NotFoundException("Role not found"));
 
         if (!toBeUpdated.getRoleName().equals(requestDto.getRoleName())) {
             updateRequired = true;
@@ -168,7 +166,7 @@ public class RoleDaoImpl implements GenericDao<RoleResponseDto, RoleRequestDto> 
             repository.saveAndFlush(toBeUpdated);
             globalAuditEntryRepository.save(new GlobalAuditEntry(resource, UserOperationEnum.UPDATE.getValue(),
                     id, objectMapper.writeValueAsString(oldDataMap), objectMapper.writeValueAsString(newDataMap),
-                    remoteAdr));
+                    userBean.getRemoteAdr()));
 
             return RoleMapper.toDto(toBeUpdated);
 
@@ -181,15 +179,13 @@ public class RoleDaoImpl implements GenericDao<RoleResponseDto, RoleRequestDto> 
     @CacheEvict(value = "roles", allEntries = true)
     public RoleResponseDto create(RoleRequestDto requestDto) throws Exception {
 
-        String remoteAdr = userBean.getRemoteAdr();
-
         Role toInsert = RoleMapper.toModel(requestDto);
 
         Role savedEntity = repository.save(toInsert);
         RoleResponseDto responseDto = RoleMapper.toDto(savedEntity);
         globalAuditEntryRepository.save(new GlobalAuditEntry(resource, UserOperationEnum.CREATE.getValue(),
                 savedEntity.getId(), null, objectMapper.writeValueAsString(responseDto),
-                remoteAdr));
+                userBean.getRemoteAdr()));
 
         return responseDto;
     }
@@ -197,8 +193,6 @@ public class RoleDaoImpl implements GenericDao<RoleResponseDto, RoleRequestDto> 
     @Override
     @CacheEvict(value = "roles", allEntries = true)
     public List<RoleResponseDto> createBulk(List<RoleRequestDto> requestDtoList) throws Exception {
-
-        String remoteAdr = userBean.getRemoteAdr();
 
         List<Role> entityList = requestDtoList
                 .stream()
@@ -212,7 +206,7 @@ public class RoleDaoImpl implements GenericDao<RoleResponseDto, RoleRequestDto> 
                     try {
                         globalAuditEntryRepository.save(new GlobalAuditEntry(resource, UserOperationEnum.CREATE.getValue(),
                                 item.getId(), null, objectMapper.writeValueAsString(responseDto),
-                                remoteAdr));
+                                userBean.getRemoteAdr()));
                     } catch (Exception e) {
                         throw new RuntimeException("Exception occurred in Auditing: ");// only unchecked exception can be passed
                     }

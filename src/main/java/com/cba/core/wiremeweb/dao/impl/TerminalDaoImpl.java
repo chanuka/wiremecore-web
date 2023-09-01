@@ -117,7 +117,6 @@ public class TerminalDaoImpl implements TerminalDao<TerminalResponseDto, Termina
     @CacheEvict(value = "terminals", allEntries = true)
     public void deleteByIdList(List<Integer> idList) throws Exception {
         try {
-            String remoteAdr = userBean.getRemoteAdr();
 
             idList.stream()
                     .map((id) -> repository.findById(id).orElseThrow(() -> new NotFoundException("Terminal not found")))
@@ -132,7 +131,7 @@ public class TerminalDaoImpl implements TerminalDao<TerminalResponseDto, Termina
                         try {
                             globalAuditEntryRepository.save(new GlobalAuditEntry(resource, UserOperationEnum.DELETE.getValue(),
                                     item, objectMapper.writeValueAsString(objectNode), null,
-                                    remoteAdr));
+                                    userBean.getRemoteAdr()));
                         } catch (Exception e) {
                             throw new RuntimeException("Exception occurred for Auditing: ");// only unchecked exception can be passed
                         }
@@ -147,12 +146,11 @@ public class TerminalDaoImpl implements TerminalDao<TerminalResponseDto, Termina
     @CacheEvict(value = "terminals", allEntries = true)
     public TerminalResponseDto updateById(int id, TerminalRequestDto requestDto) throws Exception {
 
-        String remoteAdr = userBean.getRemoteAdr();
+        Terminal toBeUpdated = repository.findById(id).orElseThrow(() -> new NotFoundException("Terminal not found"));
+
         boolean updateRequired = false;
         Map<String, Object> oldDataMap = new HashMap<>();
         Map<String, Object> newDataMap = new HashMap<>();
-
-        Terminal toBeUpdated = repository.findById(id).orElseThrow(() -> new NotFoundException("Terminal not found"));
 
         if (!toBeUpdated.getTerminalId().equals(requestDto.getTerminalId())) {
             updateRequired = true;
@@ -187,7 +185,7 @@ public class TerminalDaoImpl implements TerminalDao<TerminalResponseDto, Termina
             repository.saveAndFlush(toBeUpdated);
             globalAuditEntryRepository.save(new GlobalAuditEntry(resource, UserOperationEnum.UPDATE.getValue(),
                     id, objectMapper.writeValueAsString(oldDataMap), objectMapper.writeValueAsString(newDataMap),
-                    remoteAdr));
+                    userBean.getRemoteAdr()));
 
             return TerminalMapper.toDto(toBeUpdated);
 
@@ -200,15 +198,13 @@ public class TerminalDaoImpl implements TerminalDao<TerminalResponseDto, Termina
     @CacheEvict(value = "terminals", allEntries = true)
     public TerminalResponseDto create(TerminalRequestDto requestDto) throws Exception {
 
-        String remoteAdr = userBean.getRemoteAdr();
-
         Terminal toInsert = TerminalMapper.toModel(requestDto);
 
         Terminal savedEntity = repository.save(toInsert);
         TerminalResponseDto responseDto = TerminalMapper.toDto(savedEntity);
         globalAuditEntryRepository.save(new GlobalAuditEntry(resource, UserOperationEnum.CREATE.getValue(),
                 savedEntity.getId(), null, objectMapper.writeValueAsString(responseDto),
-                remoteAdr));
+                userBean.getRemoteAdr()));
 
         return responseDto;
     }
@@ -216,8 +212,6 @@ public class TerminalDaoImpl implements TerminalDao<TerminalResponseDto, Termina
     @Override
     @CacheEvict(value = "terminals", allEntries = true)
     public List<TerminalResponseDto> createBulk(List<TerminalRequestDto> requestDtoList) throws Exception {
-
-        String remoteAdr = userBean.getRemoteAdr();
 
         List<Terminal> entityList = requestDtoList
                 .stream()
@@ -231,7 +225,7 @@ public class TerminalDaoImpl implements TerminalDao<TerminalResponseDto, Termina
                     try {
                         globalAuditEntryRepository.save(new GlobalAuditEntry(resource, UserOperationEnum.CREATE.getValue(),
                                 item.getId(), null, objectMapper.writeValueAsString(responseDto),
-                                remoteAdr));
+                                userBean.getRemoteAdr()));
                     } catch (Exception e) {
                         throw new RuntimeException("Exception occurred in Auditing: ");// only unchecked exception can be passed
                     }

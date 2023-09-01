@@ -8,7 +8,7 @@ import com.cba.core.wiremeweb.filter.UserNamePasswordVerifyFilter;
 import com.cba.core.wiremeweb.service.impl.CustomUserDetailsServiceImpl;
 import com.cba.core.wiremeweb.service.impl.RefreshTokenServiceImpl;
 import com.cba.core.wiremeweb.service.impl.TokenBlacklistServiceImpl;
-import com.cba.core.wiremeweb.service.impl.UserPermissionServiceImpl;
+import com.cba.core.wiremeweb.service.impl.PermissionServiceImpl;
 import com.cba.core.wiremeweb.util.JwtUtils;
 import com.cba.core.wiremeweb.util.UserBean;
 import lombok.RequiredArgsConstructor;
@@ -36,7 +36,7 @@ public class SecurityConfig {
     private final PasswordEncoder passwordEncoder;
     private final JwtConfig jwtConfig;
     private final RefreshTokenServiceImpl refreshTokenServiceImpl;
-    private final UserPermissionServiceImpl userPermissionServiceImpl;// autowired not worked in the context of creating new object using new key word, has to manually inject.
+    private final PermissionServiceImpl permissionServiceImpl;// autowired not worked in the context of creating new object using new key word, has to manually inject.
     private final JwtUtils jwtUtils;
     private final JwtEncoder encoder;
     private final JwtDecoder decoder;
@@ -87,7 +87,7 @@ public class SecurityConfig {
 
         http.addFilter(new UserNamePasswordVerifyFilter(authenticationManager(http.getSharedObject(AuthenticationConfiguration.class)),
                 jwtConfig, refreshTokenServiceImpl, jwtUtils, encoder));
-        http.addFilterAfter(new AuthTokenVerifyFilter(jwtConfig, jwtUtils, userPermissionServiceImpl, decoder, userBean, tokenBlacklistServiceImpl,messageSource), UserNamePasswordVerifyFilter.class);
+        http.addFilterAfter(new AuthTokenVerifyFilter(jwtConfig, jwtUtils, permissionServiceImpl, decoder, userBean, tokenBlacklistServiceImpl,messageSource), UserNamePasswordVerifyFilter.class);
 
         return http.build();
     }

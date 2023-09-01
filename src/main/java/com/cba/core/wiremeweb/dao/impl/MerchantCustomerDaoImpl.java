@@ -113,7 +113,6 @@ public class MerchantCustomerDaoImpl implements GenericDao<MerchantCustomerRespo
     @CacheEvict(value = "partners", allEntries = true)
     public void deleteByIdList(List<Integer> idList) throws Exception {
         try {
-            String remoteAdr = userBean.getRemoteAdr();
 
             idList.stream()
                     .map((id) -> repository.findById(id).orElseThrow(() -> new NotFoundException("Merchant Customer not found")))
@@ -128,7 +127,7 @@ public class MerchantCustomerDaoImpl implements GenericDao<MerchantCustomerRespo
                         try {
                             globalAuditEntryRepository.save(new GlobalAuditEntry(resource, UserOperationEnum.DELETE.getValue(),
                                     item, objectMapper.writeValueAsString(objectNode), null,
-                                    remoteAdr));
+                                    userBean.getRemoteAdr()));
                         } catch (Exception e) {
                             throw new RuntimeException("Exception occurred for Auditing: ");// only unchecked exception can be passed
                         }
@@ -143,12 +142,11 @@ public class MerchantCustomerDaoImpl implements GenericDao<MerchantCustomerRespo
     @CacheEvict(value = "partners", allEntries = true)
     public MerchantCustomerResponseDto updateById(int id, MerchantCustomerRequestDto requestDto) throws Exception {
 
-        String remoteAdr = userBean.getRemoteAdr();
+        MerchantCustomer toBeUpdated = repository.findById(id).orElseThrow(() -> new NotFoundException("Merchant Customer not found"));
+
         boolean updateRequired = false;
         Map<String, Object> oldDataMap = new HashMap<>();
         Map<String, Object> newDataMap = new HashMap<>();
-
-        MerchantCustomer toBeUpdated = repository.findById(id).orElseThrow(() -> new NotFoundException("Merchant Customer not found"));
 
         if (!toBeUpdated.getName().equals(requestDto.getName())) {
             updateRequired = true;
@@ -190,7 +188,7 @@ public class MerchantCustomerDaoImpl implements GenericDao<MerchantCustomerRespo
             repository.saveAndFlush(toBeUpdated);
             globalAuditEntryRepository.save(new GlobalAuditEntry(resource, UserOperationEnum.UPDATE.getValue(),
                     id, objectMapper.writeValueAsString(oldDataMap), objectMapper.writeValueAsString(newDataMap),
-                    remoteAdr));
+                    userBean.getRemoteAdr()));
 
             return MerchantCustomerMapper.toDto(toBeUpdated);
 
@@ -202,7 +200,6 @@ public class MerchantCustomerDaoImpl implements GenericDao<MerchantCustomerRespo
     @Override
     @CacheEvict(value = "partners", allEntries = true)
     public MerchantCustomerResponseDto create(MerchantCustomerRequestDto requestDto) throws Exception {
-        String remoteAdr = userBean.getRemoteAdr();
 
         MerchantCustomer toInsert = MerchantCustomerMapper.toModel(requestDto);
 
@@ -210,7 +207,7 @@ public class MerchantCustomerDaoImpl implements GenericDao<MerchantCustomerRespo
         MerchantCustomerResponseDto responseDto = MerchantCustomerMapper.toDto(savedEntity);
         globalAuditEntryRepository.save(new GlobalAuditEntry(resource, UserOperationEnum.CREATE.getValue(),
                 savedEntity.getId(), null, objectMapper.writeValueAsString(responseDto),
-                remoteAdr));
+                userBean.getRemoteAdr()));
 
         return responseDto;
     }
@@ -218,7 +215,6 @@ public class MerchantCustomerDaoImpl implements GenericDao<MerchantCustomerRespo
     @Override
     @CacheEvict(value = "partners", allEntries = true)
     public List<MerchantCustomerResponseDto> createBulk(List<MerchantCustomerRequestDto> requestDtoList) throws Exception {
-        String remoteAdr = userBean.getRemoteAdr();
 
         List<MerchantCustomer> entityList = requestDtoList
                 .stream()
@@ -232,7 +228,7 @@ public class MerchantCustomerDaoImpl implements GenericDao<MerchantCustomerRespo
                     try {
                         globalAuditEntryRepository.save(new GlobalAuditEntry(resource, UserOperationEnum.CREATE.getValue(),
                                 item.getId(), null, objectMapper.writeValueAsString(responseDto),
-                                remoteAdr));
+                                userBean.getRemoteAdr()));
                     } catch (Exception e) {
                         throw new RuntimeException("Exception occurred in Auditing: ");// only unchecked exception can be passed
                     }

@@ -117,8 +117,6 @@ public class DeviceDaoImpl implements GenericDao<DeviceResponseDto, DeviceReques
     public void deleteByIdList(List<Integer> idList) throws Exception {
         try {
             ObjectMapper objectMapper = new ObjectMapper();
-            String remoteAdr = userBean.getRemoteAdr();
-
             idList.stream()
                     .map((id) -> repository.findById(id).orElseThrow(() -> new NotFoundException("Device not found")))
                     .collect(Collectors.toList());
@@ -132,7 +130,7 @@ public class DeviceDaoImpl implements GenericDao<DeviceResponseDto, DeviceReques
                         try {
                             globalAuditEntryRepository.save(new GlobalAuditEntry(resource, UserOperationEnum.DELETE.getValue(),
                                     item, objectMapper.writeValueAsString(objectNode), null,
-                                    remoteAdr));
+                                    userBean.getRemoteAdr()));
                         } catch (Exception e) {
                             throw new RuntimeException("Exception occurred for Auditing: ");// only unchecked exception can be passed
                         }
@@ -147,12 +145,11 @@ public class DeviceDaoImpl implements GenericDao<DeviceResponseDto, DeviceReques
     @CacheEvict(value = "devices", allEntries = true)
     public DeviceResponseDto updateById(int id, DeviceRequestDto requestDto) throws Exception {
 
-        String remoteAdr = userBean.getRemoteAdr();
+        Device toBeUpdated = repository.findById(id).orElseThrow(() -> new NotFoundException("Device not found"));
+
         boolean updateRequired = false;
         Map<String, Object> oldDataMap = new HashMap<>();
         Map<String, Object> newDataMap = new HashMap<>();
-
-        Device toBeUpdated = repository.findById(id).orElseThrow(() -> new NotFoundException("Device not found"));
 
         if (!toBeUpdated.getDeviceType().equals(requestDto.getDeviceType())) {
             updateRequired = true;
@@ -187,7 +184,7 @@ public class DeviceDaoImpl implements GenericDao<DeviceResponseDto, DeviceReques
             repository.saveAndFlush(toBeUpdated);
             globalAuditEntryRepository.save(new GlobalAuditEntry(resource, UserOperationEnum.UPDATE.getValue(),
                     id, objectMapper.writeValueAsString(oldDataMap), objectMapper.writeValueAsString(newDataMap),
-                    remoteAdr));
+                    userBean.getRemoteAdr()));
 
             return DeviceMapper.toDto(toBeUpdated);
 
@@ -201,15 +198,13 @@ public class DeviceDaoImpl implements GenericDao<DeviceResponseDto, DeviceReques
     @CacheEvict(value = "devices", allEntries = true)
     public DeviceResponseDto create(DeviceRequestDto requestDto) throws Exception {
 
-        String remoteAdr = userBean.getRemoteAdr();
-
         Device toInsert = DeviceMapper.toModel(requestDto);
         toInsert.setStatus(new Status(requestDto.getStatus()));
         Device savedEntity = repository.save(toInsert);
         DeviceResponseDto responseDto = DeviceMapper.toDto(savedEntity);
         globalAuditEntryRepository.save(new GlobalAuditEntry(resource, UserOperationEnum.CREATE.getValue(),
                 savedEntity.getId(), null, objectMapper.writeValueAsString(responseDto),
-                remoteAdr));
+                userBean.getRemoteAdr()));
 
         return responseDto;
 
@@ -218,8 +213,6 @@ public class DeviceDaoImpl implements GenericDao<DeviceResponseDto, DeviceReques
     @Override
     @CacheEvict(value = "devices", allEntries = true)
     public List<DeviceResponseDto> createBulk(List<DeviceRequestDto> requestDtoList) throws Exception {
-
-        String remoteAdr = userBean.getRemoteAdr();
 
         List<Device> entityList = requestDtoList
                 .stream()
@@ -233,7 +226,7 @@ public class DeviceDaoImpl implements GenericDao<DeviceResponseDto, DeviceReques
                     try {
                         globalAuditEntryRepository.save(new GlobalAuditEntry(resource, UserOperationEnum.CREATE.getValue(),
                                 item.getId(), null, objectMapper.writeValueAsString(responseDto),
-                                remoteAdr));
+                                userBean.getRemoteAdr()));
                     } catch (Exception e) {
                         throw new RuntimeException("Exception occurred in Auditing: ");// only unchecked exception can be passed
                     }

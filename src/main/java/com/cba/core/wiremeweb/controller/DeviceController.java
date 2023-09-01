@@ -38,8 +38,8 @@ public class DeviceController implements GenericResource<DeviceResponseDto, Devi
         Locale currentLocale = LocaleContextHolder.getLocale();
         logger.debug(messageSource.getMessage("DEVICE_GET_ALL_DEBUG", null, currentLocale));
         try {
-            Page<DeviceResponseDto> responseDtolist = service.findAll(page, pageSize);
-            return ResponseEntity.ok().body(responseDtolist.getContent());
+            Page<DeviceResponseDto> responseDtoList = service.findAll(page, pageSize);
+            return ResponseEntity.ok().body(responseDtoList.getContent());
         } catch (Exception e) {
             logger.error(e.getMessage());
             throw e;

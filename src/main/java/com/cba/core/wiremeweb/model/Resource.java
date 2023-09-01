@@ -27,6 +27,10 @@ public class Resource implements java.io.Serializable {
     public Resource() {
     }
 
+    public Resource(Integer resourceId) {
+        this.id = resourceId;
+    }
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", unique = true, nullable = false)

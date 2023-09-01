@@ -45,13 +45,11 @@ public class User implements java.io.Serializable {
     private Date createdAt;
     @LastModifiedDate
     private Date updatedAt;
-    private Set<Permission> permissionsForModifiedBy = new HashSet<Permission>(0);
     private Set<DeviceConfig> deviceConfigsForModifiedBy = new HashSet<DeviceConfig>(0);
     private Set<TokenRefresh> refreshTokens = new HashSet<TokenRefresh>(0);
     private Set<DeviceConfig> deviceConfigsForCreatedBy = new HashSet<DeviceConfig>(0);
     private Set<UserRole> userRolesForUserId = new HashSet<UserRole>(0);
     private Set<OnetimePassword> onetimePasswords = new HashSet<OnetimePassword>(0);
-    private Set<Permission> permissionsForCreatedBy = new HashSet<Permission>(0);
     private Set<UserConfig> userConfigs = new HashSet<UserConfig>(0);
 
     public User() {
@@ -235,15 +233,6 @@ public class User implements java.io.Serializable {
     }
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "userByModifiedBy")
-    public Set<Permission> getPermissionsForModifiedBy() {
-        return this.permissionsForModifiedBy;
-    }
-
-    public void setPermissionsForModifiedBy(Set<Permission> permissionsForModifiedBy) {
-        this.permissionsForModifiedBy = permissionsForModifiedBy;
-    }
-
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "userByModifiedBy")
     public Set<DeviceConfig> getDeviceConfigsForModifiedBy() {
         return this.deviceConfigsForModifiedBy;
     }
@@ -286,15 +275,6 @@ public class User implements java.io.Serializable {
 
     public void setOnetimePasswords(Set<OnetimePassword> onetimePasswords) {
         this.onetimePasswords = onetimePasswords;
-    }
-
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "userByCreatedBy")
-    public Set<Permission> getPermissionsForCreatedBy() {
-        return this.permissionsForCreatedBy;
-    }
-
-    public void setPermissionsForCreatedBy(Set<Permission> permissionsForCreatedBy) {
-        this.permissionsForCreatedBy = permissionsForCreatedBy;
     }
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "user")

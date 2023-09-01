@@ -3,6 +3,11 @@ package com.cba.core.wiremeweb.model;
 
 
 import jakarta.persistence.*;
+import org.springframework.data.annotation.CreatedBy;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedBy;
+import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.util.Date;
 
@@ -13,18 +18,23 @@ import java.util.Date;
 @Entity
 @Table(name = "permission"
 )
+@EntityListeners(AuditingEntityListener.class) // enable entity level auditing for create,modified attributes
 public class Permission implements java.io.Serializable {
 
     private Integer id;
     private Resource resource;
     private Role role;
-    private User userByModifiedBy;
-    private User userByCreatedBy;
+    @CreatedBy
+    private String createdBy;
+    @LastModifiedBy
+    private String modifiedBy;
     private Byte created;
     private Byte readd;
     private Byte updated;
     private Byte deleted;
+    @CreatedDate
     private Date createdAt;
+    @LastModifiedDate
     private Date updatedAt;
 
     public Permission() {
@@ -61,24 +71,22 @@ public class Permission implements java.io.Serializable {
         this.role = role;
     }
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "modified_by")
-    public User getUserByModifiedBy() {
-        return this.userByModifiedBy;
+    @Column(name = "modified_by", length = 45)
+    public String getModifiedBy() {
+        return this.modifiedBy;
     }
 
-    public void setUserByModifiedBy(User userByModifiedBy) {
-        this.userByModifiedBy = userByModifiedBy;
+    public void setModifiedBy(String modifiedBy) {
+        this.modifiedBy = modifiedBy;
     }
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "created_by", nullable = false)
-    public User getUserByCreatedBy() {
-        return this.userByCreatedBy;
+    @Column(name = "created_by", nullable = false, length = 45)
+    public String getCreatedBy() {
+        return this.createdBy;
     }
 
-    public void setUserByCreatedBy(User userByCreatedBy) {
-        this.userByCreatedBy = userByCreatedBy;
+    public void setCreatedBy(String createdBy) {
+        this.createdBy = createdBy;
     }
 
     @Column(name = "created")
