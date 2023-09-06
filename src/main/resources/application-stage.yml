@@ -9,19 +9,17 @@ spring:
     basename: messages
     encoding: UTF-8
   jpa:
-    spring.jpa.database-platform: org.hibernate.dialect.H2Dialect
     hibernate:
-      ddl-auto: create
+      ddl-auto: validate
     properties:
       hibernate:
         show_sql: true
         jdbc:
           batch_size: 50
   datasource:
-    url: jdbc:h2:mem:haradb_new
-    username: sa
-    password: password
-    driverClassName: org.h2.Driver
+    url: jdbc:mysql://${DB_HOST}:${DB_PORT}/${DB_NAME}?createDatabaseIfNotExist=true
+    username: ${DB_USER}
+    password: ${DB_PASSWORD}
     hikari:
       maximum-pool-size: 10
       minimum-idle: 5
@@ -36,7 +34,7 @@ spring:
         smtp:
           auth: true
           starttls:
-            enable: true # this should change to false when there is no SSL
+            enable: true
             required: true
     protocol: smtp
     test-connection: false
@@ -45,7 +43,7 @@ application:
   jwt:
     secretKey: securesecuresecuresecuresecuresecuresecuresecuresecuresecuresecure
     tokenPrefix: Bearer
-    tokenExpirationAfterMillis: 604800000       #86400000,3600000,60,000  Token is issued for a week, has to change once go live
+    tokenExpirationAfterMillis: 84400000
   refresh:
     tokenExpirationAfterMillis: 120000
   resource:
@@ -69,13 +67,12 @@ springdoc:
   swagger-ui:
     path: /swagger-ui.html
     enabled: true
-    default-models-expand-depth: -1  # this is to remove unwanted tables view in swagger-ui
+    default-models-expand-depth: -1
 
 swagger:
   server:
-    url: http://localhost:8091/wireme-coreweb
+    url: http://123.231.95.112:8091/wireme-coreweb
 
-# this is to activate spring actuator
 management:
   endpoints:
     web:
@@ -84,4 +81,4 @@ management:
     enabled-by-default: true
 
 logging:
-  config: C:\conf\wiremecoreweb\logback-spring.xml
+  config: /opt/conf/wiremecoreweb/logback-spring.xml

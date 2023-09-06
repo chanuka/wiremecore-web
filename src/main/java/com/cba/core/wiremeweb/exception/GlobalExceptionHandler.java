@@ -1,6 +1,7 @@
 package com.cba.core.wiremeweb.exception;
 
 import com.cba.core.wiremeweb.dto.ExceptionResponseDto;
+import jakarta.validation.ConstraintViolationException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.MessageSource;
 import org.springframework.context.i18n.LocaleContextHolder;
@@ -40,6 +41,16 @@ public class GlobalExceptionHandler {
 
         return new ResponseEntity<>(exceptionResponseDto, HttpStatus.BAD_REQUEST);
     }
+
+//    @ExceptionHandler(ConstraintViolationException.class)
+//    public ResponseEntity<ExceptionResponseDto> handleConstraintValidationException(ConstraintViolationException constraintViolationException,
+//                                                                                    WebRequest request) {
+//        ExceptionResponseDto exceptionResponseDto = new ExceptionResponseDto(LocalDateTime.now(),
+//                constraintViolationException.getMessage(),
+//                request.getDescription(false));
+//
+//        return new ResponseEntity<>(exceptionResponseDto, HttpStatus.BAD_REQUEST);
+//    }
 
     @ExceptionHandler(NotFoundException.class)
     public ResponseEntity<ExceptionResponseDto> handleNotFoundException(NotFoundException notFoundException,

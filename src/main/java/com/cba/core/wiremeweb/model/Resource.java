@@ -21,7 +21,6 @@ public class Resource implements java.io.Serializable {
     private String name;
     private Date createdAt;
     private Date updatedAt;
-    private Set<Subscription> subscriptions = new HashSet<Subscription>(0);
     private Set<Permission> permissions = new HashSet<Permission>(0);
 
     public Resource() {
@@ -69,18 +68,6 @@ public class Resource implements java.io.Serializable {
 
     public void setUpdatedAt(Date updatedAt) {
         this.updatedAt = updatedAt;
-    }
-
-    @ManyToMany(fetch = FetchType.LAZY)
-    @JoinTable(name = "subscription_resource", catalog = "haradb_new", joinColumns = {
-            @JoinColumn(name = "resourceid", nullable = false, updatable = false)}, inverseJoinColumns = {
-            @JoinColumn(name = "subscriptionid", nullable = false, updatable = false)})
-    public Set<Subscription> getSubscriptions() {
-        return this.subscriptions;
-    }
-
-    public void setSubscriptions(Set<Subscription> subscriptions) {
-        this.subscriptions = subscriptions;
     }
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "resource")
