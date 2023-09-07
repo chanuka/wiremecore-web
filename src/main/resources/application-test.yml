@@ -25,6 +25,10 @@ spring:
     hikari:
       maximum-pool-size: 10
       minimum-idle: 5
+  h2:
+    console:
+      enabled: true
+      path: /h2-console
   mail:
     default-encoding: UTF-8
     host: smtp.gmail.com

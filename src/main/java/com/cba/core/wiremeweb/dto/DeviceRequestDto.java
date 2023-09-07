@@ -27,4 +27,10 @@ public class DeviceRequestDto implements java.io.Serializable {
 
     private static final long serialVersionUID = 1L;
 
+//    public DeviceRequestDto(String serialNo, String emiNo, String deviceType, String status) {
+//        this.serialNo = serialNo;
+//        this.emiNo = emiNo;
+//        this.deviceType = deviceType;
+//        this.status = status;
+//    }
 }
