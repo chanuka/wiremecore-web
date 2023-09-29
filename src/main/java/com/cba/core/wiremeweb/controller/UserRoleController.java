@@ -4,7 +4,6 @@ import com.cba.core.wiremeweb.controller.resource.GenericResource;
 import com.cba.core.wiremeweb.dto.UserRoleRequestDto;
 import com.cba.core.wiremeweb.dto.UserRoleResponseDto;
 import com.cba.core.wiremeweb.service.GenericService;
-import com.cba.core.wiremeweb.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

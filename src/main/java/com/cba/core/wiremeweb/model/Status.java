@@ -33,6 +33,7 @@ public class Status implements java.io.Serializable {
     private Set<Role> roles = new HashSet<Role>(0);
     private Set<UserRole> userRoles = new HashSet<UserRole>(0);
     private Set<UserType> userTypes = new HashSet<UserType>(0);
+    private Set<UserConfig> userConfigs = new HashSet<UserConfig>(0);
 
     public Status() {
     }
@@ -193,6 +194,15 @@ public class Status implements java.io.Serializable {
 
     public void setUserTypes(Set<UserType> userTypes) {
         this.userTypes = userTypes;
+    }
+
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "status")
+    public Set<UserConfig> getUserConfigs() {
+        return userConfigs;
+    }
+
+    public void setUserConfigs(Set<UserConfig> userConfigs) {
+        this.userConfigs = userConfigs;
     }
 }
 

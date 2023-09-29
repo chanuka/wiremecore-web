@@ -1,6 +1,5 @@
 package com.cba.core.wiremeweb.controller;
 
-import com.cba.core.wiremeweb.controller.resource.GenericResource;
 import com.cba.core.wiremeweb.controller.resource.MerchantResource;
 import com.cba.core.wiremeweb.dto.MerchantRequestDto;
 import com.cba.core.wiremeweb.dto.MerchantResponseDto;

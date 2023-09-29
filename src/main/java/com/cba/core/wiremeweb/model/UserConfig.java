@@ -3,6 +3,11 @@ package com.cba.core.wiremeweb.model;
 
 
 import jakarta.persistence.*;
+import org.springframework.data.annotation.CreatedBy;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedBy;
+import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.util.Date;
 
@@ -13,13 +18,23 @@ import java.util.Date;
 @Entity
 @Table(name = "user_config"
 )
+@EntityListeners(AuditingEntityListener.class) // enable entity level auditing for create,modified attributes
 public class UserConfig implements java.io.Serializable {
 
     private Integer id;
     private User user;
     private String configType;
     private String config;
+    private Integer priorityOrder;
+    private String configName;
+    private Status status;
+    @CreatedBy
+    private String createdBy;
+    @LastModifiedBy
+    private String modifiedBy;
+    @CreatedDate
     private Date createdAt;
+    @LastModifiedDate
     private Date updatedAt;
 
     public UserConfig() {
@@ -55,7 +70,7 @@ public class UserConfig implements java.io.Serializable {
         this.configType = configType;
     }
 
-    @Column(name = "config", length = 65535, columnDefinition = "TEXT")
+    @Column(name = "config", nullable = false, length = 65535, columnDefinition = "TEXT")
     public String getConfig() {
         return this.config;
     }
@@ -84,6 +99,51 @@ public class UserConfig implements java.io.Serializable {
         this.updatedAt = updatedAt;
     }
 
+    @Column(name = "created_by", nullable = false, length = 45)
+    public String getCreatedBy() {
+        return this.createdBy;
+    }
+
+    public void setCreatedBy(String createdBy) {
+        this.createdBy = createdBy;
+    }
+
+    @Column(name = "modified_by", length = 45)
+    public String getModifiedBy() {
+        return this.modifiedBy;
+    }
+
+    public void setModifiedBy(String modifiedBy) {
+        this.modifiedBy = modifiedBy;
+    }
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "status", nullable = false)
+    public Status getStatus() {
+        return this.status;
+    }
+
+    public void setStatus(Status status) {
+        this.status = status;
+    }
+
+    @Column(name = "priority_order", nullable = false)
+    public Integer getPriorityOrder() {
+        return priorityOrder;
+    }
+
+    public void setPriorityOrder(Integer priorityOrder) {
+        this.priorityOrder = priorityOrder;
+    }
+
+    @Column(name = "config_name", nullable = false)
+    public String getConfigName() {
+        return configName;
+    }
+
+    public void setConfigName(String configName) {
+        this.configName = configName;
+    }
 }
 
 

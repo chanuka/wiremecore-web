@@ -1,6 +1,5 @@
 package com.cba.core.wiremeweb.dto;
 
-import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -12,12 +11,12 @@ import java.io.Serializable;
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString
-public class UserRoleRequestDto implements Serializable {
-
-    private Integer userId;
-    private Integer roleId;
-    @NotBlank(message = "Status is required")
-    private String status;
+public class SelectionScope implements Serializable {
+    private String partner;
+    private String merchant;
+    private String province;
+    private String district;
 
     private static final long serialVersionUID = 1L;
+
 }

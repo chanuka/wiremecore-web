@@ -2,8 +2,9 @@ package com.cba.core.wiremeweb.mapper;
 
 import com.cba.core.wiremeweb.dto.PermissionRequestDto;
 import com.cba.core.wiremeweb.dto.PermissionResponseDto;
-import com.cba.core.wiremeweb.dto.TerminalRequestDto;
-import com.cba.core.wiremeweb.model.*;
+import com.cba.core.wiremeweb.model.Permission;
+import com.cba.core.wiremeweb.model.Resource;
+import com.cba.core.wiremeweb.model.Role;
 
 public class PermissionMapper {
 

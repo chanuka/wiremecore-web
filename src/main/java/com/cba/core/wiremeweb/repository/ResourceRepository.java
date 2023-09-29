@@ -1,6 +1,5 @@
 package com.cba.core.wiremeweb.repository;
 
-import com.cba.core.wiremeweb.model.Merchant;
 import com.cba.core.wiremeweb.model.Resource;
 import org.springframework.data.jpa.repository.JpaRepository;
 

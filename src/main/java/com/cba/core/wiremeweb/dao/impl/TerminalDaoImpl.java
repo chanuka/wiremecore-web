@@ -1,11 +1,9 @@
 package com.cba.core.wiremeweb.dao.impl;
 
-import com.cba.core.wiremeweb.dao.GenericDao;
 import com.cba.core.wiremeweb.dao.TerminalDao;
 import com.cba.core.wiremeweb.dto.TerminalRequestDto;
 import com.cba.core.wiremeweb.dto.TerminalResponseDto;
 import com.cba.core.wiremeweb.exception.NotFoundException;
-import com.cba.core.wiremeweb.mapper.MerchantMapper;
 import com.cba.core.wiremeweb.mapper.TerminalMapper;
 import com.cba.core.wiremeweb.model.GlobalAuditEntry;
 import com.cba.core.wiremeweb.model.Merchant;

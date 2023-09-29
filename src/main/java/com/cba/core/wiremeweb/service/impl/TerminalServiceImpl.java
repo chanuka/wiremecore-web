@@ -1,10 +1,8 @@
 package com.cba.core.wiremeweb.service.impl;
 
-import com.cba.core.wiremeweb.dao.GenericDao;
 import com.cba.core.wiremeweb.dao.TerminalDao;
 import com.cba.core.wiremeweb.dto.TerminalRequestDto;
 import com.cba.core.wiremeweb.dto.TerminalResponseDto;
-import com.cba.core.wiremeweb.service.GenericService;
 import com.cba.core.wiremeweb.service.TerminalService;
 import com.cba.core.wiremeweb.util.UserBean;
 import lombok.RequiredArgsConstructor;
