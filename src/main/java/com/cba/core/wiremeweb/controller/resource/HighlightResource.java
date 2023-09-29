@@ -12,16 +12,16 @@ import java.util.List;
 @Validated
 public interface HighlightResource {
 
-    @GetMapping("/getConfig")
+    @GetMapping("/getHighlightConfig")
     ResponseEntity<List<HighlightResponseDto>> getAllHighlights(@RequestParam String configType) throws Exception;
 
-    @DeleteMapping("/getConfig")
+    @DeleteMapping("/getHighlightConfig")
     ResponseEntity<HighlightResponseDto> deleteHighlights(@RequestParam String configName) throws Exception;
 
-    @PostMapping("/setConfig")
+    @PostMapping("/setHighlightConfig")
     ResponseEntity<HighlightResponseDto> createHighlights(@RequestBody HighlightRequestDto requestDto) throws Exception;
 
-    @PutMapping("/setConfig/{configName}")
+    @PutMapping("/setHighlightConfig/{configName}")
     ResponseEntity<HighlightResponseDto> updateHighlights(@PathVariable(value = "configName") String configName,
                                                           @RequestBody HighlightRequestDto requestDto) throws Exception;
 

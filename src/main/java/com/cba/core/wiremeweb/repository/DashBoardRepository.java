@@ -9,9 +9,11 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
-public interface HighlightRepository extends JpaRepository<UserConfig, Integer>, JpaSpecificationExecutor<UserConfig> {
+public interface DashBoardRepository extends JpaRepository<UserConfig, Integer>, JpaSpecificationExecutor<UserConfig> {
 
     List<UserConfig> findByUser_NameAndConfigType(String userName, String configType);
+
+//    List<UserConfig> findByConfigName(String configName);
 
     Optional<UserConfig> findByUser_NameAndConfigName(String userName, String configName);
 

@@ -1,9 +1,9 @@
 package com.cba.core.wiremeweb.controller;
 
-import com.cba.core.wiremeweb.controller.resource.HighlightResource;
-import com.cba.core.wiremeweb.dto.HighlightRequestDto;
-import com.cba.core.wiremeweb.dto.HighlightResponseDto;
-import com.cba.core.wiremeweb.service.HighlightService;
+import com.cba.core.wiremeweb.controller.resource.GraphResource;
+import com.cba.core.wiremeweb.dto.GraphRequestDto;
+import com.cba.core.wiremeweb.dto.GraphResponseDto;
+import com.cba.core.wiremeweb.service.GraphService;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,22 +19,22 @@ import java.util.Locale;
 @Component
 @RequiredArgsConstructor
 @RequestMapping("/${application.resource.users}")
-public class HighlightController implements HighlightResource {
+public class GraphController implements GraphResource {
 
     private static final Logger logger = LoggerFactory.getLogger(DeviceController.class);
 
-    private final HighlightService service;
+    private final GraphService service;
     private final MessageSource messageSource;
 
 
     @Override
-    public ResponseEntity<List<HighlightResponseDto>> getAllHighlights(String configType) throws Exception {
+    public ResponseEntity<List<GraphResponseDto>> getAllGraph(String configType) throws Exception {
 
         Locale currentLocale = LocaleContextHolder.getLocale();
-        logger.debug(messageSource.getMessage("HIGHLIGHTS_GET_ALL_DEBUG", null, currentLocale));
+        logger.debug(messageSource.getMessage("GRAPH_GET_ALL_DEBUG", null, currentLocale));
 
         try {
-            List<HighlightResponseDto> list = service.findAll(configType);
+            List<GraphResponseDto> list = service.findAll(configType);
             return ResponseEntity.ok().body(list);
 
         } catch (Exception e) {
@@ -45,12 +45,12 @@ public class HighlightController implements HighlightResource {
     }
 
     @Override
-    public ResponseEntity<HighlightResponseDto> deleteHighlights(String configName) throws Exception {
+    public ResponseEntity<GraphResponseDto> deleteGraph(String configName) throws Exception {
 
         Locale currentLocale = LocaleContextHolder.getLocale();// works only when as local statement
-        logger.debug(messageSource.getMessage("HIGHLIGHTS_DELETE_ONE_DEBUG", null, currentLocale));
+        logger.debug(messageSource.getMessage("GRAPH_DELETE_ONE_DEBUG", null, currentLocale));
         try {
-            HighlightResponseDto responseDtos = service.deleteByUser_NameAndConfigType(configName);
+            GraphResponseDto responseDtos = service.deleteByUser_NameAndConfigType(configName);
             return ResponseEntity.ok().body(responseDtos);
         } catch (Exception e) {
             logger.error(e.getMessage());
@@ -59,12 +59,12 @@ public class HighlightController implements HighlightResource {
     }
 
     @Override
-    public ResponseEntity<HighlightResponseDto> createHighlights(HighlightRequestDto requestDto) throws Exception {
+    public ResponseEntity<GraphResponseDto> createGraph(GraphRequestDto requestDto) throws Exception {
 
         Locale currentLocale = LocaleContextHolder.getLocale();// works only when as local statement
-        logger.debug(messageSource.getMessage("HIGHLIGHTS_CREATE_ONE_DEBUG", null, currentLocale));
+        logger.debug(messageSource.getMessage("GRAPH_CREATE_ONE_DEBUG", null, currentLocale));
         try {
-            HighlightResponseDto responseDto = service.create(requestDto);
+            GraphResponseDto responseDto = service.create(requestDto);
             return ResponseEntity.ok().body(responseDto);
         } catch (Exception e) {
             logger.error(e.getMessage());
@@ -73,11 +73,11 @@ public class HighlightController implements HighlightResource {
     }
 
     @Override
-    public ResponseEntity<HighlightResponseDto> updateHighlights(String configName, HighlightRequestDto requestDto) throws Exception {
+    public ResponseEntity<GraphResponseDto> updateGraph(String configName, GraphRequestDto requestDto) throws Exception {
         Locale currentLocale = LocaleContextHolder.getLocale();// works only when as local statement
-        logger.debug(messageSource.getMessage("HIGHLIGHTS_UPDATE_ONE_DEBUG", null, currentLocale));
+        logger.debug(messageSource.getMessage("GRAPH_UPDATE_ONE_DEBUG", null, currentLocale));
         try {
-            HighlightResponseDto responseDto = service.update(configName, requestDto);
+            GraphResponseDto responseDto = service.update(configName, requestDto);
             return ResponseEntity.ok().body(responseDto);
 
         } catch (Exception e) {

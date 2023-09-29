@@ -1,10 +1,10 @@
 package com.cba.core.wiremeweb.dao.impl;
 
-import com.cba.core.wiremeweb.dao.HighlightDao;
-import com.cba.core.wiremeweb.dto.HighlightRequestDto;
-import com.cba.core.wiremeweb.dto.HighlightResponseDto;
+import com.cba.core.wiremeweb.dao.GraphDao;
+import com.cba.core.wiremeweb.dto.GraphRequestDto;
+import com.cba.core.wiremeweb.dto.GraphResponseDto;
 import com.cba.core.wiremeweb.exception.NotFoundException;
-import com.cba.core.wiremeweb.mapper.HighlightMapper;
+import com.cba.core.wiremeweb.mapper.GraphMapper;
 import com.cba.core.wiremeweb.model.GlobalAuditEntry;
 import com.cba.core.wiremeweb.model.Status;
 import com.cba.core.wiremeweb.model.UserConfig;
@@ -27,7 +27,7 @@ import java.util.stream.Collectors;
 @Component
 @Transactional
 @RequiredArgsConstructor
-public class HighlightDaoImpl implements HighlightDao {
+public class GraphDaoImpl implements GraphDao {
 
     private final DashBoardRepository repository;
     private final UserRepository userRepository;
@@ -39,7 +39,7 @@ public class HighlightDaoImpl implements HighlightDao {
     private String resource;
 
     @Override
-    public List<HighlightResponseDto> findAll(String configType) throws Exception {
+    public List<GraphResponseDto> findAll(String configType) throws Exception {
 
         List<UserConfig> entityList = repository.findByUser_NameAndConfigType(userBean.getUsername(), configType);
         if (entityList.isEmpty()) {
@@ -50,8 +50,8 @@ public class HighlightDaoImpl implements HighlightDao {
                 .stream()
                 .map((userConfig -> {
                     try {
-                        HighlightResponseDto responseDto = objectMapper.readValue(userConfig.getConfig(), HighlightResponseDto.class);
-                        return HighlightMapper.toDto(responseDto, userConfig);
+                        GraphResponseDto responseDto = objectMapper.readValue(userConfig.getConfig(), GraphResponseDto.class);
+                        return GraphMapper.toDto(responseDto, userConfig);
                     } catch (Exception e) {
                         e.printStackTrace();
                         return null;
@@ -61,13 +61,13 @@ public class HighlightDaoImpl implements HighlightDao {
     }
 
     @Override
-    public HighlightResponseDto deleteByUser_NameAndConfigType(String configName) throws Exception {
+    public GraphResponseDto deleteByUser_NameAndConfigType(String configName) throws Exception {
         try {
 
             UserConfig entity = repository.findByUser_NameAndConfigName(userBean.getUsername(), configName)
                     .orElseThrow(() -> new NotFoundException("User Config not found"));
 
-            HighlightResponseDto responseDto = objectMapper.readValue(entity.getConfig(), HighlightResponseDto.class);
+            GraphResponseDto responseDto = objectMapper.readValue(entity.getConfig(), GraphResponseDto.class);
 
             repository.deleteByUser_NameAndConfigName(userBean.getUsername(), configName);
 
@@ -75,7 +75,7 @@ public class HighlightDaoImpl implements HighlightDao {
                     entity.getUser().getId(), entity.getConfig(), null,
                     userBean.getRemoteAdr()));
 
-            return HighlightMapper.toDto(responseDto, entity);
+            return GraphMapper.toDto(responseDto, entity);
 
         } catch (Exception rr) {
             rr.printStackTrace();
@@ -84,14 +84,14 @@ public class HighlightDaoImpl implements HighlightDao {
     }
 
     @Override
-    public HighlightResponseDto create(HighlightRequestDto requestDto) throws Exception {
+    public GraphResponseDto create(GraphRequestDto requestDto) throws Exception {
 
         String config = objectMapper.writeValueAsString(requestDto);
-        UserConfig toInsert = HighlightMapper.toModel(requestDto, config, userRepository.findByUserName(userBean.getUsername()));
+        UserConfig toInsert = GraphMapper.toModel(requestDto, config, userRepository.findByUserName(userBean.getUsername()));
 
         UserConfig savedEntity = repository.save(toInsert);
 
-        HighlightResponseDto responseDto = objectMapper.readValue(savedEntity.getConfig(), HighlightResponseDto.class);
+        GraphResponseDto responseDto = objectMapper.readValue(savedEntity.getConfig(), GraphResponseDto.class);
 
         globalAuditEntryRepository.save(new GlobalAuditEntry(resource, UserOperationEnum.CREATE.getValue(),
                 savedEntity.getId(), null, objectMapper.writeValueAsString(responseDto),
@@ -101,10 +101,10 @@ public class HighlightDaoImpl implements HighlightDao {
     }
 
     @Override
-    public HighlightResponseDto update(String configName, HighlightRequestDto requestDto) throws Exception {
+    public GraphResponseDto update(String configName, GraphRequestDto requestDto) throws Exception {
 
         UserConfig toBeUpdatedEntity = repository.findByUser_NameAndConfigName(userBean.getUsername(), configName).orElseThrow(() -> new NotFoundException("User Config not found"));
-        HighlightResponseDto toBeUpdatedDto = objectMapper.readValue(toBeUpdatedEntity.getConfig(), HighlightResponseDto.class);
+        GraphResponseDto toBeUpdatedDto = objectMapper.readValue(toBeUpdatedEntity.getConfig(), GraphResponseDto.class);
 
         boolean updateRequired = false;
         Map<String, Object> oldDataMap = new HashMap<>();
@@ -136,7 +136,8 @@ public class HighlightDaoImpl implements HighlightDao {
                 toBeUpdatedEntity.setPriorityOrder(requestDto.getPriorityOrder());
                 toBeUpdatedDto.setPriorityOrder(requestDto.getPriorityOrder());
             }
-            if (!toBeUpdatedDto.getAggregator().equals(requestDto.getAggregator())) {
+            if (toBeUpdatedDto.getAggregator() != null && !toBeUpdatedDto.getAggregator().equals(requestDto.getAggregator())
+                    || requestDto.getAggregator() != null && !requestDto.getAggregator().equals(toBeUpdatedDto.getAggregator())) {
                 updateRequired = true;
                 oldDataMap.put("aggregator", toBeUpdatedDto.getAggregator());
                 newDataMap.put("aggregator", requestDto.getAggregator());
@@ -170,6 +171,29 @@ public class HighlightDaoImpl implements HighlightDao {
                 newDataMap.put("tag", requestDto.getTag());
 
                 toBeUpdatedDto.setTag(requestDto.getTag());
+            }
+            if (toBeUpdatedDto.getXaxis() != null && !toBeUpdatedDto.getXaxis().equals(requestDto.getXaxis())
+                    || requestDto.getXaxis() != null && !requestDto.getXaxis().equals(toBeUpdatedDto.getXaxis())) {
+                updateRequired = true;
+                oldDataMap.put("xaxis", toBeUpdatedDto.getXaxis());
+                newDataMap.put("xaxis", requestDto.getXaxis());
+
+                toBeUpdatedDto.setXaxis(requestDto.getXaxis());
+            }
+            if (toBeUpdatedDto.getYaxis() != null && !toBeUpdatedDto.getYaxis().equals(requestDto.getYaxis())
+                    || requestDto.getYaxis() != null && !requestDto.getYaxis().equals(toBeUpdatedDto.getYaxis())) {
+                updateRequired = true;
+                oldDataMap.put("yaxis", toBeUpdatedDto.getYaxis());
+                newDataMap.put("yaxis", requestDto.getYaxis());
+
+                toBeUpdatedDto.setYaxis(requestDto.getYaxis());
+            }
+            if (!toBeUpdatedDto.getGraphType().equals(requestDto.getGraphType())) {
+                updateRequired = true;
+                oldDataMap.put("graphType", toBeUpdatedDto.getGraphType());
+                newDataMap.put("graphType", requestDto.getGraphType());
+
+                toBeUpdatedDto.setGraphType(requestDto.getGraphType());
             }
             if (!toBeUpdatedDto.getSelectionScope().getDistrict().equals(requestDto.getSelectionScope().getDistrict())) {
                 updateRequired = true;
@@ -208,7 +232,7 @@ public class HighlightDaoImpl implements HighlightDao {
                     toBeUpdatedEntity.getId(), objectMapper.writeValueAsString(oldDataMap), objectMapper.writeValueAsString(newDataMap),
                     userBean.getRemoteAdr()));
 
-            return HighlightMapper.toDto(toBeUpdatedDto, toBeUpdatedEntity);
+            return GraphMapper.toDto(toBeUpdatedDto, toBeUpdatedEntity);
 
         } else {
             throw new NotFoundException("No Changes found");
