@@ -52,5 +52,77 @@ public interface TransactionRepository extends JpaRepository<TransactionCore, In
             "WHERE p.dateTime BETWEEN :fromDate AND :toDate GROUP BY p.tranType,m.district")
     List<Object[]> revenueTransactionCoreGroupByTranTypeAndDistrict(Date fromDate, Date toDate);
 
+    @Query("SELECT m.province,p.cardLabel, COUNT(p) FROM TransactionCore p INNER JOIN Merchant m ON p.merchantId=m.merchantId " +
+            "WHERE p.dateTime BETWEEN :fromDate AND :toDate GROUP BY p.cardLabel,m.province")
+    List<Object[]> countTransactionCoreGroupByCardLabelAndProvince(Date fromDate, Date toDate);
+
+    @Query("SELECT m.province,p.cardLabel, sum(p.amount) FROM TransactionCore p INNER JOIN Merchant m ON p.merchantId=m.merchantId " +
+            "WHERE p.dateTime BETWEEN :fromDate AND :toDate GROUP BY p.cardLabel,m.province")
+    List<Object[]> revenueTransactionCoreGroupByCardLabelAndProvince(Date fromDate, Date toDate);
+
+    @Query("SELECT m.province,p.paymentMode, COUNT(p) FROM TransactionCore p INNER JOIN Merchant m ON p.merchantId=m.merchantId " +
+            "WHERE p.dateTime BETWEEN :fromDate AND :toDate GROUP BY p.paymentMode,m.province")
+    List<Object[]> countTransactionCoreGroupByPaymentModeAndProvince(Date fromDate, Date toDate);
+
+    @Query("SELECT m.province,p.paymentMode, sum(p.amount) FROM TransactionCore p INNER JOIN Merchant m ON p.merchantId=m.merchantId " +
+            "WHERE p.dateTime BETWEEN :fromDate AND :toDate GROUP BY p.paymentMode,m.province")
+    List<Object[]> revenueTransactionCoreGroupByPaymentModeAndProvince(Date fromDate, Date toDate);
+
+    @Query("SELECT m.province,p.tranType, COUNT(p) FROM TransactionCore p INNER JOIN Merchant m ON p.merchantId=m.merchantId " +
+            "WHERE p.dateTime BETWEEN :fromDate AND :toDate GROUP BY p.tranType,m.province")
+    List<Object[]> countTransactionCoreGroupByTranTypeAndProvince(Date fromDate, Date toDate);
+
+    @Query("SELECT m.province,p.tranType, sum(p.amount) FROM TransactionCore p INNER JOIN Merchant m ON p.merchantId=m.merchantId " +
+            "WHERE p.dateTime BETWEEN :fromDate AND :toDate GROUP BY p.tranType,m.province")
+    List<Object[]> revenueTransactionCoreGroupByTranTypeAndProvince(Date fromDate, Date toDate);
+
+    @Query("SELECT m.merchantId,p.cardLabel, COUNT(p) FROM TransactionCore p INNER JOIN Merchant m ON p.merchantId=m.merchantId " +
+            "WHERE p.dateTime BETWEEN :fromDate AND :toDate GROUP BY p.cardLabel,m.merchantId")
+    List<Object[]> countTransactionCoreGroupByCardLabelAndMerchant(Date fromDate, Date toDate);
+
+    @Query("SELECT m.merchantId,p.cardLabel, sum(p.amount) FROM TransactionCore p INNER JOIN Merchant m ON p.merchantId=m.merchantId " +
+            "WHERE p.dateTime BETWEEN :fromDate AND :toDate GROUP BY p.cardLabel,m.merchantId")
+    List<Object[]> revenueTransactionCoreGroupByCardLabelAndMerchant(Date fromDate, Date toDate);
+
+    @Query("SELECT m.merchantId,p.paymentMode, COUNT(p) FROM TransactionCore p INNER JOIN Merchant m ON p.merchantId=m.merchantId " +
+            "WHERE p.dateTime BETWEEN :fromDate AND :toDate GROUP BY p.paymentMode,m.merchantId")
+    List<Object[]> countTransactionCoreGroupByPaymentModeAndMerchant(Date fromDate, Date toDate);
+
+    @Query("SELECT m.merchantId,p.paymentMode, sum(p.amount) FROM TransactionCore p INNER JOIN Merchant m ON p.merchantId=m.merchantId " +
+            "WHERE p.dateTime BETWEEN :fromDate AND :toDate GROUP BY p.paymentMode,m.merchantId")
+    List<Object[]> revenueTransactionCoreGroupByPaymentModeAndMerchant(Date fromDate, Date toDate);
+
+    @Query("SELECT m.merchantId,p.tranType, COUNT(p) FROM TransactionCore p INNER JOIN Merchant m ON p.merchantId=m.merchantId " +
+            "WHERE p.dateTime BETWEEN :fromDate AND :toDate GROUP BY p.tranType,m.merchantId")
+    List<Object[]> countTransactionCoreGroupByTranTypeAndMerchant(Date fromDate, Date toDate);
+
+    @Query("SELECT m.merchantId,p.tranType, sum(p.amount) FROM TransactionCore p INNER JOIN Merchant m ON p.merchantId=m.merchantId " +
+            "WHERE p.dateTime BETWEEN :fromDate AND :toDate GROUP BY p.tranType,m.merchantId")
+    List<Object[]> revenueTransactionCoreGroupByTranTypeAndMerchant(Date fromDate, Date toDate);
+
+    @Query("SELECT m.merchantCustomer.name,p.cardLabel, COUNT(p) FROM TransactionCore p INNER JOIN Merchant m ON p.merchantId=m.merchantId " +
+            "WHERE p.dateTime BETWEEN :fromDate AND :toDate GROUP BY p.cardLabel,m.merchantCustomer.name")
+    List<Object[]> countTransactionCoreGroupByCardLabelAndPartner(Date fromDate, Date toDate);
+
+    @Query("SELECT m.merchantCustomer.name,p.cardLabel, sum(p.amount) FROM TransactionCore p INNER JOIN Merchant m ON p.merchantId=m.merchantId " +
+            "WHERE p.dateTime BETWEEN :fromDate AND :toDate GROUP BY p.cardLabel,m.merchantCustomer.name")
+    List<Object[]> revenueTransactionCoreGroupByCardLabelAndPartner(Date fromDate, Date toDate);
+
+    @Query("SELECT m.merchantCustomer.name,p.paymentMode, COUNT(p) FROM TransactionCore p INNER JOIN Merchant m ON p.merchantId=m.merchantId " +
+            "WHERE p.dateTime BETWEEN :fromDate AND :toDate GROUP BY p.paymentMode,m.merchantCustomer.name")
+    List<Object[]> countTransactionCoreGroupByPaymentModeAndPartner(Date fromDate, Date toDate);
+
+    @Query("SELECT m.merchantCustomer.name,p.paymentMode, sum(p.amount) FROM TransactionCore p INNER JOIN Merchant m ON p.merchantId=m.merchantId " +
+            "WHERE p.dateTime BETWEEN :fromDate AND :toDate GROUP BY p.paymentMode,m.merchantCustomer.name")
+    List<Object[]> revenueTransactionCoreGroupByPaymentModeAndPartner(Date fromDate, Date toDate);
+
+    @Query("SELECT m.merchantCustomer.name,p.tranType, COUNT(p) FROM TransactionCore p INNER JOIN Merchant m ON p.merchantId=m.merchantId " +
+            "WHERE p.dateTime BETWEEN :fromDate AND :toDate GROUP BY p.tranType,m.merchantCustomer.name")
+    List<Object[]> countTransactionCoreGroupByTranTypeAndPartner(Date fromDate, Date toDate);
+
+    @Query("SELECT m.merchantCustomer.name,p.tranType, sum(p.amount) FROM TransactionCore p INNER JOIN Merchant m ON p.merchantId=m.merchantId " +
+            "WHERE p.dateTime BETWEEN :fromDate AND :toDate GROUP BY p.tranType,m.merchantCustomer.name")
+    List<Object[]> revenueTransactionCoreGroupByTranTypeAndPartner(Date fromDate, Date toDate);
+
 
 }
