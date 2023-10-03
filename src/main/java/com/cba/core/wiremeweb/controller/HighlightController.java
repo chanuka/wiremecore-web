@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 
 @Component
 @RequiredArgsConstructor
@@ -28,10 +29,10 @@ public class HighlightController implements HighlightResource {
 
 
     @Override
-    public ResponseEntity<List<HighlightResponseDto>> getAllHighlights(String configType) throws Exception {
+    public ResponseEntity<List<HighlightResponseDto>> getHighlightConfig(String configType) throws Exception {
 
         Locale currentLocale = LocaleContextHolder.getLocale();
-        logger.debug(messageSource.getMessage("HIGHLIGHTS_GET_ALL_DEBUG", null, currentLocale));
+        logger.debug(messageSource.getMessage("HIGHLIGHTS_CONFIG_GET_ALL_DEBUG", null, currentLocale));
 
         try {
             List<HighlightResponseDto> list = service.findAll(configType);
@@ -45,7 +46,7 @@ public class HighlightController implements HighlightResource {
     }
 
     @Override
-    public ResponseEntity<HighlightResponseDto> deleteHighlights(String configName) throws Exception {
+    public ResponseEntity<HighlightResponseDto> deleteHighlightConfig(String configName) throws Exception {
 
         Locale currentLocale = LocaleContextHolder.getLocale();// works only when as local statement
         logger.debug(messageSource.getMessage("HIGHLIGHTS_DELETE_ONE_DEBUG", null, currentLocale));
@@ -59,7 +60,7 @@ public class HighlightController implements HighlightResource {
     }
 
     @Override
-    public ResponseEntity<HighlightResponseDto> createHighlights(HighlightRequestDto requestDto) throws Exception {
+    public ResponseEntity<HighlightResponseDto> createHighlightConfig(HighlightRequestDto requestDto) throws Exception {
 
         Locale currentLocale = LocaleContextHolder.getLocale();// works only when as local statement
         logger.debug(messageSource.getMessage("HIGHLIGHTS_CREATE_ONE_DEBUG", null, currentLocale));
@@ -73,7 +74,7 @@ public class HighlightController implements HighlightResource {
     }
 
     @Override
-    public ResponseEntity<HighlightResponseDto> updateHighlights(String configName, HighlightRequestDto requestDto) throws Exception {
+    public ResponseEntity<HighlightResponseDto> updateHighlightConfig(String configName, HighlightRequestDto requestDto) throws Exception {
         Locale currentLocale = LocaleContextHolder.getLocale();// works only when as local statement
         logger.debug(messageSource.getMessage("HIGHLIGHTS_UPDATE_ONE_DEBUG", null, currentLocale));
         try {
@@ -85,4 +86,18 @@ public class HighlightController implements HighlightResource {
             throw e;
         }
     }
+
+    @Override
+    public ResponseEntity<Map<Integer, Map<String, Object>>> getHighlights(HighlightRequestDto requestDto) throws Exception {
+        Locale currentLocale = LocaleContextHolder.getLocale();// works only when as local statement
+        logger.debug(messageSource.getMessage("HIGHLIGHTS_GET_ALL_DEBUG", null, currentLocale));
+        try {
+            Map<Integer, Map<String, Object>> responseData = service.findHighLights(requestDto);
+            return ResponseEntity.ok().body(responseData);
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+            throw e;
+        }
+    }
+
 }

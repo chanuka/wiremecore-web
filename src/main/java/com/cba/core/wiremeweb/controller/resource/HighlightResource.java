@@ -7,22 +7,26 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @Validated
 public interface HighlightResource {
 
     @GetMapping("/getHighlightConfig")
-    ResponseEntity<List<HighlightResponseDto>> getAllHighlights(@RequestParam String configType) throws Exception;
+    ResponseEntity<List<HighlightResponseDto>> getHighlightConfig(@RequestParam String configType) throws Exception;
 
-    @DeleteMapping("/getHighlightConfig")
-    ResponseEntity<HighlightResponseDto> deleteHighlights(@RequestParam String configName) throws Exception;
+    @DeleteMapping("/deleteHighlightConfig")
+    ResponseEntity<HighlightResponseDto> deleteHighlightConfig(@RequestParam String configName) throws Exception;
 
     @PostMapping("/setHighlightConfig")
-    ResponseEntity<HighlightResponseDto> createHighlights(@RequestBody HighlightRequestDto requestDto) throws Exception;
+    ResponseEntity<HighlightResponseDto> createHighlightConfig(@RequestBody HighlightRequestDto requestDto) throws Exception;
 
-    @PutMapping("/setHighlightConfig/{configName}")
-    ResponseEntity<HighlightResponseDto> updateHighlights(@PathVariable(value = "configName") String configName,
+    @PutMapping("/updateHighlightConfig/{configName}")
+    ResponseEntity<HighlightResponseDto> updateHighlightConfig(@PathVariable(value = "configName") String configName,
                                                           @RequestBody HighlightRequestDto requestDto) throws Exception;
+
+    @GetMapping("/getHighlights")
+    ResponseEntity<Map<Integer, Map<String, Object>>> getHighlights(@RequestBody HighlightRequestDto requestDto) throws Exception;
 
 }

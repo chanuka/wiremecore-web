@@ -14,13 +14,21 @@ import java.io.Serializable;
 @ToString
 public class GraphRequestDto implements Serializable {
 
+    @JsonInclude(JsonInclude.Include.NON_NULL)
     private String configName;
+    @JsonInclude(JsonInclude.Include.NON_NULL)
     private String configType;
+    @JsonInclude(JsonInclude.Include.NON_NULL)
     private String configTitle;
+    @JsonInclude(JsonInclude.Include.NON_NULL)
     private String dateClustering;
+    @JsonInclude(JsonInclude.Include.NON_NULL)
     private String graphType;
+    @JsonInclude(JsonInclude.Include.NON_NULL)
     private String tag;
+    @JsonInclude(JsonInclude.Include.NON_NULL)
     private SelectionScope selectionScope;
+    @JsonInclude(JsonInclude.Include.NON_NULL)
     private String grouping;
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private String aggregator;
@@ -28,7 +36,13 @@ public class GraphRequestDto implements Serializable {
     private String xaxis;
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private String yaxis;
+    @JsonInclude(JsonInclude.Include.NON_NULL)
     private String status;
+    @JsonInclude(JsonInclude.Include.NON_NULL)
+    private String fromDate;
+    @JsonInclude(JsonInclude.Include.NON_NULL)
+    private String toDate;
+    @JsonInclude(JsonInclude.Include.NON_NULL)
     private Integer priorityOrder;
 
     private static final long serialVersionUID = 1L;

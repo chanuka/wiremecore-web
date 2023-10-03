@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
@@ -33,5 +34,10 @@ public class HighlightServiceImpl implements HighlightService {
     @Override
     public HighlightResponseDto update(String configName, HighlightRequestDto requestDto) throws Exception {
         return dao.update(configName, requestDto);
+    }
+
+    @Override
+    public Map<Integer, Map<String, Object>> findHighLights(HighlightRequestDto requestDto) throws Exception {
+        return dao.findHighLights(requestDto);
     }
 }

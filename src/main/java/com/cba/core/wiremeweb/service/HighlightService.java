@@ -4,6 +4,7 @@ import com.cba.core.wiremeweb.dto.HighlightRequestDto;
 import com.cba.core.wiremeweb.dto.HighlightResponseDto;
 
 import java.util.List;
+import java.util.Map;
 
 public interface HighlightService {
 
@@ -14,5 +15,8 @@ public interface HighlightService {
     HighlightResponseDto create(HighlightRequestDto requestDto) throws Exception;
 
     HighlightResponseDto update(String configName, HighlightRequestDto requestDto) throws Exception;
+
+    Map<Integer, Map<String, Object>> findHighLights(HighlightRequestDto requestDto) throws Exception;
+
 
 }

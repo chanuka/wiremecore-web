@@ -3,6 +3,7 @@ package com.cba.core.wiremeweb.dao.impl;
 import com.cba.core.wiremeweb.dao.GraphDao;
 import com.cba.core.wiremeweb.dto.GraphRequestDto;
 import com.cba.core.wiremeweb.dto.GraphResponseDto;
+import com.cba.core.wiremeweb.dto.HighlightRequestDto;
 import com.cba.core.wiremeweb.exception.NotFoundException;
 import com.cba.core.wiremeweb.mapper.GraphMapper;
 import com.cba.core.wiremeweb.model.GlobalAuditEntry;
@@ -10,6 +11,7 @@ import com.cba.core.wiremeweb.model.Status;
 import com.cba.core.wiremeweb.model.UserConfig;
 import com.cba.core.wiremeweb.repository.DashBoardRepository;
 import com.cba.core.wiremeweb.repository.GlobalAuditEntryRepository;
+import com.cba.core.wiremeweb.repository.TransactionRepository;
 import com.cba.core.wiremeweb.repository.UserRepository;
 import com.cba.core.wiremeweb.util.UserBean;
 import com.cba.core.wiremeweb.util.UserOperationEnum;
@@ -19,9 +21,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Component
@@ -30,6 +32,7 @@ import java.util.stream.Collectors;
 public class GraphDaoImpl implements GraphDao {
 
     private final DashBoardRepository repository;
+    private final TransactionRepository transactionRepository;
     private final UserRepository userRepository;
     private final GlobalAuditEntryRepository globalAuditEntryRepository;
     private final UserBean userBean;
@@ -237,5 +240,194 @@ public class GraphDaoImpl implements GraphDao {
         } else {
             throw new NotFoundException("No Changes found");
         }
+    }
+
+    @Override
+    public Map<String, Object> findGraphs(GraphRequestDto requestDto) throws Exception {
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        Map<String, Object> responseData = new HashMap<>();
+
+        try {
+            Date fromDate = dateFormat.parse(requestDto.getFromDate());
+            Date toDate = dateFormat.parse(requestDto.getToDate());
+
+            Map<String, Object> metadata = new HashMap<>();
+            metadata.put("metaData", requestDto);
+            responseData.put("0", metadata);
+
+            if ("Revenue".equals(requestDto.getYaxis())) {
+                if ("CardLabel".equals(requestDto.getGrouping())) {
+                    List<Object[]> revenues = transactionRepository.revenueTransactionCoreGroupByCardLabelAndDistrict(fromDate, toDate);
+//                    for (int i = 0; i < revenues.size(); i++) {
+//                        ArrayList<Map<String, Object>> list = null;
+//                        if (!responseData.containsKey((String) revenues.get(i)[0])) {
+//                            list = new ArrayList<>();
+//                        } else {
+//                            list = (ArrayList<Map<String, Object>>) responseData.get((String) revenues.get(i)[0]);
+//                        }
+//                        Map<String, Object> map1 = new HashMap<>();
+//                        map1.put("grouping", (String) revenues.get(i)[1]);
+//                        map1.put("value", (Long) revenues.get(i)[2]);
+//                        list.add(map1);
+//                        responseData.put(((String) revenues.get(i)[0]), list);
+//                    }
+                    Map<String, List<Map<String, Object>>> responseData2 = new HashMap<>();
+                    revenues.forEach(count -> {
+                        String key = (String) count[0];
+                        String grouping = (String) count[1];
+                        Long value = (Long) count[2];
+
+                        responseData2.computeIfAbsent(key, k -> new ArrayList<>())
+                                .add(Map.of("grouping", grouping, "value", value));
+                    });
+                    responseData.putAll(responseData2);
+                } else if ("PaymentMode".equals(requestDto.getGrouping())) {
+                    List<Object[]> revenues = transactionRepository.revenueTransactionCoreGroupByPaymentModeAndDistrict(fromDate, toDate);
+//                    for (int i = 0; i < revenues.size(); i++) {
+//                        ArrayList<Map<String, Object>> list = null;
+//                        if (!responseData.containsKey((String) revenues.get(i)[0])) {
+//                            list = new ArrayList<>();
+//                        } else {
+//                            list = (ArrayList<Map<String, Object>>) responseData.get((String) revenues.get(i)[0]);
+//                        }
+//                        Map<String, Object> map1 = new HashMap<>();
+//                        map1.put("grouping", (String) revenues.get(i)[1]);
+//                        map1.put("value", (Long) revenues.get(i)[2]);
+//                        list.add(map1);
+//                        responseData.put(((String) revenues.get(i)[0]), list);
+//                    }
+                    Map<String, List<Map<String, Object>>> responseData2 = new HashMap<>();
+                    revenues.forEach(count -> {
+                        String key = (String) count[0];
+                        String grouping = (String) count[1];
+                        Long value = (Long) count[2];
+
+                        responseData2.computeIfAbsent(key, k -> new ArrayList<>())
+                                .add(Map.of("grouping", grouping, "value", value));
+                    });
+                    responseData.putAll(responseData2);
+                } else if ("TranType".equals(requestDto.getGrouping())) {
+                    List<Object[]> revenues = transactionRepository.revenueTransactionCoreGroupByTranTypeAndDistrict(fromDate, toDate);
+//                    for (int i = 0; i < revenues.size(); i++) {
+//                        ArrayList<Map<String, Object>> list = null;
+//                        if (!responseData.containsKey((String) revenues.get(i)[0])) {
+//                            list = new ArrayList<>();
+//                        } else {
+//                            list = (ArrayList<Map<String, Object>>) responseData.get((String) revenues.get(i)[0]);
+//                        }
+//                        Map<String, Object> map1 = new HashMap<>();
+//                        map1.put("grouping", (String) revenues.get(i)[1]);
+//                        map1.put("value", (Long) revenues.get(i)[2]);
+//                        list.add(map1);
+//                        responseData.put(((String) revenues.get(i)[0]), list);
+//                    }
+                    Map<String, List<Map<String, Object>>> responseData2 = new HashMap<>();
+                    revenues.forEach(count -> {
+                        String key = (String) count[0];
+                        String grouping = (String) count[1];
+                        Long value = (Long) count[2];
+
+                        responseData2.computeIfAbsent(key, k -> new ArrayList<>())
+                                .add(Map.of("grouping", grouping, "value", value));
+                    });
+                    responseData.putAll(responseData2);
+                } else {
+                    return null;
+                }
+            } else if ("Count".equals(requestDto.getYaxis())) {
+                if ("CardLabel".equals(requestDto.getGrouping())) {
+                    List<Object[]> counts = transactionRepository.countTransactionCoreGroupByCardLabelAndDistrict(fromDate, toDate);
+//                    for (int i = 0; i < counts.size(); i++) {
+//                        ArrayList<Map<String, Object>> list = null;
+//                        if (!responseData.containsKey((String) counts.get(i)[0])) {
+//                            list = new ArrayList<>();
+//                        } else {
+//                            list = (ArrayList<Map<String, Object>>) responseData.get((String) counts.get(i)[0]);
+//                        }
+//                        Map<String, Object> map1 = new HashMap<>();
+//                        map1.put("grouping", (String) counts.get(i)[1]);
+//                        map1.put("value", (Long) counts.get(i)[2]);
+//                        list.add(map1);
+//                        responseData.put(((String) counts.get(i)[0]), list);
+//                    }
+                    Map<String, List<Map<String, Object>>> responseData2 = new HashMap<>();
+                    counts.forEach(count -> {
+                        String key = (String) count[0];
+                        String grouping = (String) count[1];
+                        Long value = (Long) count[2];
+
+                        responseData2.computeIfAbsent(key, k -> new ArrayList<>())
+                                .add(Map.of("grouping", grouping, "value", value));
+                    });
+                    responseData.putAll(responseData2);
+
+                } else if ("PaymentMode".equals(requestDto.getGrouping())) {
+                    List<Object[]> counts = transactionRepository.countTransactionCoreGroupByPaymentModeAndDistrict(fromDate, toDate);
+//                    for (int i = 0; i < counts.size(); i++) {
+//                        ArrayList<Map<String, Object>> list = null;
+//                        if (!responseData.containsKey((String) counts.get(i)[0])) {
+//                            list = new ArrayList<>();
+//                        } else {
+//                            list = (ArrayList<Map<String, Object>>) responseData.get((String) counts.get(i)[0]);
+//                        }
+//                        Map<String, Object> map1 = new HashMap<>();
+//                        map1.put("grouping", (String) counts.get(i)[1]);
+//                        map1.put("value", (Long) counts.get(i)[2]);
+//                        list.add(map1);
+//                        responseData.put(((String) counts.get(i)[0]), list);
+//                    }
+                    Map<String, List<Map<String, Object>>> responseData2 = new HashMap<>();
+                    counts.forEach(count -> {
+                        String key = (String) count[0];
+                        String grouping = (String) count[1];
+                        Long value = (Long) count[2];
+
+                        responseData2.computeIfAbsent(key, k -> new ArrayList<>())
+                                .add(Map.of("grouping", grouping, "value", value));
+                    });
+                    responseData.putAll(responseData2);
+                } else if ("TranType".equals(requestDto.getGrouping())) {
+                    List<Object[]> counts = transactionRepository.countTransactionCoreGroupByTranTypeAndDistrict(fromDate, toDate);
+//                    for (int i = 0; i < counts.size(); i++) {
+//                        ArrayList<Map<String, Object>> list = null;
+//                        if (!responseData.containsKey((String) counts.get(i)[0])) {
+//                            list = new ArrayList<>();
+//                        } else {
+//                            list = (ArrayList<Map<String, Object>>) responseData.get((String) counts.get(i)[0]);
+//                        }
+//                        Map<String, Object> map1 = new HashMap<>();
+//                        map1.put("grouping", (String) counts.get(i)[1]);
+//                        map1.put("value", (Long) counts.get(i)[2]);
+//                        list.add(map1);
+//                        responseData.put(((String) counts.get(i)[0]), list);
+//                    }
+                    Map<String, List<Map<String, Object>>> responseData2 = new HashMap<>();
+                    counts.forEach(count -> {
+                        String key = (String) count[0];
+                        String grouping = (String) count[1];
+                        Long value = (Long) count[2];
+
+                        responseData2.computeIfAbsent(key, k -> new ArrayList<>())
+                                .add(Map.of("grouping", grouping, "value", value));
+                    });
+                    responseData.putAll(responseData2);
+                } else {
+                    return null;
+                }
+            } else {
+                return null;
+            }
+
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return responseData;
+    }
+
+    private Map<String, Object> createDataEntry(GraphRequestDto requestDto, long count, String cardLabel) {
+        Map<String, Object> dataEntry = new HashMap<>();
+        dataEntry.put(requestDto.getAggregator(), count);
+        dataEntry.put(requestDto.getGrouping(), cardLabel);
+        return dataEntry;
     }
 }

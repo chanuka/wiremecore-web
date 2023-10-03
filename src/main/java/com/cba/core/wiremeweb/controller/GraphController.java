@@ -3,6 +3,7 @@ package com.cba.core.wiremeweb.controller;
 import com.cba.core.wiremeweb.controller.resource.GraphResource;
 import com.cba.core.wiremeweb.dto.GraphRequestDto;
 import com.cba.core.wiremeweb.dto.GraphResponseDto;
+import com.cba.core.wiremeweb.dto.HighlightRequestDto;
 import com.cba.core.wiremeweb.service.GraphService;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 
 @Component
 @RequiredArgsConstructor
@@ -31,7 +33,7 @@ public class GraphController implements GraphResource {
     public ResponseEntity<List<GraphResponseDto>> getAllGraph(String configType) throws Exception {
 
         Locale currentLocale = LocaleContextHolder.getLocale();
-        logger.debug(messageSource.getMessage("GRAPH_GET_ALL_DEBUG", null, currentLocale));
+        logger.debug(messageSource.getMessage("GRAPH_CONFIG_GET_ALL_DEBUG", null, currentLocale));
 
         try {
             List<GraphResponseDto> list = service.findAll(configType);
@@ -80,6 +82,19 @@ public class GraphController implements GraphResource {
             GraphResponseDto responseDto = service.update(configName, requestDto);
             return ResponseEntity.ok().body(responseDto);
 
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+            throw e;
+        }
+    }
+
+    @Override
+    public ResponseEntity<Map<String, Object>> getGraphs(GraphRequestDto requestDto) throws Exception {
+        Locale currentLocale = LocaleContextHolder.getLocale();// works only when as local statement
+        logger.debug(messageSource.getMessage("GRAPH_GET_ALL_DEBUG", null, currentLocale));
+        try {
+            Map<String, Object> responseData = service.findGraphs(requestDto);
+            return ResponseEntity.ok().body(responseData);
         } catch (Exception e) {
             logger.error(e.getMessage());
             throw e;
