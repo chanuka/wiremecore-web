@@ -16,7 +16,7 @@ public interface HighlightService {
 
     HighlightResponseDto update(String configName, HighlightRequestDto requestDto) throws Exception;
 
-    Map<Integer, Map<String, Object>> findHighLights(HighlightRequestDto requestDto) throws Exception;
+    Map<String, Map<String, Object>> findHighLights(HighlightRequestDto requestDto) throws Exception;
 
 
 }

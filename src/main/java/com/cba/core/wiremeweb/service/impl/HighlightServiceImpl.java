@@ -37,7 +37,7 @@ public class HighlightServiceImpl implements HighlightService {
     }
 
     @Override
-    public Map<Integer, Map<String, Object>> findHighLights(HighlightRequestDto requestDto) throws Exception {
+    public Map<String, Map<String, Object>> findHighLights(HighlightRequestDto requestDto) throws Exception {
         return dao.findHighLights(requestDto);
     }
 }

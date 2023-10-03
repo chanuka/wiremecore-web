@@ -88,11 +88,11 @@ public class HighlightController implements HighlightResource {
     }
 
     @Override
-    public ResponseEntity<Map<Integer, Map<String, Object>>> getHighlights(HighlightRequestDto requestDto) throws Exception {
+    public ResponseEntity<Map<String, Map<String, Object>>> getHighlights(HighlightRequestDto requestDto) throws Exception {
         Locale currentLocale = LocaleContextHolder.getLocale();// works only when as local statement
         logger.debug(messageSource.getMessage("HIGHLIGHTS_GET_ALL_DEBUG", null, currentLocale));
         try {
-            Map<Integer, Map<String, Object>> responseData = service.findHighLights(requestDto);
+            Map<String, Map<String, Object>> responseData = service.findHighLights(requestDto);
             return ResponseEntity.ok().body(responseData);
         } catch (Exception e) {
             logger.error(e.getMessage());

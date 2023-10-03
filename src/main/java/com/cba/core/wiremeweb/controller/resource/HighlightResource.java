@@ -27,6 +27,6 @@ public interface HighlightResource {
                                                           @RequestBody HighlightRequestDto requestDto) throws Exception;
 
     @GetMapping("/getHighlights")
-    ResponseEntity<Map<Integer, Map<String, Object>>> getHighlights(@RequestBody HighlightRequestDto requestDto) throws Exception;
+    ResponseEntity<Map<String, Map<String, Object>>> getHighlights(@RequestBody HighlightRequestDto requestDto) throws Exception;
 
 }

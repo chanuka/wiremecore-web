@@ -22,11 +22,9 @@ import org.springframework.stereotype.Component;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 @Component
 @Transactional
@@ -221,9 +219,9 @@ public class HighlightDaoImpl implements HighlightDao {
     }
 
     @Override
-    public Map<Integer, Map<String, Object>> findHighLights(HighlightRequestDto requestDto) throws Exception {
+    public Map<String, Map<String, Object>> findHighLights(HighlightRequestDto requestDto) throws Exception {
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-        Map<Integer, Map<String, Object>> responseData = new HashMap<>();
+        Map<String, Map<String, Object>> responseData = new HashMap<>();
 
         try {
             Date fromDate = dateFormat.parse(requestDto.getFromDate());
@@ -231,62 +229,52 @@ public class HighlightDaoImpl implements HighlightDao {
 
             Map<String, Object> metadata = new HashMap<>();
             metadata.put("metaData", requestDto);
-            responseData.put(0, metadata);
-
-//            Specification<TransactionCore> spec = TransactionSpecification.fromDateAndToDate(
-//                    fromDate,
-//                    toDate);
-
-//            List<TransactionCore> transactions = transactionRepository.findAll(spec);
-//            System.out.println("Transaction Count : " + transactions.size());
-
+            responseData.put("0", metadata);
 
             if ("Revenue".equals(requestDto.getAggregator())) {
                 if ("CardLabel".equals(requestDto.getGrouping())) {
-                    List<Object[]> revenues = transactionRepository.revenueTransactionCoreGroupByCardLabel(fromDate, toDate);
-                    for (int i = 0; i < revenues.size(); i++) {
-                        responseData.put(i + 1, createDataEntry(requestDto,(Long) revenues.get(i)[1], (String) revenues.get(i)[0]));
-                    }
+                    List<Object[]> list = transactionRepository.revenueTransactionCoreGroupByCardLabel(fromDate, toDate);
+                    extracted(requestDto, responseData, list);
                 } else if ("PaymentMode".equals(requestDto.getGrouping())) {
-                    List<Object[]> revenues = transactionRepository.revenueTransactionCoreGroupByPaymentMode(fromDate, toDate);
-                    for (int i = 0; i < revenues.size(); i++) {
-                        responseData.put(i + 1, createDataEntry(requestDto,(Long) revenues.get(i)[1], (String) revenues.get(i)[0]));
-                    }
+                    List<Object[]> list = transactionRepository.revenueTransactionCoreGroupByPaymentMode(fromDate, toDate);
+                    extracted(requestDto, responseData, list);
                 } else if ("TranType".equals(requestDto.getGrouping())) {
-                    List<Object[]> revenues = transactionRepository.revenueTransactionCoreGroupByTranType(fromDate, toDate);
-                    for (int i = 0; i < revenues.size(); i++) {
-                        responseData.put(i + 1, createDataEntry(requestDto,(Long) revenues.get(i)[1], (String) revenues.get(i)[0]));
-                    }
+                    List<Object[]> list = transactionRepository.revenueTransactionCoreGroupByTranType(fromDate, toDate);
+                    extracted(requestDto, responseData, list);
                 } else {
-                    return null;
+                    throw new NotFoundException("No Changes found");
                 }
             } else if ("Count".equals(requestDto.getAggregator())) {
                 if ("CardLabel".equals(requestDto.getGrouping())) {
-                    List<Object[]> counts = transactionRepository.countTransactionCoreGroupByCardLabel(fromDate, toDate);
-                    for (int i = 0; i < counts.size(); i++) {
-                        responseData.put(i + 1, createDataEntry(requestDto,(Long) counts.get(i)[1], (String) counts.get(i)[0]));
-                    }
+                    List<Object[]> list = transactionRepository.countTransactionCoreGroupByCardLabel(fromDate, toDate);
+                    extracted(requestDto, responseData, list);
                 } else if ("PaymentMode".equals(requestDto.getGrouping())) {
-                    List<Object[]> counts = transactionRepository.countTransactionCoreGroupByPaymentMode(fromDate, toDate);
-                    for (int i = 0; i < counts.size(); i++) {
-                        responseData.put(i + 1, createDataEntry(requestDto,(Long) counts.get(i)[1], (String) counts.get(i)[0]));
-                    }
+                    List<Object[]> list = transactionRepository.countTransactionCoreGroupByPaymentMode(fromDate, toDate);
+                    extracted(requestDto, responseData, list);
                 } else if ("TranType".equals(requestDto.getGrouping())) {
-                    List<Object[]> counts = transactionRepository.countTransactionCoreGroupByTranType(fromDate, toDate);
-                    for (int i = 0; i < counts.size(); i++) {
-                        responseData.put(i + 1, createDataEntry(requestDto,(Long) counts.get(i)[1], (String) counts.get(i)[0]));
-                    }
+                    List<Object[]> list = transactionRepository.countTransactionCoreGroupByTranType(fromDate, toDate);
+                    extracted(requestDto, responseData, list);
                 } else {
-                    return null;
+                    throw new NotFoundException("No Changes found");
                 }
             } else {
-                return null;
+                throw new NotFoundException("No Changes found");
             }
-
         } catch (ParseException e) {
             e.printStackTrace();
         }
         return responseData;
+    }
+
+    private void extracted(HighlightRequestDto requestDto, Map<String, Map<String, Object>> responseData, List<Object[]> list) {
+        IntStream.range(0, list.size())
+                .forEach(i -> {
+                    String index = String.valueOf(i + 1);
+                    Long value = (Long) list.get(i)[1];
+                    String label = (String) list.get(i)[0];
+                    responseData.put(index, createDataEntry(requestDto, value, label)
+                    );
+                });
     }
 
     private Map<String, Object> createDataEntry(HighlightRequestDto requestDto, long count, String cardLabel) {
