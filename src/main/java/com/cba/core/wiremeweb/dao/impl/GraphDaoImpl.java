@@ -16,6 +16,9 @@ import com.cba.core.wiremeweb.repository.UserRepository;
 import com.cba.core.wiremeweb.util.UserBean;
 import com.cba.core.wiremeweb.util.UserOperationEnum;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
+import jakarta.persistence.Query;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -37,6 +40,9 @@ public class GraphDaoImpl implements GraphDao {
     private final GlobalAuditEntryRepository globalAuditEntryRepository;
     private final UserBean userBean;
     private final ObjectMapper objectMapper;
+
+    @PersistenceContext
+    private EntityManager entityManager;
 
     @Value("${application.resource.users}")
     private String resource;
@@ -248,102 +254,48 @@ public class GraphDaoImpl implements GraphDao {
         Map<String, Object> responseData = new HashMap<>();
 
         try {
-            Date fromDate = dateFormat.parse(requestDto.getFromDate());
-            Date toDate = dateFormat.parse(requestDto.getToDate());
-
             Map<String, Object> metadata = new HashMap<>();
             metadata.put("metaData", requestDto);
             responseData.put("0", metadata);
-            List<Object[]> list = null;
-            if ("Revenue".equals(requestDto.getYaxis())) {
-                if ("CardLabel".equals(requestDto.getGrouping())) {
-                    if ("Districts".equals(requestDto.getXaxis())) {
-                        list = transactionRepository.revenueTransactionCoreGroupByCardLabelAndDistrict(fromDate, toDate);
-                    } else if ("Provinces".equals(requestDto.getXaxis())) {
-                        list = transactionRepository.revenueTransactionCoreGroupByCardLabelAndProvince(fromDate, toDate);
-                    } else if ("Merchants".equals(requestDto.getXaxis())) {
-                        list = transactionRepository.revenueTransactionCoreGroupByCardLabelAndMerchant(fromDate, toDate);
-                    } else if ("Partners".equals(requestDto.getXaxis())) {
-                        list = transactionRepository.revenueTransactionCoreGroupByCardLabelAndPartner(fromDate, toDate);
-                    } else {
-                        throw new NotFoundException("No Record Found");
-                    }
-                    responseData.putAll(getStringListMap(list));
-                } else if ("PaymentMode".equals(requestDto.getGrouping())) {
-                    if ("Districts".equals(requestDto.getXaxis())) {
-                        list = transactionRepository.revenueTransactionCoreGroupByPaymentModeAndDistrict(fromDate, toDate);
-                    } else if ("Provinces".equals(requestDto.getXaxis())) {
-                        list = transactionRepository.revenueTransactionCoreGroupByPaymentModeAndProvince(fromDate, toDate);
-                    } else if ("Merchants".equals(requestDto.getXaxis())) {
-                        list = transactionRepository.revenueTransactionCoreGroupByPaymentModeAndMerchant(fromDate, toDate);
-                    } else if ("Partners".equals(requestDto.getXaxis())) {
-                        list = transactionRepository.revenueTransactionCoreGroupByPaymentModeAndPartner(fromDate, toDate);
-                    } else {
-                        throw new NotFoundException("No Record Found");
-                    }
-                    responseData.putAll(getStringListMap(list));
-                } else if ("TranType".equals(requestDto.getGrouping())) {
-                    if ("Districts".equals(requestDto.getXaxis())) {
-                        list = transactionRepository.revenueTransactionCoreGroupByTranTypeAndDistrict(fromDate, toDate);
-                    } else if ("Provinces".equals(requestDto.getXaxis())) {
-                        list = transactionRepository.revenueTransactionCoreGroupByTranTypeAndProvince(fromDate, toDate);
-                    } else if ("Merchants".equals(requestDto.getXaxis())) {
-                        list = transactionRepository.revenueTransactionCoreGroupByTranTypeAndMerchant(fromDate, toDate);
-                    } else if ("Partners".equals(requestDto.getXaxis())) {
-                        list = transactionRepository.revenueTransactionCoreGroupByTranTypeAndPartner(fromDate, toDate);
-                    } else {
-                        throw new NotFoundException("No Record Found");
-                    }
-                    responseData.putAll(getStringListMap(list));
-                } else {
-                    throw new NotFoundException("No Record Found");
-                }
-            } else if ("Count".equals(requestDto.getYaxis())) {
-                if ("CardLabel".equals(requestDto.getGrouping())) {
-                    if ("Districts".equals(requestDto.getXaxis())) {
-                        list = transactionRepository.countTransactionCoreGroupByCardLabelAndDistrict(fromDate, toDate);
-                    } else if ("Provinces".equals(requestDto.getXaxis())) {
-                        list = transactionRepository.countTransactionCoreGroupByCardLabelAndProvince(fromDate, toDate);
-                    } else if ("Merchants".equals(requestDto.getXaxis())) {
-                        list = transactionRepository.countTransactionCoreGroupByCardLabelAndMerchant(fromDate, toDate);
-                    } else if ("Partners".equals(requestDto.getXaxis())) {
-                        list = transactionRepository.countTransactionCoreGroupByCardLabelAndPartner(fromDate, toDate);
-                    } else {
-                        throw new NotFoundException("No Record Found");
-                    }
-                    responseData.putAll(getStringListMap(list));
-                } else if ("PaymentMode".equals(requestDto.getGrouping())) {
-                    if ("Districts".equals(requestDto.getXaxis())) {
-                        list = transactionRepository.countTransactionCoreGroupByPaymentModeAndDistrict(fromDate, toDate);
-                    } else if ("Provinces".equals(requestDto.getXaxis())) {
-                        list = transactionRepository.countTransactionCoreGroupByPaymentModeAndProvince(fromDate, toDate);
-                    } else if ("Merchants".equals(requestDto.getXaxis())) {
-                        list = transactionRepository.countTransactionCoreGroupByPaymentModeAndMerchant(fromDate, toDate);
-                    } else if ("Partners".equals(requestDto.getXaxis())) {
-                        list = transactionRepository.countTransactionCoreGroupByPaymentModeAndPartner(fromDate, toDate);
-                    } else {
-                        throw new NotFoundException("No Record Found");
-                    }
-                    responseData.putAll(getStringListMap(list));
-                } else if ("TranType".equals(requestDto.getGrouping())) {
-                    if ("Districts".equals(requestDto.getXaxis())) {
-                        list = transactionRepository.countTransactionCoreGroupByTranTypeAndDistrict(fromDate, toDate);
-                    } else if ("Provinces".equals(requestDto.getXaxis())) {
-                        list = transactionRepository.countTransactionCoreGroupByTranTypeAndProvince(fromDate, toDate);
-                    } else if ("Merchants".equals(requestDto.getXaxis())) {
-                        list = transactionRepository.countTransactionCoreGroupByTranTypeAndMerchant(fromDate, toDate);
-                    } else if ("Partners".equals(requestDto.getXaxis())) {
-                        list = transactionRepository.countTransactionCoreGroupByTranTypeAndPartner(fromDate, toDate);
-                    } else {
-                        throw new NotFoundException("No Record Found");
-                    }
-                    responseData.putAll(getStringListMap(list));
-                } else {
-                    throw new NotFoundException("No Record Found");
-                }
+
+            String fromDate = requestDto.getFromDate();
+            String toDate = requestDto.getToDate();
+            String partner = requestDto.getSelectionScope().getPartner();
+            String merchant = requestDto.getSelectionScope().getMerchant();
+            String province = requestDto.getSelectionScope().getProvince();
+            String district = requestDto.getSelectionScope().getDistrict();
+
+            String whereClause = setWhereCondition(requestDto);
+            String selectClause = setSelectCondition(requestDto);
+            String groupByClause = setGroupByCondition(requestDto);
+
+            String jpql = "SELECT " + selectClause + " FROM TransactionCore p INNER JOIN Merchant m ON p.merchantId=m.merchantId " +
+                    "WHERE " + whereClause + " GROUP BY " + groupByClause;
+
+            Query query = entityManager.createQuery(jpql);
+
+            if (partner != null && !"all".equals(partner)) {
+                query.setParameter("partner", partner);
+            }
+            if (merchant != null && !"all".equals(merchant)) {
+                query.setParameter("merchant", merchant);
+            }
+            if (province != null && !"all".equals(province)) {
+                query.setParameter("province", province);
+            }
+            if (district != null && !"all".equals(district)) {
+                query.setParameter("district", district);
+            }
+            if ((fromDate != null && !fromDate.isEmpty())
+                    && (requestDto.getToDate() != null && !toDate.isEmpty())) {
+                query.setParameter("fromDate", dateFormat.parse(fromDate));
+                query.setParameter("toDate", dateFormat.parse(toDate));
             } else {
                 throw new NotFoundException("No Record Found");
             }
+
+            List<Object[]> list = query.getResultList();
+            responseData.putAll(getStringListMap(list));
 
         } catch (ParseException e) {
             e.printStackTrace();
@@ -351,16 +303,213 @@ public class GraphDaoImpl implements GraphDao {
         return responseData;
     }
 
+    private String setWhereCondition(GraphRequestDto requestDto) throws Exception {
+
+        String fromDate = requestDto.getFromDate();
+        String toDate = requestDto.getToDate();
+        String partner = requestDto.getSelectionScope().getPartner();
+        String merchant = requestDto.getSelectionScope().getMerchant();
+        String province = requestDto.getSelectionScope().getProvince();
+        String district = requestDto.getSelectionScope().getDistrict();
+
+        String where = " 1=1 ";
+
+        if (partner != null && !"all".equals(partner)) {
+            where += " AND m.merchantCustomer.name=:partner";
+        }
+        if (merchant != null && !"all".equals(merchant)) {
+            where += " AND m.merchantId=:merchant";
+        }
+        if (province != null && !"all".equals(province)) {
+            where += " AND m.province=:province";
+        }
+        if (district != null && !"all".equals(district)) {
+            where += " AND m.district=:district";
+        }
+        if ((fromDate != null && !fromDate.isEmpty())
+                && (requestDto.getToDate() != null && !toDate.isEmpty())) {
+            where += " AND p.dateTime BETWEEN :fromDate AND :toDate ";
+        } else {
+            throw new NotFoundException("No Record Found");
+        }
+
+        return where;
+    }
+
+    private String setSelectCondition(GraphRequestDto requestDto) throws Exception {
+
+        String aggregator = requestDto.getYaxis();
+        String grouping = requestDto.getGrouping();
+        String xAxis = requestDto.getXaxis();
+
+        String select = " ";
+
+        if ((aggregator != null && !"".equals(aggregator)) && (aggregator != null && !"".equals(aggregator))) {
+            if ("CardLabel".equals(grouping)) {
+                select += " p.cardLabel,";
+                if ("Revenue".equals(aggregator)) {
+                    if ("Districts".equals(xAxis)) {
+                        select += " m.district, ";
+                    } else if ("Provinces".equals(xAxis)) {
+                        select += " m.province, ";
+                    } else if ("Merchants".equals(xAxis)) {
+                        select += " m.merchantId, ";
+                    } else if ("Partners".equals(xAxis)) {
+                        select += " m.merchantCustomer.name, ";
+                    } else {
+
+                    }
+                    select += " sum(p.amount) ";
+                }
+                if ("Count".equals(aggregator)) {
+                    if ("Districts".equals(xAxis)) {
+                        select += " m.district, ";
+                    } else if ("Provinces".equals(xAxis)) {
+                        select += " m.province, ";
+                    } else if ("Merchants".equals(xAxis)) {
+                        select += " m.merchantId, ";
+                    } else if ("Partners".equals(xAxis)) {
+                        select += " m.merchantCustomer.name, ";
+                    } else {
+
+                    }
+                    select += " count(p) ";
+                }
+            }
+            if ("PaymentMode".equals(grouping)) {
+                select += " p.paymentMode,";
+                if ("Revenue".equals(aggregator)) {
+                    if ("Districts".equals(xAxis)) {
+                        select += " m.district, ";
+                    } else if ("Provinces".equals(xAxis)) {
+                        select += " m.province, ";
+                    } else if ("Merchants".equals(xAxis)) {
+                        select += " m.merchantId, ";
+                    } else if ("Partners".equals(xAxis)) {
+                        select += " m.merchantCustomer.name, ";
+                    } else {
+
+                    }
+                    select += " sum(p.amount) ";
+                }
+                if ("Count".equals(aggregator)) {
+                    if ("Districts".equals(xAxis)) {
+                        select += " m.district, ";
+                    } else if ("Provinces".equals(xAxis)) {
+                        select += " m.province, ";
+                    } else if ("Merchants".equals(xAxis)) {
+                        select += " m.merchantId, ";
+                    } else if ("Partners".equals(xAxis)) {
+                        select += " m.merchantCustomer.name, ";
+                    } else {
+
+                    }
+                    select += " count(p) ";
+                }
+            }
+            if ("TranType".equals(grouping)) {
+                select += " p.tranType,";
+                if ("Revenue".equals(aggregator)) {
+                    if ("Districts".equals(xAxis)) {
+                        select += " m.district, ";
+                    } else if ("Provinces".equals(xAxis)) {
+                        select += " m.province, ";
+                    } else if ("Merchants".equals(xAxis)) {
+                        select += " m.merchantId, ";
+                    } else if ("Partners".equals(xAxis)) {
+                        select += " m.merchantCustomer.name, ";
+                    } else {
+
+                    }
+                    select += " sum(p.amount) ";
+                }
+                if ("Count".equals(aggregator)) {
+                    if ("Districts".equals(xAxis)) {
+                        select += " m.district, ";
+                    } else if ("Provinces".equals(xAxis)) {
+                        select += " m.province, ";
+                    } else if ("Merchants".equals(xAxis)) {
+                        select += " m.merchantId, ";
+                    } else if ("Partners".equals(xAxis)) {
+                        select += " m.merchantCustomer.name, ";
+                    } else {
+
+                    }
+                    select += " count(p) ";
+                }
+            }
+
+        } else {
+        }
+
+        return select;
+    }
+
+    private String setGroupByCondition(GraphRequestDto requestDto) throws Exception {
+
+        String grouping = requestDto.getGrouping();
+        String xAxis = requestDto.getXaxis();
+        String groupBy = " ";
+        if (grouping != null && !"".equals(grouping)) {
+            if ("CardLabel".equals(grouping)) {
+                groupBy += " p.cardLabel,";
+                if ("Districts".equals(xAxis)) {
+                    groupBy += " m.district ";
+                } else if ("Provinces".equals(xAxis)) {
+                    groupBy += " m.province ";
+                } else if ("Merchants".equals(xAxis)) {
+                    groupBy += " m.merchantId ";
+                } else if ("Partners".equals(xAxis)) {
+                    groupBy += " m.merchantCustomer.name ";
+                } else {
+                    throw new NotFoundException("No Record Found");
+                }
+            }
+            if ("PaymentMode".equals(grouping)) {
+                groupBy += " p.paymentMode,";
+                if ("Districts".equals(xAxis)) {
+                    groupBy += " m.district ";
+                } else if ("Provinces".equals(xAxis)) {
+                    groupBy += " m.province ";
+                } else if ("Merchants".equals(xAxis)) {
+                    groupBy += " m.merchantId ";
+                } else if ("Partners".equals(xAxis)) {
+                    groupBy += " m.merchantCustomer.name ";
+                } else {
+                    throw new NotFoundException("No Record Found");
+                }
+            }
+            if ("TranType".equals(grouping)) {
+                groupBy += " p.tranType,";
+                if ("Districts".equals(xAxis)) {
+                    groupBy += " m.district ";
+                } else if ("Provinces".equals(xAxis)) {
+                    groupBy += " m.province ";
+                } else if ("Merchants".equals(xAxis)) {
+                    groupBy += " m.merchantId ";
+                } else if ("Partners".equals(xAxis)) {
+                    groupBy += " m.merchantCustomer.name ";
+                } else {
+                    throw new NotFoundException("No Record Found");
+                }
+            }
+        } else {
+            throw new NotFoundException("No Record Found");
+        }
+
+        return groupBy;
+    }
+
     private Map<String, List<Map<String, Object>>> getStringListMap(List<Object[]> list) {
-        Map<String, List<Map<String, Object>>> responseData2 = new HashMap<>();
+        Map<String, List<Map<String, Object>>> responseData = new HashMap<>();
         list.forEach(obj -> {
             String key = (String) obj[0];
             String grouping = (String) obj[1];
             Long value = (Long) obj[2];
 
-            responseData2.computeIfAbsent(key, k -> new ArrayList<>())
+            responseData.computeIfAbsent(key, k -> new ArrayList<>())
                     .add(Map.of("grouping", grouping, "value", value));
         });
-        return responseData2;
+        return responseData;
     }
 }

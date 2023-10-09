@@ -2,7 +2,6 @@ package com.cba.core.wiremeweb.controller.resource;
 
 import com.cba.core.wiremeweb.dto.GraphRequestDto;
 import com.cba.core.wiremeweb.dto.GraphResponseDto;
-import com.cba.core.wiremeweb.dto.HighlightRequestDto;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;

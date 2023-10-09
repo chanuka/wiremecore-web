@@ -10,24 +10,6 @@ import java.util.List;
 
 public interface TransactionRepository extends JpaRepository<TransactionCore, Integer>, JpaSpecificationExecutor<TransactionCore> {
 
-//    @Query("SELECT p.cardLabel, COUNT(p) FROM TransactionCore p WHERE p.dateTime BETWEEN :fromDate AND :toDate GROUP BY p.cardLabel")
-//    List<Object[]> countTransactionCoreGroupByCardLabel(Date fromDate, Date toDate);
-//
-//    @Query("SELECT p.cardLabel, sum(p.amount) FROM TransactionCore p WHERE p.dateTime BETWEEN :fromDate AND :toDate GROUP BY p.cardLabel")
-//    List<Object[]> revenueTransactionCoreGroupByCardLabel(Date fromDate, Date toDate);
-//
-//    @Query("SELECT p.paymentMode, COUNT(p) FROM TransactionCore p WHERE p.dateTime BETWEEN :fromDate AND :toDate GROUP BY p.paymentMode")
-//    List<Object[]> countTransactionCoreGroupByPaymentMode(Date fromDate, Date toDate);
-//
-//    @Query("SELECT p.paymentMode, sum(p.amount) FROM TransactionCore p WHERE p.dateTime BETWEEN :fromDate AND :toDate GROUP BY p.paymentMode")
-//    List<Object[]> revenueTransactionCoreGroupByPaymentMode(Date fromDate, Date toDate);
-//
-//    @Query("SELECT p.tranType, COUNT(p) FROM TransactionCore p WHERE p.dateTime BETWEEN :fromDate AND :toDate GROUP BY p.tranType")
-//    List<Object[]> countTransactionCoreGroupByTranType(Date fromDate, Date toDate);
-//
-//    @Query("SELECT p.tranType, sum(p.amount) FROM TransactionCore p WHERE p.dateTime BETWEEN :fromDate AND :toDate GROUP BY p.tranType")
-//    List<Object[]> revenueTransactionCoreGroupByTranType(Date fromDate, Date toDate);
-
     @Query("SELECT m.district,p.cardLabel, COUNT(p) FROM TransactionCore p INNER JOIN Merchant m ON p.merchantId=m.merchantId " +
             "WHERE p.dateTime BETWEEN :fromDate AND :toDate GROUP BY p.cardLabel,m.district")
     List<Object[]> countTransactionCoreGroupByCardLabelAndDistrict(Date fromDate, Date toDate);

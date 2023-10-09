@@ -1,10 +1,7 @@
 package com.cba.core.wiremeweb.mapper;
 
-import com.cba.core.wiremeweb.dto.TerminalResponseDto;
 import com.cba.core.wiremeweb.dto.TransactionCoreResponseDto;
-import com.cba.core.wiremeweb.model.Terminal;
 import com.cba.core.wiremeweb.model.TransactionCore;
-import org.springframework.transaction.annotation.Transactional;
 
 public class TransactionCoreMapper {
 

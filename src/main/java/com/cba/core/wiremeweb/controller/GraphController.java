@@ -3,7 +3,6 @@ package com.cba.core.wiremeweb.controller;
 import com.cba.core.wiremeweb.controller.resource.GraphResource;
 import com.cba.core.wiremeweb.dto.GraphRequestDto;
 import com.cba.core.wiremeweb.dto.GraphResponseDto;
-import com.cba.core.wiremeweb.dto.HighlightRequestDto;
 import com.cba.core.wiremeweb.service.GraphService;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;

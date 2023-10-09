@@ -18,7 +18,9 @@ import com.cba.core.wiremeweb.repository.UserRepository;
 import com.cba.core.wiremeweb.util.UserBean;
 import com.cba.core.wiremeweb.util.UserOperationEnum;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import jakarta.persistence.*;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
+import jakarta.persistence.Query;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -26,7 +28,9 @@ import org.springframework.stereotype.Component;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
@@ -36,7 +40,6 @@ import java.util.stream.IntStream;
 public class HighlightDaoImpl implements HighlightDao {
 
     private final DashBoardRepository repository;
-    private final TransactionRepository transactionRepository;
     private final UserRepository userRepository;
     private final GlobalAuditEntryRepository globalAuditEntryRepository;
     private final UserBean userBean;
@@ -410,8 +413,6 @@ public class HighlightDaoImpl implements HighlightDao {
 
     private String setWhereCondition(HighlightRequestDto requestDto) throws Exception {
 
-        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-
         String fromDate = requestDto.getFromDate();
         String toDate = requestDto.getToDate();
         String partner = requestDto.getSelectionScope().getPartner();
@@ -419,6 +420,7 @@ public class HighlightDaoImpl implements HighlightDao {
         String province = requestDto.getSelectionScope().getProvince();
         String district = requestDto.getSelectionScope().getDistrict();
         String filterKey = "", filterValue = "";
+        
         if (requestDto.getFilter() != null) {
             for (Map.Entry<String, String> entry : requestDto.getFilter().entrySet()) {
                 filterKey = entry.getKey();
