@@ -3,6 +3,7 @@ package com.cba.core.wiremeweb.service.impl;
 import com.cba.core.wiremeweb.dao.HighlightDao;
 import com.cba.core.wiremeweb.dto.HighlightRequestDto;
 import com.cba.core.wiremeweb.dto.HighlightResponseDto;
+import com.cba.core.wiremeweb.dto.TransactionCoreResponseDto;
 import com.cba.core.wiremeweb.service.HighlightService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -39,5 +40,10 @@ public class HighlightServiceImpl implements HighlightService {
     @Override
     public Map<String, Map<String, Object>> findHighLights(HighlightRequestDto requestDto) throws Exception {
         return dao.findHighLights(requestDto);
+    }
+
+    @Override
+    public Map<String, TransactionCoreResponseDto> findHighLightsDetail(HighlightRequestDto requestDto) throws Exception {
+        return dao.findHighLightsDetail(requestDto);
     }
 }

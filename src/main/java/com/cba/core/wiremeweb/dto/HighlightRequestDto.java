@@ -7,6 +7,8 @@ import lombok.NoArgsConstructor;
 import lombok.ToString;
 
 import java.io.Serializable;
+import java.util.HashMap;
+import java.util.Map;
 
 @Data
 @NoArgsConstructor
@@ -38,6 +40,8 @@ public class HighlightRequestDto implements Serializable {
     private String toDate;
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private Integer priorityOrder;
+    @JsonInclude(JsonInclude.Include.NON_NULL)
+    private HashMap<String,String> filter;
 
     private static final long serialVersionUID = 1L;
 

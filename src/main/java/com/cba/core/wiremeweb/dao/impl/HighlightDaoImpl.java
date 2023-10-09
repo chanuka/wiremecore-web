@@ -3,10 +3,13 @@ package com.cba.core.wiremeweb.dao.impl;
 import com.cba.core.wiremeweb.dao.HighlightDao;
 import com.cba.core.wiremeweb.dto.HighlightRequestDto;
 import com.cba.core.wiremeweb.dto.HighlightResponseDto;
+import com.cba.core.wiremeweb.dto.TransactionCoreResponseDto;
 import com.cba.core.wiremeweb.exception.NotFoundException;
 import com.cba.core.wiremeweb.mapper.HighlightMapper;
+import com.cba.core.wiremeweb.mapper.TransactionCoreMapper;
 import com.cba.core.wiremeweb.model.GlobalAuditEntry;
 import com.cba.core.wiremeweb.model.Status;
+import com.cba.core.wiremeweb.model.TransactionCore;
 import com.cba.core.wiremeweb.model.UserConfig;
 import com.cba.core.wiremeweb.repository.DashBoardRepository;
 import com.cba.core.wiremeweb.repository.GlobalAuditEntryRepository;
@@ -15,6 +18,7 @@ import com.cba.core.wiremeweb.repository.UserRepository;
 import com.cba.core.wiremeweb.util.UserBean;
 import com.cba.core.wiremeweb.util.UserOperationEnum;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import jakarta.persistence.*;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -37,6 +41,9 @@ public class HighlightDaoImpl implements HighlightDao {
     private final GlobalAuditEntryRepository globalAuditEntryRepository;
     private final UserBean userBean;
     private final ObjectMapper objectMapper;
+
+    @PersistenceContext
+    private EntityManager entityManager;
 
     @Value("${application.resource.users}")
     private String resource;
@@ -224,46 +231,233 @@ public class HighlightDaoImpl implements HighlightDao {
         Map<String, Map<String, Object>> responseData = new HashMap<>();
 
         try {
-            Date fromDate = dateFormat.parse(requestDto.getFromDate());
-            Date toDate = dateFormat.parse(requestDto.getToDate());
 
             Map<String, Object> metadata = new HashMap<>();
             metadata.put("metaData", requestDto);
             responseData.put("0", metadata);
 
-            if ("Revenue".equals(requestDto.getAggregator())) {
-                if ("CardLabel".equals(requestDto.getGrouping())) {
-                    List<Object[]> list = transactionRepository.revenueTransactionCoreGroupByCardLabel(fromDate, toDate);
-                    extracted(requestDto, responseData, list);
-                } else if ("PaymentMode".equals(requestDto.getGrouping())) {
-                    List<Object[]> list = transactionRepository.revenueTransactionCoreGroupByPaymentMode(fromDate, toDate);
-                    extracted(requestDto, responseData, list);
-                } else if ("TranType".equals(requestDto.getGrouping())) {
-                    List<Object[]> list = transactionRepository.revenueTransactionCoreGroupByTranType(fromDate, toDate);
-                    extracted(requestDto, responseData, list);
-                } else {
-                    throw new NotFoundException("No Changes found");
-                }
-            } else if ("Count".equals(requestDto.getAggregator())) {
-                if ("CardLabel".equals(requestDto.getGrouping())) {
-                    List<Object[]> list = transactionRepository.countTransactionCoreGroupByCardLabel(fromDate, toDate);
-                    extracted(requestDto, responseData, list);
-                } else if ("PaymentMode".equals(requestDto.getGrouping())) {
-                    List<Object[]> list = transactionRepository.countTransactionCoreGroupByPaymentMode(fromDate, toDate);
-                    extracted(requestDto, responseData, list);
-                } else if ("TranType".equals(requestDto.getGrouping())) {
-                    List<Object[]> list = transactionRepository.countTransactionCoreGroupByTranType(fromDate, toDate);
-                    extracted(requestDto, responseData, list);
-                } else {
-                    throw new NotFoundException("No Changes found");
-                }
-            } else {
-                throw new NotFoundException("No Changes found");
+            String fromDate = requestDto.getFromDate();
+            String toDate = requestDto.getToDate();
+            String partner = requestDto.getSelectionScope().getPartner();
+            String merchant = requestDto.getSelectionScope().getMerchant();
+            String province = requestDto.getSelectionScope().getProvince();
+            String district = requestDto.getSelectionScope().getDistrict();
+
+            String whereClause = setWhereCondition(requestDto);
+            String selectClause = setSelectCondition(requestDto);
+            String groupByClause = setGroupByCondition(requestDto);
+
+            String jpql = "SELECT " + selectClause + " FROM TransactionCore p INNER JOIN Merchant m ON p.merchantId=m.merchantId " +
+                    "WHERE " + whereClause + " GROUP BY " + groupByClause;
+
+            Query query = entityManager.createQuery(jpql);
+
+            if (partner != null && !"all".equals(partner)) {
+                query.setParameter("partner", partner);
             }
+            if (merchant != null && !"all".equals(merchant)) {
+                query.setParameter("merchant", merchant);
+            }
+            if (province != null && !"all".equals(province)) {
+                query.setParameter("province", province);
+            }
+            if (district != null && !"all".equals(district)) {
+                query.setParameter("district", district);
+            }
+            if ((fromDate != null && !fromDate.isEmpty())
+                    && (requestDto.getToDate() != null && !toDate.isEmpty())) {
+                query.setParameter("fromDate", dateFormat.parse(fromDate));
+                query.setParameter("toDate", dateFormat.parse(toDate));
+            } else {
+            }
+
+            List<Object[]> list = query.getResultList();
+            extracted(requestDto, responseData, list);
+
         } catch (ParseException e) {
             e.printStackTrace();
         }
         return responseData;
+    }
+
+    @Override
+    public Map<String, TransactionCoreResponseDto> findHighLightsDetail(HighlightRequestDto requestDto) throws Exception {
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        Map<String, TransactionCoreResponseDto> responseData = new HashMap<>();
+
+        try {
+            String filterKey = "", filterValue = "";
+            if (requestDto.getFilter() != null) {
+                for (Map.Entry<String, String> entry : requestDto.getFilter().entrySet()) {
+                    filterKey = entry.getKey();
+                    filterValue = entry.getValue();
+                }
+            }
+            String fromDate = requestDto.getFromDate();
+            String toDate = requestDto.getToDate();
+            String partner = requestDto.getSelectionScope().getPartner();
+            String merchant = requestDto.getSelectionScope().getMerchant();
+            String province = requestDto.getSelectionScope().getProvince();
+            String district = requestDto.getSelectionScope().getDistrict();
+
+            String whereClause = setWhereCondition(requestDto);
+
+            String jpql = "SELECT p FROM TransactionCore p INNER JOIN Merchant m ON p.merchantId=m.merchantId " +
+                    "WHERE " + whereClause;
+
+            Query query = entityManager.createQuery(jpql);
+
+            if (partner != null && !"all".equals(partner)) {
+                query.setParameter("partner", partner);
+            }
+            if (merchant != null && !"all".equals(merchant)) {
+                query.setParameter("merchant", merchant);
+            }
+            if (province != null && !"all".equals(province)) {
+                query.setParameter("province", province);
+            }
+            if (district != null && !"all".equals(district)) {
+                query.setParameter("district", district);
+            }
+            if ((fromDate != null && !fromDate.isEmpty())
+                    && (requestDto.getToDate() != null && !toDate.isEmpty())) {
+                query.setParameter("fromDate", dateFormat.parse(fromDate));
+                query.setParameter("toDate", dateFormat.parse(toDate));
+            }
+            if (filterKey != null && !"".equals(filterKey) && filterValue != null && !"".equals(filterValue)) {
+                query.setParameter("filterValue", filterValue);
+            }
+            else {
+            }
+
+            List<TransactionCore> list = query.getResultList();
+
+            IntStream.range(0, list.size())
+                    .forEach(i -> {
+                        String index = String.valueOf(i + 1);
+                        TransactionCore value = list.get(i);
+                        responseData.put(index, TransactionCoreMapper.toDto(value));
+                    });
+
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return responseData;
+    }
+
+
+    private String setGroupByCondition(HighlightRequestDto requestDto) throws Exception {
+
+        String grouping = requestDto.getGrouping();
+        String groupBy = " ";
+        if (grouping != null && !"".equals(grouping)) {
+            if ("CardLabel".equals(grouping)) {
+                groupBy += " p.cardLabel";
+            }
+            if ("PaymentMode".equals(grouping)) {
+                groupBy += " p.paymentMode";
+            }
+            if ("TranType".equals(grouping)) {
+                groupBy += " p.tranType";
+            }
+        } else {
+        }
+
+        return groupBy;
+    }
+
+    private String setSelectCondition(HighlightRequestDto requestDto) throws Exception {
+
+        String aggregator = requestDto.getAggregator();
+        String grouping = requestDto.getGrouping();
+
+        String select = " ";
+
+        if ((aggregator != null && !"".equals(aggregator)) && (aggregator != null && !"".equals(aggregator))) {
+            if ("CardLabel".equals(grouping)) {
+                select += " p.cardLabel,";
+                if ("Revenue".equals(aggregator)) {
+                    select += " sum(p.amount) ";
+                }
+                if ("Count".equals(aggregator)) {
+                    select += " count(p) ";
+                }
+            }
+            if ("PaymentMode".equals(grouping)) {
+                select += " p.paymentMode,";
+                if ("Revenue".equals(aggregator)) {
+                    select += " sum(p.amount) ";
+                }
+                if ("Count".equals(aggregator)) {
+                    select += " count(p) ";
+                }
+            }
+            if ("TranType".equals(grouping)) {
+                select += " p.tranType,";
+                if ("Revenue".equals(aggregator)) {
+                    select += " sum(p.amount) ";
+                }
+                if ("Count".equals(aggregator)) {
+                    select += " count(p) ";
+                }
+            }
+
+        } else {
+        }
+
+        return select;
+    }
+
+    private String setWhereCondition(HighlightRequestDto requestDto) throws Exception {
+
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+
+        String fromDate = requestDto.getFromDate();
+        String toDate = requestDto.getToDate();
+        String partner = requestDto.getSelectionScope().getPartner();
+        String merchant = requestDto.getSelectionScope().getMerchant();
+        String province = requestDto.getSelectionScope().getProvince();
+        String district = requestDto.getSelectionScope().getDistrict();
+        String filterKey = "", filterValue = "";
+        if (requestDto.getFilter() != null) {
+            for (Map.Entry<String, String> entry : requestDto.getFilter().entrySet()) {
+                filterKey = entry.getKey();
+                filterValue = entry.getValue();
+            }
+        }
+        String where = " 1=1 ";
+
+        if (partner != null && !"all".equals(partner)) {
+            where += " AND m.merchantCustomer.name=:partner";
+        }
+        if (merchant != null && !"all".equals(merchant)) {
+            where += " AND m.merchantId=:merchant";
+        }
+        if (province != null && !"all".equals(province)) {
+            where += " AND m.province=:province";
+        }
+        if (district != null && !"all".equals(district)) {
+            where += " AND m.district=:district";
+        }
+        if ((fromDate != null && !fromDate.isEmpty())
+                && (requestDto.getToDate() != null && !toDate.isEmpty())) {
+            where += " AND p.dateTime BETWEEN :fromDate AND :toDate ";
+        }
+        if (filterKey != null && !"".equals(filterKey) && filterValue != null && !"".equals(filterValue)) {
+            if ("CardLabel".equals(filterKey)) {
+                where += " AND p.cardLabel=:filterValue";
+            }
+            if ("PaymentMode".equals(filterKey)) {
+                where += " AND p.paymentMode=:filterValue";
+            }
+            if ("TranType".equals(filterKey)) {
+                where += " AND p.tranType=:filterValue";
+            }
+        }
+        else {
+        }
+
+        return where;
     }
 
     private void extracted(HighlightRequestDto requestDto, Map<String, Map<String, Object>> responseData, List<Object[]> list) {

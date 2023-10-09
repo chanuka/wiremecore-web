@@ -2,6 +2,7 @@ package com.cba.core.wiremeweb.controller.resource;
 
 import com.cba.core.wiremeweb.dto.HighlightRequestDto;
 import com.cba.core.wiremeweb.dto.HighlightResponseDto;
+import com.cba.core.wiremeweb.dto.TransactionCoreResponseDto;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -28,5 +29,8 @@ public interface HighlightResource {
 
     @GetMapping("/getHighlights")
     ResponseEntity<Map<String, Map<String, Object>>> getHighlights(@RequestBody HighlightRequestDto requestDto) throws Exception;
+
+    @GetMapping("/getHighlightsDetail")
+    ResponseEntity<Map<String, TransactionCoreResponseDto>> getHighlightsDetail(@RequestBody HighlightRequestDto requestDto) throws Exception;
 
 }

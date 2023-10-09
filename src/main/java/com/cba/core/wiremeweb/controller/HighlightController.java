@@ -3,6 +3,7 @@ package com.cba.core.wiremeweb.controller;
 import com.cba.core.wiremeweb.controller.resource.HighlightResource;
 import com.cba.core.wiremeweb.dto.HighlightRequestDto;
 import com.cba.core.wiremeweb.dto.HighlightResponseDto;
+import com.cba.core.wiremeweb.dto.TransactionCoreResponseDto;
 import com.cba.core.wiremeweb.service.HighlightService;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
@@ -99,5 +100,17 @@ public class HighlightController implements HighlightResource {
             throw e;
         }
     }
+
+    @Override
+    public ResponseEntity<Map<String, TransactionCoreResponseDto>> getHighlightsDetail(HighlightRequestDto requestDto) throws Exception {
+        Locale currentLocale = LocaleContextHolder.getLocale();// works only when as local statement
+        logger.debug(messageSource.getMessage("HIGHLIGHTS_GET_DETAIL_DEBUG", null, currentLocale));
+        try {
+            Map<String, TransactionCoreResponseDto> responseData = service.findHighLightsDetail(requestDto);
+            return ResponseEntity.ok().body(responseData);
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+            throw e;
+        }    }
 
 }
