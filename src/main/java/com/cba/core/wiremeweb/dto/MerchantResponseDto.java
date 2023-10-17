@@ -1,5 +1,6 @@
 package com.cba.core.wiremeweb.dto;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -18,10 +19,16 @@ public class MerchantResponseDto implements Serializable {
 
     private Integer id;
     private String merchantId;
+    @JsonInclude(JsonInclude.Include.NON_NULL)
     private Integer partnerId;
+    @JsonInclude(JsonInclude.Include.NON_NULL)
     private String name;
+    @JsonInclude(JsonInclude.Include.NON_NULL)
     private String email;
+    @JsonInclude(JsonInclude.Include.NON_NULL)
     private String province;
+    @JsonInclude(JsonInclude.Include.NON_NULL)
     private String district;
+    @JsonInclude(JsonInclude.Include.NON_NULL)
     private String status;
 }
