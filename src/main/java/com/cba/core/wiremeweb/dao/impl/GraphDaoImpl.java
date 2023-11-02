@@ -314,16 +314,16 @@ public class GraphDaoImpl implements GraphDao {
 
         String where = " 1=1 ";
 
-        if (partner != null && !"all".equals(partner)) {
+        if (partner != null && !"all".equalsIgnoreCase(partner)) {
             where += " AND m.merchantCustomer.name=:partner";
         }
-        if (merchant != null && !"all".equals(merchant)) {
+        if (merchant != null && !"all".equalsIgnoreCase(merchant)) {
             where += " AND m.merchantId=:merchant";
         }
-        if (province != null && !"all".equals(province)) {
+        if (province != null && !"all".equalsIgnoreCase(province)) {
             where += " AND m.province=:province";
         }
-        if (district != null && !"all".equals(district)) {
+        if (district != null && !"all".equalsIgnoreCase(district)) {
             where += " AND m.district=:district";
         }
         if ((fromDate != null && !fromDate.isEmpty())
@@ -345,30 +345,30 @@ public class GraphDaoImpl implements GraphDao {
         String select = " ";
 
         if ((aggregator != null && !"".equals(aggregator)) && (aggregator != null && !"".equals(aggregator))) {
-            if ("CardLabel".equals(grouping)) {
+            if ("CardLabel".equalsIgnoreCase(grouping)) {
                 select += " p.cardLabel,";
-                if ("Revenue".equals(aggregator)) {
-                    if ("Districts".equals(xAxis)) {
+                if ("Revenue".equalsIgnoreCase(aggregator)) {
+                    if ("Districts".equalsIgnoreCase(xAxis)) {
                         select += " m.district, ";
-                    } else if ("Provinces".equals(xAxis)) {
+                    } else if ("Provinces".equalsIgnoreCase(xAxis)) {
                         select += " m.province, ";
-                    } else if ("Merchants".equals(xAxis)) {
+                    } else if ("Merchants".equalsIgnoreCase(xAxis)) {
                         select += " m.merchantId, ";
-                    } else if ("Partners".equals(xAxis)) {
+                    } else if ("Partners".equalsIgnoreCase(xAxis)) {
                         select += " m.merchantCustomer.name, ";
                     } else {
 
                     }
                     select += " sum(p.amount) ";
                 }
-                if ("Count".equals(aggregator)) {
-                    if ("Districts".equals(xAxis)) {
+                if ("Count".equalsIgnoreCase(aggregator)) {
+                    if ("Districts".equalsIgnoreCase(xAxis)) {
                         select += " m.district, ";
-                    } else if ("Provinces".equals(xAxis)) {
+                    } else if ("Provinces".equalsIgnoreCase(xAxis)) {
                         select += " m.province, ";
-                    } else if ("Merchants".equals(xAxis)) {
+                    } else if ("Merchants".equalsIgnoreCase(xAxis)) {
                         select += " m.merchantId, ";
-                    } else if ("Partners".equals(xAxis)) {
+                    } else if ("Partners".equalsIgnoreCase(xAxis)) {
                         select += " m.merchantCustomer.name, ";
                     } else {
 
@@ -376,30 +376,30 @@ public class GraphDaoImpl implements GraphDao {
                     select += " count(p) ";
                 }
             }
-            if ("PaymentMode".equals(grouping)) {
+            if ("PaymentMode".equalsIgnoreCase(grouping)) {
                 select += " p.paymentMode,";
-                if ("Revenue".equals(aggregator)) {
-                    if ("Districts".equals(xAxis)) {
+                if ("Revenue".equalsIgnoreCase(aggregator)) {
+                    if ("Districts".equalsIgnoreCase(xAxis)) {
                         select += " m.district, ";
-                    } else if ("Provinces".equals(xAxis)) {
+                    } else if ("Provinces".equalsIgnoreCase(xAxis)) {
                         select += " m.province, ";
-                    } else if ("Merchants".equals(xAxis)) {
+                    } else if ("Merchants".equalsIgnoreCase(xAxis)) {
                         select += " m.merchantId, ";
-                    } else if ("Partners".equals(xAxis)) {
+                    } else if ("Partners".equalsIgnoreCase(xAxis)) {
                         select += " m.merchantCustomer.name, ";
                     } else {
 
                     }
                     select += " sum(p.amount) ";
                 }
-                if ("Count".equals(aggregator)) {
-                    if ("Districts".equals(xAxis)) {
+                if ("Count".equalsIgnoreCase(aggregator)) {
+                    if ("Districts".equalsIgnoreCase(xAxis)) {
                         select += " m.district, ";
-                    } else if ("Provinces".equals(xAxis)) {
+                    } else if ("Provinces".equalsIgnoreCase(xAxis)) {
                         select += " m.province, ";
-                    } else if ("Merchants".equals(xAxis)) {
+                    } else if ("Merchants".equalsIgnoreCase(xAxis)) {
                         select += " m.merchantId, ";
-                    } else if ("Partners".equals(xAxis)) {
+                    } else if ("Partners".equalsIgnoreCase(xAxis)) {
                         select += " m.merchantCustomer.name, ";
                     } else {
 
@@ -407,30 +407,30 @@ public class GraphDaoImpl implements GraphDao {
                     select += " count(p) ";
                 }
             }
-            if ("TranType".equals(grouping)) {
+            if ("TranType".equalsIgnoreCase(grouping)) {
                 select += " p.tranType,";
-                if ("Revenue".equals(aggregator)) {
-                    if ("Districts".equals(xAxis)) {
+                if ("Revenue".equalsIgnoreCase(aggregator)) {
+                    if ("Districts".equalsIgnoreCase(xAxis)) {
                         select += " m.district, ";
-                    } else if ("Provinces".equals(xAxis)) {
+                    } else if ("Provinces".equalsIgnoreCase(xAxis)) {
                         select += " m.province, ";
-                    } else if ("Merchants".equals(xAxis)) {
+                    } else if ("Merchants".equalsIgnoreCase(xAxis)) {
                         select += " m.merchantId, ";
-                    } else if ("Partners".equals(xAxis)) {
+                    } else if ("Partners".equalsIgnoreCase(xAxis)) {
                         select += " m.merchantCustomer.name, ";
                     } else {
 
                     }
                     select += " sum(p.amount) ";
                 }
-                if ("Count".equals(aggregator)) {
-                    if ("Districts".equals(xAxis)) {
+                if ("Count".equalsIgnoreCase(aggregator)) {
+                    if ("Districts".equalsIgnoreCase(xAxis)) {
                         select += " m.district, ";
-                    } else if ("Provinces".equals(xAxis)) {
+                    } else if ("Provinces".equalsIgnoreCase(xAxis)) {
                         select += " m.province, ";
-                    } else if ("Merchants".equals(xAxis)) {
+                    } else if ("Merchants".equalsIgnoreCase(xAxis)) {
                         select += " m.merchantId, ";
-                    } else if ("Partners".equals(xAxis)) {
+                    } else if ("Partners".equalsIgnoreCase(xAxis)) {
                         select += " m.merchantCustomer.name, ";
                     } else {
 
@@ -451,43 +451,43 @@ public class GraphDaoImpl implements GraphDao {
         String xAxis = requestDto.getXaxis();
         String groupBy = " ";
         if (grouping != null && !"".equals(grouping)) {
-            if ("CardLabel".equals(grouping)) {
+            if ("CardLabel".equalsIgnoreCase(grouping)) {
                 groupBy += " p.cardLabel,";
-                if ("Districts".equals(xAxis)) {
+                if ("Districts".equalsIgnoreCase(xAxis)) {
                     groupBy += " m.district ";
-                } else if ("Provinces".equals(xAxis)) {
+                } else if ("Provinces".equalsIgnoreCase(xAxis)) {
                     groupBy += " m.province ";
-                } else if ("Merchants".equals(xAxis)) {
+                } else if ("Merchants".equalsIgnoreCase(xAxis)) {
                     groupBy += " m.merchantId ";
-                } else if ("Partners".equals(xAxis)) {
+                } else if ("Partners".equalsIgnoreCase(xAxis)) {
                     groupBy += " m.merchantCustomer.name ";
                 } else {
                     throw new NotFoundException("No Record Found");
                 }
             }
-            if ("PaymentMode".equals(grouping)) {
+            if ("PaymentMode".equalsIgnoreCase(grouping)) {
                 groupBy += " p.paymentMode,";
-                if ("Districts".equals(xAxis)) {
+                if ("Districts".equalsIgnoreCase(xAxis)) {
                     groupBy += " m.district ";
-                } else if ("Provinces".equals(xAxis)) {
+                } else if ("Provinces".equalsIgnoreCase(xAxis)) {
                     groupBy += " m.province ";
-                } else if ("Merchants".equals(xAxis)) {
+                } else if ("Merchants".equalsIgnoreCase(xAxis)) {
                     groupBy += " m.merchantId ";
-                } else if ("Partners".equals(xAxis)) {
+                } else if ("Partners".equalsIgnoreCase(xAxis)) {
                     groupBy += " m.merchantCustomer.name ";
                 } else {
                     throw new NotFoundException("No Record Found");
                 }
             }
-            if ("TranType".equals(grouping)) {
+            if ("TranType".equalsIgnoreCase(grouping)) {
                 groupBy += " p.tranType,";
-                if ("Districts".equals(xAxis)) {
+                if ("Districts".equalsIgnoreCase(xAxis)) {
                     groupBy += " m.district ";
-                } else if ("Provinces".equals(xAxis)) {
+                } else if ("Provinces".equalsIgnoreCase(xAxis)) {
                     groupBy += " m.province ";
-                } else if ("Merchants".equals(xAxis)) {
+                } else if ("Merchants".equalsIgnoreCase(xAxis)) {
                     groupBy += " m.merchantId ";
-                } else if ("Partners".equals(xAxis)) {
+                } else if ("Partners".equalsIgnoreCase(xAxis)) {
                     groupBy += " m.merchantCustomer.name ";
                 } else {
                     throw new NotFoundException("No Record Found");

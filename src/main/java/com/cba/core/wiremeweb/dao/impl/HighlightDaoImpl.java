@@ -255,20 +255,20 @@ public class HighlightDaoImpl implements HighlightDao {
 
             Query query = entityManager.createQuery(jpql);
 
-            if (partner != null && !"all".equals(partner)) {
+            if (partner != null && !"all".equalsIgnoreCase(partner)) {
                 query.setParameter("partner", partner);
             }
-            if (merchant != null && !"all".equals(merchant)) {
+            if (merchant != null && !"all".equalsIgnoreCase(merchant)) {
                 query.setParameter("merchant", merchant);
             }
-            if (province != null && !"all".equals(province)) {
+            if (province != null && !"all".equalsIgnoreCase(province)) {
                 query.setParameter("province", province);
             }
-            if (district != null && !"all".equals(district)) {
+            if (district != null && !"all".equalsIgnoreCase(district)) {
                 query.setParameter("district", district);
             }
             if ((fromDate != null && !fromDate.isEmpty())
-                    && (requestDto.getToDate() != null && !toDate.isEmpty())) {
+                    && (toDate != null && !toDate.isEmpty())) {
                 query.setParameter("fromDate", dateFormat.parse(fromDate));
                 query.setParameter("toDate", dateFormat.parse(toDate));
             } else {
@@ -348,19 +348,18 @@ public class HighlightDaoImpl implements HighlightDao {
         return responseData;
     }
 
-
     private String setGroupByCondition(HighlightRequestDto requestDto) throws Exception {
 
         String grouping = requestDto.getGrouping();
         String groupBy = " ";
-        if (grouping != null && !"".equals(grouping)) {
-            if ("CardLabel".equals(grouping)) {
+        if (grouping != null && !"".equalsIgnoreCase(grouping)) {
+            if ("CardLabel".equalsIgnoreCase(grouping)) {
                 groupBy += " p.cardLabel";
             }
-            if ("PaymentMode".equals(grouping)) {
+            if ("PaymentMode".equalsIgnoreCase(grouping)) {
                 groupBy += " p.paymentMode";
             }
-            if ("TranType".equals(grouping)) {
+            if ("TranType".equalsIgnoreCase(grouping)) {
                 groupBy += " p.tranType";
             }
         } else {
@@ -376,31 +375,31 @@ public class HighlightDaoImpl implements HighlightDao {
 
         String select = " ";
 
-        if ((aggregator != null && !"".equals(aggregator)) && (aggregator != null && !"".equals(aggregator))) {
-            if ("CardLabel".equals(grouping)) {
+        if ((aggregator != null && !"".equals(aggregator)) && (grouping != null && !"".equals(grouping))) {
+            if ("CardLabel".equalsIgnoreCase(grouping)) {
                 select += " p.cardLabel,";
-                if ("Revenue".equals(aggregator)) {
+                if ("Revenue".equalsIgnoreCase(aggregator)) {
                     select += " sum(p.amount) ";
                 }
-                if ("Count".equals(aggregator)) {
-                    select += " count(p) ";
+                if ("Count".equalsIgnoreCase(aggregator)) {
+                        select += " count(p) ";
                 }
             }
-            if ("PaymentMode".equals(grouping)) {
+            if ("PaymentMode".equalsIgnoreCase(grouping)) {
                 select += " p.paymentMode,";
-                if ("Revenue".equals(aggregator)) {
+                if ("Revenue".equalsIgnoreCase(aggregator)) {
                     select += " sum(p.amount) ";
                 }
-                if ("Count".equals(aggregator)) {
+                if ("Count".equalsIgnoreCase(aggregator)) {
                     select += " count(p) ";
                 }
             }
-            if ("TranType".equals(grouping)) {
+            if ("TranType".equalsIgnoreCase(grouping)) {
                 select += " p.tranType,";
-                if ("Revenue".equals(aggregator)) {
+                if ("Revenue".equalsIgnoreCase(aggregator)) {
                     select += " sum(p.amount) ";
                 }
-                if ("Count".equals(aggregator)) {
+                if ("Count".equalsIgnoreCase(aggregator)) {
                     select += " count(p) ";
                 }
             }
@@ -429,30 +428,30 @@ public class HighlightDaoImpl implements HighlightDao {
         }
         String where = " 1=1 ";
 
-        if (partner != null && !"all".equals(partner)) {
+        if (partner != null && !"all".equalsIgnoreCase(partner)) {
             where += " AND m.merchantCustomer.name=:partner";
         }
-        if (merchant != null && !"all".equals(merchant)) {
+        if (merchant != null && !"all".equalsIgnoreCase(merchant)) {
             where += " AND m.merchantId=:merchant";
         }
-        if (province != null && !"all".equals(province)) {
+        if (province != null && !"all".equalsIgnoreCase(province)) {
             where += " AND m.province=:province";
         }
-        if (district != null && !"all".equals(district)) {
+        if (district != null && !"all".equalsIgnoreCase(district)) {
             where += " AND m.district=:district";
         }
         if ((fromDate != null && !fromDate.isEmpty())
-                && (requestDto.getToDate() != null && !toDate.isEmpty())) {
+                && (toDate != null && !toDate.isEmpty())) {
             where += " AND p.dateTime BETWEEN :fromDate AND :toDate ";
         }
         if (filterKey != null && !"".equals(filterKey) && filterValue != null && !"".equals(filterValue)) {
-            if ("CardLabel".equals(filterKey)) {
+            if ("CardLabel".equalsIgnoreCase(filterKey)) {
                 where += " AND p.cardLabel=:filterValue";
             }
-            if ("PaymentMode".equals(filterKey)) {
+            if ("PaymentMode".equalsIgnoreCase(filterKey)) {
                 where += " AND p.paymentMode=:filterValue";
             }
-            if ("TranType".equals(filterKey)) {
+            if ("TranType".equalsIgnoreCase(filterKey)) {
                 where += " AND p.tranType=:filterValue";
             }
         }

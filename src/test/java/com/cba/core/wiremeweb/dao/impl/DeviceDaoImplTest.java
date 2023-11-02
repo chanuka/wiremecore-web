@@ -3,12 +3,12 @@ package com.cba.core.wiremeweb.dao.impl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
-@SpringBootTest
+//@SpringBootTest
 //@Sql(scripts = {"/data.sql"}, executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
 class DeviceDaoImplTest {
 
-    @Autowired
-    DeviceDaoImpl deviceDaoImpl;
+//    @Autowired
+//    DeviceDaoImpl deviceDaoImpl;
 
 //    @Test
 //    @Transactional
