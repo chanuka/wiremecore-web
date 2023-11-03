@@ -3,6 +3,7 @@ package com.cba.core.wiremeweb.controller;
 import com.cba.core.wiremeweb.controller.resource.ResourceResource;
 import com.cba.core.wiremeweb.dto.ResourceResponseDto;
 import com.cba.core.wiremeweb.service.ResourceService;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,6 +19,7 @@ import java.util.Locale;
 @Component
 @RequiredArgsConstructor
 @RequestMapping("/${application.resource.resources}")
+@Tag(name = "Resource Management", description = "Provides Resource Management API's")
 public class ResourceController implements ResourceResource {
 
     private final ResourceService service;

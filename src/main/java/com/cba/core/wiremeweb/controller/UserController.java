@@ -5,6 +5,7 @@ import com.cba.core.wiremeweb.dto.ChangePasswordRequestDto;
 import com.cba.core.wiremeweb.dto.UserRequestDto;
 import com.cba.core.wiremeweb.dto.UserResponseDto;
 import com.cba.core.wiremeweb.service.UserService;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -25,6 +26,7 @@ import java.util.Map;
 @Component
 @RequiredArgsConstructor
 @RequestMapping("/${application.resource.users}")
+@Tag(name = "User Management", description = "Provides User Management API's")
 public class UserController implements UserResource<UserResponseDto, UserRequestDto> {
 
     private static final Logger logger = LoggerFactory.getLogger(UserController.class);

@@ -4,6 +4,7 @@ import com.cba.core.wiremeweb.controller.resource.GraphResource;
 import com.cba.core.wiremeweb.dto.GraphRequestDto;
 import com.cba.core.wiremeweb.dto.GraphResponseDto;
 import com.cba.core.wiremeweb.service.GraphService;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,6 +21,7 @@ import java.util.Map;
 @Component
 @RequiredArgsConstructor
 @RequestMapping("/${application.resource.users}")
+@Tag(name = "Graph Management", description = "Provides Graph Management API's")
 public class GraphController implements GraphResource {
 
     private static final Logger logger = LoggerFactory.getLogger(DeviceController.class);

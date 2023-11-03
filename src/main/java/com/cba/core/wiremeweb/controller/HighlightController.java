@@ -5,6 +5,7 @@ import com.cba.core.wiremeweb.dto.HighlightRequestDto;
 import com.cba.core.wiremeweb.dto.HighlightResponseDto;
 import com.cba.core.wiremeweb.dto.TransactionCoreResponseDto;
 import com.cba.core.wiremeweb.service.HighlightService;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,6 +22,7 @@ import java.util.Map;
 @Component
 @RequiredArgsConstructor
 @RequestMapping("/${application.resource.users}")
+@Tag(name = "Highlight Management", description = "Provides Highlight Management API's")
 public class HighlightController implements HighlightResource {
 
     private static final Logger logger = LoggerFactory.getLogger(DeviceController.class);

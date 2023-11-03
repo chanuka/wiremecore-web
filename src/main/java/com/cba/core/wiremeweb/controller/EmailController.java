@@ -2,6 +2,7 @@ package com.cba.core.wiremeweb.controller;
 
 import com.cba.core.wiremeweb.dto.EmailRequestDto;
 import com.cba.core.wiremeweb.service.EmailService;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
@@ -15,6 +16,7 @@ import java.util.Map;
 @RestController
 @RequiredArgsConstructor
 @Validated
+@Tag(name = "Email Management", description = "Provides Email Sending API's")
 public class EmailController {
 
     private final EmailService emailService;

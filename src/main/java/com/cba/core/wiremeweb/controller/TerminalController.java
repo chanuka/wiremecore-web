@@ -4,6 +4,7 @@ import com.cba.core.wiremeweb.controller.resource.GenericResource;
 import com.cba.core.wiremeweb.dto.TerminalRequestDto;
 import com.cba.core.wiremeweb.dto.TerminalResponseDto;
 import com.cba.core.wiremeweb.service.GenericService;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -24,6 +25,7 @@ import java.util.Map;
 @Component
 @RequiredArgsConstructor
 @RequestMapping("/${application.resource.terminals}")
+@Tag(name = "Terminal Management", description = "Provides Terminal Management API's")
 public class TerminalController implements GenericResource<TerminalResponseDto, TerminalRequestDto> {
 
     private static final Logger logger = LoggerFactory.getLogger(TerminalController.class);

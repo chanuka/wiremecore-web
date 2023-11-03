@@ -4,6 +4,7 @@ import com.cba.core.wiremeweb.controller.resource.TransactionResource;
 import com.cba.core.wiremeweb.dto.*;
 import com.cba.core.wiremeweb.service.GenericService;
 import com.cba.core.wiremeweb.service.TransactionService;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,6 +21,7 @@ import java.util.*;
 @Component
 @RequiredArgsConstructor
 @RequestMapping("/${application.resource.transactions}")
+@Tag(name = "Transaction Management", description = "Provides Transaction Management API's")
 public class TransactionController implements TransactionResource {
 
     private static final Logger logger = LoggerFactory.getLogger(TerminalController.class);

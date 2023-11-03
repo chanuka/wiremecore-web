@@ -4,6 +4,8 @@ import com.cba.core.wiremeweb.controller.resource.GenericResource;
 import com.cba.core.wiremeweb.dto.DeviceRequestDto;
 import com.cba.core.wiremeweb.dto.DeviceResponseDto;
 import com.cba.core.wiremeweb.service.GenericService;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import io.swagger.v3.oas.annotations.tags.Tags;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -24,6 +26,7 @@ import java.util.Map;
 @Component
 @RequiredArgsConstructor
 @RequestMapping("/${application.resource.devices}")
+@Tag(name = "Device Management", description = "Provides Device Management API's")
 public class DeviceController implements GenericResource<DeviceResponseDto, DeviceRequestDto> {
 
     private static final Logger logger = LoggerFactory.getLogger(DeviceController.class);

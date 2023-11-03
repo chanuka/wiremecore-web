@@ -4,6 +4,7 @@ import com.cba.core.wiremeweb.controller.resource.GenericResource;
 import com.cba.core.wiremeweb.dto.PermissionRequestDto;
 import com.cba.core.wiremeweb.dto.PermissionResponseDto;
 import com.cba.core.wiremeweb.service.GenericService;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,6 +22,7 @@ import java.util.Map;
 @Component
 @RequiredArgsConstructor
 @RequestMapping("/${application.resource.permissions}")
+@Tag(name = "Permission Management", description = "Provides Permission Customer Management API's")
 public class PermissionController implements GenericResource<PermissionResponseDto, PermissionRequestDto> {
 
 

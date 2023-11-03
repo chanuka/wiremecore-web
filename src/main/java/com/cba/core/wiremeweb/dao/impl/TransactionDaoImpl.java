@@ -130,6 +130,7 @@ public class TransactionDaoImpl implements TransactionDao {
             String label = (String) i[0];
             Long count = (Long) i[1];
             Long amount = (Long) i[2];
+
             countMap.put("count", count);
             if ((queryBy != null && !"".equals(queryBy))) {
                 if ("CardLabel".equalsIgnoreCase(queryBy)) {

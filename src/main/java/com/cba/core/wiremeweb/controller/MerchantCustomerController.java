@@ -7,6 +7,7 @@ import com.cba.core.wiremeweb.dto.MerchantRequestDto;
 import com.cba.core.wiremeweb.dto.MerchantResponseDto;
 import com.cba.core.wiremeweb.service.GenericService;
 import com.cba.core.wiremeweb.service.MerchantService;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -27,6 +28,7 @@ import java.util.Map;
 @Component
 @RequiredArgsConstructor
 @RequestMapping("/${application.resource.partners}")
+@Tag(name = "Merchant Customer Management", description = "Provides Merchant Customer Management API's")
 public class MerchantCustomerController implements MerchantCustomerResource<MerchantCustomerResponseDto, MerchantCustomerRequestDto> {
 
     private static final Logger logger = LoggerFactory.getLogger(MerchantCustomerController.class);

@@ -4,6 +4,7 @@ import com.cba.core.wiremeweb.controller.resource.GenericResource;
 import com.cba.core.wiremeweb.dto.RoleRequestDto;
 import com.cba.core.wiremeweb.dto.RoleResponseDto;
 import com.cba.core.wiremeweb.service.GenericService;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -24,6 +25,7 @@ import java.util.Map;
 @Component
 @RequiredArgsConstructor
 @RequestMapping("/${application.resource.roles}")
+@Tag(name = "Role Management", description = "Provides Role Management API's")
 public class RoleController implements GenericResource<RoleResponseDto, RoleRequestDto> {
 
     private static final Logger logger = LoggerFactory.getLogger(RoleController.class);
