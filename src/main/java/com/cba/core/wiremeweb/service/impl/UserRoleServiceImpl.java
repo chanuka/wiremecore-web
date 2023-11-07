@@ -4,7 +4,7 @@ import com.cba.core.wiremeweb.dao.GenericDao;
 import com.cba.core.wiremeweb.dto.UserRoleRequestDto;
 import com.cba.core.wiremeweb.dto.UserRoleResponseDto;
 import com.cba.core.wiremeweb.service.GenericService;
-import com.cba.core.wiremeweb.util.UserBean;
+import com.cba.core.wiremeweb.util.UserBeanUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
@@ -17,7 +17,7 @@ import java.util.Map;
 public class UserRoleServiceImpl implements GenericService<UserRoleResponseDto, UserRoleRequestDto> {
 
     private final GenericDao<UserRoleResponseDto, UserRoleRequestDto> dao;
-    private final UserBean userBean;
+    private final UserBeanUtil userBeanUtil;
 
     @Override
     public Page<UserRoleResponseDto> findAll(int page, int pageSize) throws Exception {

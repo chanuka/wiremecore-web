@@ -5,8 +5,8 @@ import com.cba.core.wiremeweb.dto.PermissionResponseDto;
 import com.cba.core.wiremeweb.exception.JwtTokenException;
 import com.cba.core.wiremeweb.service.impl.PermissionServiceImpl;
 import com.cba.core.wiremeweb.service.impl.TokenBlacklistServiceImpl;
-import com.cba.core.wiremeweb.util.JwtUtils;
-import com.cba.core.wiremeweb.util.UserBean;
+import com.cba.core.wiremeweb.util.JwtUtil;
+import com.cba.core.wiremeweb.util.UserBeanUtil;
 import com.cba.core.wiremeweb.util.UserTypeEnum;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -35,10 +35,10 @@ import java.util.stream.Collectors;
 public class AuthTokenVerifyFilter extends OncePerRequestFilter {
 
     private final JwtConfig jwtConfig;
-    private final JwtUtils jwtUtils;
+    private final JwtUtil jwtUtil;
     private final PermissionServiceImpl permissionServiceImpl;
     private final JwtDecoder decoder;
-    private final UserBean userBean;
+    private final UserBeanUtil userBeanUtil;
     private final TokenBlacklistServiceImpl tokenBlacklistServiceImpl;
     private final MessageSource messageSource;
 
@@ -63,11 +63,11 @@ public class AuthTokenVerifyFilter extends OncePerRequestFilter {
 
             token = authorizationHeader.replace(jwtConfig.getTokenPrefix(), "").trim();
 
-            Jwt claimsJws = jwtUtils.validateJwtToken(token, decoder);
+            Jwt claimsJws = jwtUtil.validateJwtToken(token, decoder);
             String username = claimsJws.getSubject();
             String validity = claimsJws.getClaimAsString("Validity");
-            userBean.setUsername(username); // set user data in request scope for db updating
-            userBean.setRemoteAdr(request.getRemoteAddr()); // set remote address in request scope for db updating
+            userBeanUtil.setUsername(username); // set user data in request scope for db updating
+            userBeanUtil.setRemoteAdr(request.getRemoteAddr()); // set remote address in request scope for db updating
 
             if (!validity.equals(String.valueOf(UserTypeEnum.WEB.getValue()))) {
                 throw new JwtTokenException(token, messageSource.getMessage("GLOBAL_TOKEN_MODULE_ERROR", null, currentLocale));

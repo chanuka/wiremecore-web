@@ -5,7 +5,7 @@ import com.cba.core.wiremeweb.dto.ChangePasswordRequestDto;
 import com.cba.core.wiremeweb.dto.UserRequestDto;
 import com.cba.core.wiremeweb.dto.UserResponseDto;
 import com.cba.core.wiremeweb.service.UserService;
-import com.cba.core.wiremeweb.util.UserBean;
+import com.cba.core.wiremeweb.util.UserBeanUtil;
 import lombok.RequiredArgsConstructor;
 import net.sf.jasperreports.engine.*;
 import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
@@ -29,7 +29,7 @@ import java.util.Map;
 public class UserServiceImpl implements UserService<UserResponseDto, UserRequestDto> {
 
     private final UserDao<UserResponseDto, UserRequestDto> dao;
-    private final UserBean userBean;
+    private final UserBeanUtil userBeanUtil;
 
     @Override
     public Page<UserResponseDto> findAll(int page, int pageSize) throws Exception {
@@ -84,7 +84,7 @@ public class UserServiceImpl implements UserService<UserResponseDto, UserRequest
         JasperReport jasperReport = JasperCompileManager.compileReport(file.getAbsolutePath());
         JRBeanCollectionDataSource dataSource = new JRBeanCollectionDataSource(responseDtoList);
         Map<String, Object> parameters = new HashMap<>();
-        parameters.put("createdBy", "Created By :" + userBean.getUsername()); // username can be extracted once the url is accessible
+        parameters.put("createdBy", "Created By :" + userBeanUtil.getUsername()); // username can be extracted once the url is accessible
 
         JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, parameters, dataSource);
 
@@ -143,6 +143,6 @@ public class UserServiceImpl implements UserService<UserResponseDto, UserRequest
 
     @Override
     public String changePassword(ChangePasswordRequestDto requestDto) throws Exception {
-        return dao.changePassword(requestDto, userBean.getUsername());
+        return dao.changePassword(requestDto, userBeanUtil.getUsername());
     }
 }

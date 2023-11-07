@@ -14,14 +14,14 @@ import com.cba.core.wiremeweb.repository.GlobalAuditEntryRepository;
 import com.cba.core.wiremeweb.repository.UserRepository;
 import com.cba.core.wiremeweb.repository.specification.UserSpecification;
 import com.cba.core.wiremeweb.service.EmailService;
-import com.cba.core.wiremeweb.util.UserBean;
+import com.cba.core.wiremeweb.util.UserBeanUtil;
 import com.cba.core.wiremeweb.util.UserOperationEnum;
+import com.cba.core.wiremeweb.util.UserPasswordUtil;
 import com.cba.core.wiremeweb.util.UserTypeEnum;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
-import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
@@ -32,7 +32,6 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -47,7 +46,7 @@ public class UserDaoImpl implements UserDao<UserResponseDto, UserRequestDto> {
     private final GlobalAuditEntryRepository globalAuditEntryRepository;
     private final ObjectMapper objectMapper;
     private final PasswordEncoder passwordEncoder;
-    private final UserBean userBean;
+    private final UserBeanUtil userBeanUtil;
     private final EmailService emailService;
 
     @Value("${application.resource.users}")
@@ -106,7 +105,7 @@ public class UserDaoImpl implements UserDao<UserResponseDto, UserRequestDto> {
             repository.deleteById(id);
             globalAuditEntryRepository.save(new GlobalAuditEntry(resource, UserOperationEnum.DELETE.getValue(),
                     id, objectMapper.writeValueAsString(responseDto), null,
-                    userBean.getRemoteAdr()));
+                    userBeanUtil.getRemoteAdr()));
 
             return responseDto;
 
@@ -133,7 +132,7 @@ public class UserDaoImpl implements UserDao<UserResponseDto, UserRequestDto> {
                         try {
                             globalAuditEntryRepository.save(new GlobalAuditEntry(resource, UserOperationEnum.DELETE.getValue(),
                                     item, objectMapper.writeValueAsString(objectNode), null,
-                                    userBean.getRemoteAdr()));
+                                    userBeanUtil.getRemoteAdr()));
                         } catch (Exception e) {
                             throw new RuntimeException("Exception occurred for Auditing: ");// only unchecked exception can be passed
                         }
@@ -194,7 +193,7 @@ public class UserDaoImpl implements UserDao<UserResponseDto, UserRequestDto> {
             repository.saveAndFlush(toBeUpdated);
             globalAuditEntryRepository.save(new GlobalAuditEntry(resource, UserOperationEnum.UPDATE.getValue(),
                     id, objectMapper.writeValueAsString(oldDataMap), objectMapper.writeValueAsString(newDataMap),
-                    userBean.getRemoteAdr()));
+                    userBeanUtil.getRemoteAdr()));
 
             return UserMapper.toDto(toBeUpdated);
 
@@ -207,7 +206,7 @@ public class UserDaoImpl implements UserDao<UserResponseDto, UserRequestDto> {
     @CacheEvict(value = "users", allEntries = true)
     public UserResponseDto create(UserRequestDto requestDto) throws Exception {
 
-        requestDto.setPassword(UserMapper.generateCommonLangPassword());
+        requestDto.setPassword(UserPasswordUtil.generateCommonLangPassword());
         User toInsert = UserMapper.toModel(requestDto);
         requestDto.setPassword(null); // to protect the generated password
 
@@ -217,7 +216,7 @@ public class UserDaoImpl implements UserDao<UserResponseDto, UserRequestDto> {
         UserResponseDto responseDto = UserMapper.toDto(savedEntity);
         globalAuditEntryRepository.save(new GlobalAuditEntry(resource, UserOperationEnum.CREATE.getValue(),
                 savedEntity.getId(), null, objectMapper.writeValueAsString(responseDto),
-                userBean.getRemoteAdr()));
+                userBeanUtil.getRemoteAdr()));
 
         return responseDto;
     }
@@ -238,7 +237,7 @@ public class UserDaoImpl implements UserDao<UserResponseDto, UserRequestDto> {
                     try {
                         globalAuditEntryRepository.save(new GlobalAuditEntry(resource, UserOperationEnum.CREATE.getValue(),
                                 item.getId(), null, objectMapper.writeValueAsString(responseDto),
-                                userBean.getRemoteAdr()));
+                                userBeanUtil.getRemoteAdr()));
                     } catch (Exception e) {
                         throw new RuntimeException("Exception occurred in Auditing: ");// only unchecked exception can be passed
                     }
@@ -265,7 +264,7 @@ public class UserDaoImpl implements UserDao<UserResponseDto, UserRequestDto> {
 
             globalAuditEntryRepository.save(new GlobalAuditEntry(resource, UserOperationEnum.UPDATE.getValue(),
                     entity.getId(), maskValue, maskValue,
-                    userBean.getRemoteAdr()));
+                    userBeanUtil.getRemoteAdr()));
 
             return "success";
 

@@ -12,7 +12,7 @@ import com.cba.core.wiremeweb.model.Status;
 import com.cba.core.wiremeweb.repository.GlobalAuditEntryRepository;
 import com.cba.core.wiremeweb.repository.MerchantRepository;
 import com.cba.core.wiremeweb.repository.specification.MerchantSpecification;
-import com.cba.core.wiremeweb.util.UserBean;
+import com.cba.core.wiremeweb.util.UserBeanUtil;
 import com.cba.core.wiremeweb.util.UserOperationEnum;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
@@ -40,7 +40,7 @@ public class MerchantDaoImpl implements MerchantDao<MerchantResponseDto, Merchan
     private final MerchantRepository repository;
     private final GlobalAuditEntryRepository globalAuditEntryRepository;
     private final ObjectMapper objectMapper;
-    private final UserBean userBean;
+    private final UserBeanUtil userBeanUtil;
 
     @Value("${application.resource.merchants}")
     private String resource;
@@ -101,7 +101,7 @@ public class MerchantDaoImpl implements MerchantDao<MerchantResponseDto, Merchan
             repository.deleteById(id);
             globalAuditEntryRepository.save(new GlobalAuditEntry(resource, UserOperationEnum.DELETE.getValue(),
                     id, objectMapper.writeValueAsString(responseDto), null,
-                    userBean.getRemoteAdr()));
+                    userBeanUtil.getRemoteAdr()));
 
             return responseDto;
 
@@ -127,7 +127,7 @@ public class MerchantDaoImpl implements MerchantDao<MerchantResponseDto, Merchan
                         try {
                             globalAuditEntryRepository.save(new GlobalAuditEntry(resource, UserOperationEnum.DELETE.getValue(),
                                     item, objectMapper.writeValueAsString(objectNode), null,
-                                    userBean.getRemoteAdr()));
+                                    userBeanUtil.getRemoteAdr()));
                         } catch (Exception e) {
                             throw new RuntimeException("Exception occurred for Auditing: ");// only unchecked exception can be passed
                         }
@@ -202,7 +202,7 @@ public class MerchantDaoImpl implements MerchantDao<MerchantResponseDto, Merchan
             repository.saveAndFlush(toBeUpdated);
             globalAuditEntryRepository.save(new GlobalAuditEntry(resource, UserOperationEnum.UPDATE.getValue(),
                     id, objectMapper.writeValueAsString(oldDataMap), objectMapper.writeValueAsString(newDataMap),
-                    userBean.getRemoteAdr()));
+                    userBeanUtil.getRemoteAdr()));
 
             return MerchantMapper.toDto(toBeUpdated);
 
@@ -221,7 +221,7 @@ public class MerchantDaoImpl implements MerchantDao<MerchantResponseDto, Merchan
         MerchantResponseDto responseDto = MerchantMapper.toDto(savedEntity);
         globalAuditEntryRepository.save(new GlobalAuditEntry(resource, UserOperationEnum.CREATE.getValue(),
                 savedEntity.getId(), null, objectMapper.writeValueAsString(responseDto),
-                userBean.getRemoteAdr()));
+                userBeanUtil.getRemoteAdr()));
 
         return responseDto;
     }
@@ -242,7 +242,7 @@ public class MerchantDaoImpl implements MerchantDao<MerchantResponseDto, Merchan
                     try {
                         globalAuditEntryRepository.save(new GlobalAuditEntry(resource, UserOperationEnum.CREATE.getValue(),
                                 item.getId(), null, objectMapper.writeValueAsString(responseDto),
-                                userBean.getRemoteAdr()));
+                                userBeanUtil.getRemoteAdr()));
                     } catch (Exception e) {
                         throw new RuntimeException("Exception occurred in Auditing: ");// only unchecked exception can be passed
                     }

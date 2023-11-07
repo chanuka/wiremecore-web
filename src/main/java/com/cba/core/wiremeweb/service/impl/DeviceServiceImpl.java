@@ -4,7 +4,7 @@ import com.cba.core.wiremeweb.dao.GenericDao;
 import com.cba.core.wiremeweb.dto.DeviceRequestDto;
 import com.cba.core.wiremeweb.dto.DeviceResponseDto;
 import com.cba.core.wiremeweb.service.GenericService;
-import com.cba.core.wiremeweb.util.UserBean;
+import com.cba.core.wiremeweb.util.UserBeanUtil;
 import lombok.RequiredArgsConstructor;
 import net.sf.jasperreports.engine.*;
 import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
@@ -28,7 +28,7 @@ import java.util.Map;
 public class DeviceServiceImpl implements GenericService<DeviceResponseDto, DeviceRequestDto> {
 
     private final GenericDao<DeviceResponseDto, DeviceRequestDto> dao;
-    private final UserBean userBean;
+    private final UserBeanUtil userBeanUtil;
 
 
     @Override
@@ -83,7 +83,7 @@ public class DeviceServiceImpl implements GenericService<DeviceResponseDto, Devi
         JasperReport jasperReport = JasperCompileManager.compileReport(file.getAbsolutePath());
         JRBeanCollectionDataSource dataSource = new JRBeanCollectionDataSource(ResponseDtoList);
         Map<String, Object> parameters = new HashMap<>();
-        parameters.put("createdBy", "Created By :" + userBean.getUsername()); // username can be extracted once the url is accessible
+        parameters.put("createdBy", "Created By :" + userBeanUtil.getUsername()); // username can be extracted once the url is accessible
 
         JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, parameters, dataSource);
 

@@ -8,7 +8,7 @@ import org.springframework.stereotype.Component;
 @Component // this is for storing user data through out the request scope
 @Scope(value = "request", proxyMode = ScopedProxyMode.TARGET_CLASS)
 @Data
-public class UserBean {
+public class UserBeanUtil {
 
     private String username;
     private String remoteAdr;

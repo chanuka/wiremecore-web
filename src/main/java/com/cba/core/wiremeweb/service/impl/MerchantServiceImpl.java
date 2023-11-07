@@ -4,7 +4,7 @@ import com.cba.core.wiremeweb.dao.MerchantDao;
 import com.cba.core.wiremeweb.dto.MerchantRequestDto;
 import com.cba.core.wiremeweb.dto.MerchantResponseDto;
 import com.cba.core.wiremeweb.service.MerchantService;
-import com.cba.core.wiremeweb.util.UserBean;
+import com.cba.core.wiremeweb.util.UserBeanUtil;
 import lombok.RequiredArgsConstructor;
 import net.sf.jasperreports.engine.*;
 import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
@@ -28,7 +28,7 @@ import java.util.Map;
 public class MerchantServiceImpl implements MerchantService<MerchantResponseDto, MerchantRequestDto> {
 
     private final MerchantDao<MerchantResponseDto, MerchantRequestDto> dao;
-    private final UserBean userBean;
+    private final UserBeanUtil userBeanUtil;
 
     @Override
     public Page<MerchantResponseDto> findAll(int page, int pageSize) throws Exception {
@@ -83,7 +83,7 @@ public class MerchantServiceImpl implements MerchantService<MerchantResponseDto,
         JasperReport jasperReport = JasperCompileManager.compileReport(file.getAbsolutePath());
         JRBeanCollectionDataSource dataSource = new JRBeanCollectionDataSource(responseDtoList);
         Map<String, Object> parameters = new HashMap<>();
-        parameters.put("createdBy", "Created By :" + userBean.getUsername()); // username can be extracted once the url is accessible
+        parameters.put("createdBy", "Created By :" + userBeanUtil.getUsername()); // username can be extracted once the url is accessible
 
         JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, parameters, dataSource);
 

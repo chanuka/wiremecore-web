@@ -11,7 +11,7 @@ import com.cba.core.wiremeweb.model.Status;
 import com.cba.core.wiremeweb.repository.GlobalAuditEntryRepository;
 import com.cba.core.wiremeweb.repository.MerchantCustomerRepository;
 import com.cba.core.wiremeweb.repository.specification.MerchantCustomerSpecification;
-import com.cba.core.wiremeweb.util.UserBean;
+import com.cba.core.wiremeweb.util.UserBeanUtil;
 import com.cba.core.wiremeweb.util.UserOperationEnum;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
@@ -39,7 +39,7 @@ public class MerchantCustomerDaoImpl implements GenericDao<MerchantCustomerRespo
     private final MerchantCustomerRepository repository;
     private final GlobalAuditEntryRepository globalAuditEntryRepository;
     private final ObjectMapper objectMapper;
-    private final UserBean userBean;
+    private final UserBeanUtil userBeanUtil;
 
     @Value("${application.resource.partners}")
     private String resource;
@@ -100,7 +100,7 @@ public class MerchantCustomerDaoImpl implements GenericDao<MerchantCustomerRespo
             repository.deleteById(id);
             globalAuditEntryRepository.save(new GlobalAuditEntry(resource, UserOperationEnum.DELETE.getValue(),
                     id, objectMapper.writeValueAsString(responseDto), null,
-                    userBean.getRemoteAdr()));
+                    userBeanUtil.getRemoteAdr()));
 
             return responseDto;
 
@@ -127,7 +127,7 @@ public class MerchantCustomerDaoImpl implements GenericDao<MerchantCustomerRespo
                         try {
                             globalAuditEntryRepository.save(new GlobalAuditEntry(resource, UserOperationEnum.DELETE.getValue(),
                                     item, objectMapper.writeValueAsString(objectNode), null,
-                                    userBean.getRemoteAdr()));
+                                    userBeanUtil.getRemoteAdr()));
                         } catch (Exception e) {
                             throw new RuntimeException("Exception occurred for Auditing: ");// only unchecked exception can be passed
                         }
@@ -188,7 +188,7 @@ public class MerchantCustomerDaoImpl implements GenericDao<MerchantCustomerRespo
             repository.saveAndFlush(toBeUpdated);
             globalAuditEntryRepository.save(new GlobalAuditEntry(resource, UserOperationEnum.UPDATE.getValue(),
                     id, objectMapper.writeValueAsString(oldDataMap), objectMapper.writeValueAsString(newDataMap),
-                    userBean.getRemoteAdr()));
+                    userBeanUtil.getRemoteAdr()));
 
             return MerchantCustomerMapper.toDto(toBeUpdated);
 
@@ -207,7 +207,7 @@ public class MerchantCustomerDaoImpl implements GenericDao<MerchantCustomerRespo
         MerchantCustomerResponseDto responseDto = MerchantCustomerMapper.toDto(savedEntity);
         globalAuditEntryRepository.save(new GlobalAuditEntry(resource, UserOperationEnum.CREATE.getValue(),
                 savedEntity.getId(), null, objectMapper.writeValueAsString(responseDto),
-                userBean.getRemoteAdr()));
+                userBeanUtil.getRemoteAdr()));
 
         return responseDto;
     }
@@ -228,7 +228,7 @@ public class MerchantCustomerDaoImpl implements GenericDao<MerchantCustomerRespo
                     try {
                         globalAuditEntryRepository.save(new GlobalAuditEntry(resource, UserOperationEnum.CREATE.getValue(),
                                 item.getId(), null, objectMapper.writeValueAsString(responseDto),
-                                userBean.getRemoteAdr()));
+                                userBeanUtil.getRemoteAdr()));
                     } catch (Exception e) {
                         throw new RuntimeException("Exception occurred in Auditing: ");// only unchecked exception can be passed
                     }

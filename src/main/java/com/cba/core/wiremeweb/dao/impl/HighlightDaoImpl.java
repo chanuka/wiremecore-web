@@ -13,9 +13,8 @@ import com.cba.core.wiremeweb.model.TransactionCore;
 import com.cba.core.wiremeweb.model.UserConfig;
 import com.cba.core.wiremeweb.repository.DashBoardRepository;
 import com.cba.core.wiremeweb.repository.GlobalAuditEntryRepository;
-import com.cba.core.wiremeweb.repository.TransactionRepository;
 import com.cba.core.wiremeweb.repository.UserRepository;
-import com.cba.core.wiremeweb.util.UserBean;
+import com.cba.core.wiremeweb.util.UserBeanUtil;
 import com.cba.core.wiremeweb.util.UserOperationEnum;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.persistence.EntityManager;
@@ -42,7 +41,7 @@ public class HighlightDaoImpl implements HighlightDao {
     private final DashBoardRepository repository;
     private final UserRepository userRepository;
     private final GlobalAuditEntryRepository globalAuditEntryRepository;
-    private final UserBean userBean;
+    private final UserBeanUtil userBeanUtil;
     private final ObjectMapper objectMapper;
 
     @PersistenceContext
@@ -54,7 +53,7 @@ public class HighlightDaoImpl implements HighlightDao {
     @Override
     public List<HighlightResponseDto> findAll(String configType) throws Exception {
 
-        List<UserConfig> entityList = repository.findByUser_NameAndConfigType(userBean.getUsername(), configType);
+        List<UserConfig> entityList = repository.findByUser_NameAndConfigType(userBeanUtil.getUsername(), configType);
         if (entityList.isEmpty()) {
             throw new NotFoundException("No User Config found");
         }
@@ -77,16 +76,16 @@ public class HighlightDaoImpl implements HighlightDao {
     public HighlightResponseDto deleteByUser_NameAndConfigType(String configName) throws Exception {
         try {
 
-            UserConfig entity = repository.findByUser_NameAndConfigName(userBean.getUsername(), configName)
+            UserConfig entity = repository.findByUser_NameAndConfigName(userBeanUtil.getUsername(), configName)
                     .orElseThrow(() -> new NotFoundException("User Config not found"));
 
             HighlightResponseDto responseDto = objectMapper.readValue(entity.getConfig(), HighlightResponseDto.class);
 
-            repository.deleteByUser_NameAndConfigName(userBean.getUsername(), configName);
+            repository.deleteByUser_NameAndConfigName(userBeanUtil.getUsername(), configName);
 
             globalAuditEntryRepository.save(new GlobalAuditEntry(resource, UserOperationEnum.DELETE.getValue(),
                     entity.getUser().getId(), entity.getConfig(), null,
-                    userBean.getRemoteAdr()));
+                    userBeanUtil.getRemoteAdr()));
 
             return HighlightMapper.toDto(responseDto, entity);
 
@@ -100,7 +99,7 @@ public class HighlightDaoImpl implements HighlightDao {
     public HighlightResponseDto create(HighlightRequestDto requestDto) throws Exception {
 
         String config = objectMapper.writeValueAsString(requestDto);
-        UserConfig toInsert = HighlightMapper.toModel(requestDto, config, userRepository.findByUserName(userBean.getUsername()));
+        UserConfig toInsert = HighlightMapper.toModel(requestDto, config, userRepository.findByUserName(userBeanUtil.getUsername()));
 
         UserConfig savedEntity = repository.save(toInsert);
 
@@ -108,7 +107,7 @@ public class HighlightDaoImpl implements HighlightDao {
 
         globalAuditEntryRepository.save(new GlobalAuditEntry(resource, UserOperationEnum.CREATE.getValue(),
                 savedEntity.getId(), null, objectMapper.writeValueAsString(responseDto),
-                userBean.getRemoteAdr()));
+                userBeanUtil.getRemoteAdr()));
 
         return responseDto;
     }
@@ -116,7 +115,7 @@ public class HighlightDaoImpl implements HighlightDao {
     @Override
     public HighlightResponseDto update(String configName, HighlightRequestDto requestDto) throws Exception {
 
-        UserConfig toBeUpdatedEntity = repository.findByUser_NameAndConfigName(userBean.getUsername(), configName).orElseThrow(() -> new NotFoundException("User Config not found"));
+        UserConfig toBeUpdatedEntity = repository.findByUser_NameAndConfigName(userBeanUtil.getUsername(), configName).orElseThrow(() -> new NotFoundException("User Config not found"));
         HighlightResponseDto toBeUpdatedDto = objectMapper.readValue(toBeUpdatedEntity.getConfig(), HighlightResponseDto.class);
 
         boolean updateRequired = false;
@@ -219,7 +218,7 @@ public class HighlightDaoImpl implements HighlightDao {
             repository.saveAndFlush(toBeUpdatedEntity);
             globalAuditEntryRepository.save(new GlobalAuditEntry(resource, UserOperationEnum.UPDATE.getValue(),
                     toBeUpdatedEntity.getId(), objectMapper.writeValueAsString(oldDataMap), objectMapper.writeValueAsString(newDataMap),
-                    userBean.getRemoteAdr()));
+                    userBeanUtil.getRemoteAdr()));
 
             return HighlightMapper.toDto(toBeUpdatedDto, toBeUpdatedEntity);
 

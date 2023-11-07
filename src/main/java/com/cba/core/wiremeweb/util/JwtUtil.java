@@ -19,8 +19,8 @@ import java.time.temporal.ChronoUnit;
 
 @Component
 @RequiredArgsConstructor
-public class JwtUtils {
-    private static final Logger logger = LoggerFactory.getLogger(JwtUtils.class);
+public class JwtUtil {
+    private static final Logger logger = LoggerFactory.getLogger(JwtUtil.class);
 
     private final JwtConfig jwtConfig;
     private final CustomUserDetailsServiceImpl customUserDetailsServiceImpl;

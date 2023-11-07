@@ -11,7 +11,7 @@ import com.cba.core.wiremeweb.model.Status;
 import com.cba.core.wiremeweb.repository.GlobalAuditEntryRepository;
 import com.cba.core.wiremeweb.repository.RoleRepository;
 import com.cba.core.wiremeweb.repository.specification.RoleSpecification;
-import com.cba.core.wiremeweb.util.UserBean;
+import com.cba.core.wiremeweb.util.UserBeanUtil;
 import com.cba.core.wiremeweb.util.UserOperationEnum;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
@@ -39,7 +39,7 @@ public class RoleDaoImpl implements GenericDao<RoleResponseDto, RoleRequestDto> 
     private final RoleRepository repository;
     private final GlobalAuditEntryRepository globalAuditEntryRepository;
     private final ObjectMapper objectMapper;
-    private final UserBean userBean;
+    private final UserBeanUtil userBeanUtil;
 
     @Value("${application.resource.roles}")
     private String resource;
@@ -99,7 +99,7 @@ public class RoleDaoImpl implements GenericDao<RoleResponseDto, RoleRequestDto> 
             repository.deleteById(id);
             globalAuditEntryRepository.save(new GlobalAuditEntry(resource, UserOperationEnum.DELETE.getValue(),
                     id, objectMapper.writeValueAsString(responseDto), null,
-                    userBean.getRemoteAdr()));
+                    userBeanUtil.getRemoteAdr()));
 
             return responseDto;
 
@@ -126,7 +126,7 @@ public class RoleDaoImpl implements GenericDao<RoleResponseDto, RoleRequestDto> 
                         try {
                             globalAuditEntryRepository.save(new GlobalAuditEntry(resource, UserOperationEnum.DELETE.getValue(),
                                     item, objectMapper.writeValueAsString(objectNode), null,
-                                    userBean.getRemoteAdr()));
+                                    userBeanUtil.getRemoteAdr()));
                         } catch (Exception e) {
                             throw new RuntimeException("Exception occurred for Auditing: ");// only unchecked exception can be passed
                         }
@@ -166,7 +166,7 @@ public class RoleDaoImpl implements GenericDao<RoleResponseDto, RoleRequestDto> 
             repository.saveAndFlush(toBeUpdated);
             globalAuditEntryRepository.save(new GlobalAuditEntry(resource, UserOperationEnum.UPDATE.getValue(),
                     id, objectMapper.writeValueAsString(oldDataMap), objectMapper.writeValueAsString(newDataMap),
-                    userBean.getRemoteAdr()));
+                    userBeanUtil.getRemoteAdr()));
 
             return RoleMapper.toDto(toBeUpdated);
 
@@ -185,7 +185,7 @@ public class RoleDaoImpl implements GenericDao<RoleResponseDto, RoleRequestDto> 
         RoleResponseDto responseDto = RoleMapper.toDto(savedEntity);
         globalAuditEntryRepository.save(new GlobalAuditEntry(resource, UserOperationEnum.CREATE.getValue(),
                 savedEntity.getId(), null, objectMapper.writeValueAsString(responseDto),
-                userBean.getRemoteAdr()));
+                userBeanUtil.getRemoteAdr()));
 
         return responseDto;
     }
@@ -206,7 +206,7 @@ public class RoleDaoImpl implements GenericDao<RoleResponseDto, RoleRequestDto> 
                     try {
                         globalAuditEntryRepository.save(new GlobalAuditEntry(resource, UserOperationEnum.CREATE.getValue(),
                                 item.getId(), null, objectMapper.writeValueAsString(responseDto),
-                                userBean.getRemoteAdr()));
+                                userBeanUtil.getRemoteAdr()));
                     } catch (Exception e) {
                         throw new RuntimeException("Exception occurred in Auditing: ");// only unchecked exception can be passed
                     }

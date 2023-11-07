@@ -4,7 +4,7 @@ import com.cba.core.wiremeweb.dao.TerminalDao;
 import com.cba.core.wiremeweb.dto.TerminalRequestDto;
 import com.cba.core.wiremeweb.dto.TerminalResponseDto;
 import com.cba.core.wiremeweb.service.TerminalService;
-import com.cba.core.wiremeweb.util.UserBean;
+import com.cba.core.wiremeweb.util.UserBeanUtil;
 import lombok.RequiredArgsConstructor;
 import net.sf.jasperreports.engine.*;
 import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
@@ -28,7 +28,7 @@ import java.util.Map;
 public class TerminalServiceImpl implements TerminalService<TerminalResponseDto, TerminalRequestDto> {
 
     private final TerminalDao<TerminalResponseDto, TerminalRequestDto> dao;
-    private final UserBean userBean;
+    private final UserBeanUtil userBeanUtil;
 
     @Override
     public Page<TerminalResponseDto> findAll(int page, int pageSize) throws Exception {
@@ -85,7 +85,7 @@ public class TerminalServiceImpl implements TerminalService<TerminalResponseDto,
         JasperReport jasperReport = JasperCompileManager.compileReport(file.getAbsolutePath());
         JRBeanCollectionDataSource dataSource = new JRBeanCollectionDataSource(responseDtoList);
         Map<String, Object> parameters = new HashMap<>();
-        parameters.put("createdBy", "Created By :" + userBean.getUsername()); // username can be extracted once the url is accessible
+        parameters.put("createdBy", "Created By :" + userBeanUtil.getUsername()); // username can be extracted once the url is accessible
 
         JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, parameters, dataSource);
 

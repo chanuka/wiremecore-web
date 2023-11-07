@@ -3,7 +3,7 @@ package com.cba.core.wiremeweb.dao.impl;
 import com.cba.core.wiremeweb.dao.TokenBlacklistDao;
 import com.cba.core.wiremeweb.model.TokenBlacklist;
 import com.cba.core.wiremeweb.repository.TokenBlacklistRepository;
-import com.cba.core.wiremeweb.util.JwtUtils;
+import com.cba.core.wiremeweb.util.JwtUtil;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.oauth2.jwt.Jwt;
@@ -20,7 +20,7 @@ import java.util.Optional;
 public class TokenBlacklistDaoImpl implements TokenBlacklistDao {
 
     private final TokenBlacklistRepository tokenBlacklistRepository;
-    private final JwtUtils jwtUtils;
+    private final JwtUtil jwtUtil;
     private final JwtDecoder decoder;
 
     @Override
@@ -47,7 +47,7 @@ public class TokenBlacklistDaoImpl implements TokenBlacklistDao {
 
 
     private Instant extractTokenExpiration(String token) throws Exception {
-        Jwt claimsJws = jwtUtils.validateJwtToken(token, decoder);
+        Jwt claimsJws = jwtUtil.validateJwtToken(token, decoder);
         return claimsJws.getExpiresAt();
     }
 }

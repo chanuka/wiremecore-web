@@ -9,8 +9,8 @@ import com.cba.core.wiremeweb.service.impl.CustomUserDetailsServiceImpl;
 import com.cba.core.wiremeweb.service.impl.PermissionServiceImpl;
 import com.cba.core.wiremeweb.service.impl.RefreshTokenServiceImpl;
 import com.cba.core.wiremeweb.service.impl.TokenBlacklistServiceImpl;
-import com.cba.core.wiremeweb.util.JwtUtils;
-import com.cba.core.wiremeweb.util.UserBean;
+import com.cba.core.wiremeweb.util.JwtUtil;
+import com.cba.core.wiremeweb.util.UserBeanUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Bean;
@@ -39,10 +39,10 @@ public class SecurityConfig {
     private final JwtConfig jwtConfig;
     private final RefreshTokenServiceImpl refreshTokenServiceImpl;
     private final PermissionServiceImpl permissionServiceImpl;// autowired not worked in the context of creating new object using new key word, has to manually inject.
-    private final JwtUtils jwtUtils;
+    private final JwtUtil jwtUtil;
     private final JwtEncoder encoder;
     private final JwtDecoder decoder;
-    private final UserBean userBean;
+    private final UserBeanUtil userBeanUtil;
     private final TokenBlacklistServiceImpl tokenBlacklistServiceImpl;
     private final CustomLogoutHandler customLogoutHandler;
     private final MessageSource messageSource;
@@ -88,8 +88,8 @@ public class SecurityConfig {
 //        http.authenticationProvider(authenticationProvider()); // no need, auto detect
 
         http.addFilter(new UserNamePasswordVerifyFilter(authenticationManager(http.getSharedObject(AuthenticationConfiguration.class)),
-                jwtConfig, refreshTokenServiceImpl, jwtUtils, encoder));
-        http.addFilterAfter(new AuthTokenVerifyFilter(jwtConfig, jwtUtils, permissionServiceImpl, decoder, userBean, tokenBlacklistServiceImpl,messageSource), UserNamePasswordVerifyFilter.class);
+                jwtConfig, refreshTokenServiceImpl, jwtUtil, encoder));
+        http.addFilterAfter(new AuthTokenVerifyFilter(jwtConfig, jwtUtil, permissionServiceImpl, decoder, userBeanUtil, tokenBlacklistServiceImpl,messageSource), UserNamePasswordVerifyFilter.class);
 
         return http.build();
     }

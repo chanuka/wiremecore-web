@@ -3,7 +3,6 @@ package com.cba.core.wiremeweb.dao.impl;
 import com.cba.core.wiremeweb.dao.GraphDao;
 import com.cba.core.wiremeweb.dto.GraphRequestDto;
 import com.cba.core.wiremeweb.dto.GraphResponseDto;
-import com.cba.core.wiremeweb.dto.HighlightRequestDto;
 import com.cba.core.wiremeweb.exception.NotFoundException;
 import com.cba.core.wiremeweb.mapper.GraphMapper;
 import com.cba.core.wiremeweb.model.GlobalAuditEntry;
@@ -13,7 +12,7 @@ import com.cba.core.wiremeweb.repository.DashBoardRepository;
 import com.cba.core.wiremeweb.repository.GlobalAuditEntryRepository;
 import com.cba.core.wiremeweb.repository.TransactionRepository;
 import com.cba.core.wiremeweb.repository.UserRepository;
-import com.cba.core.wiremeweb.util.UserBean;
+import com.cba.core.wiremeweb.util.UserBeanUtil;
 import com.cba.core.wiremeweb.util.UserOperationEnum;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.persistence.EntityManager;
@@ -38,7 +37,7 @@ public class GraphDaoImpl implements GraphDao {
     private final TransactionRepository transactionRepository;
     private final UserRepository userRepository;
     private final GlobalAuditEntryRepository globalAuditEntryRepository;
-    private final UserBean userBean;
+    private final UserBeanUtil userBeanUtil;
     private final ObjectMapper objectMapper;
 
     @PersistenceContext
@@ -50,7 +49,7 @@ public class GraphDaoImpl implements GraphDao {
     @Override
     public List<GraphResponseDto> findAll(String configType) throws Exception {
 
-        List<UserConfig> entityList = repository.findByUser_NameAndConfigType(userBean.getUsername(), configType);
+        List<UserConfig> entityList = repository.findByUser_NameAndConfigType(userBeanUtil.getUsername(), configType);
         if (entityList.isEmpty()) {
             throw new NotFoundException("No User Config found");
         }
@@ -73,16 +72,16 @@ public class GraphDaoImpl implements GraphDao {
     public GraphResponseDto deleteByUser_NameAndConfigType(String configName) throws Exception {
         try {
 
-            UserConfig entity = repository.findByUser_NameAndConfigName(userBean.getUsername(), configName)
+            UserConfig entity = repository.findByUser_NameAndConfigName(userBeanUtil.getUsername(), configName)
                     .orElseThrow(() -> new NotFoundException("User Config not found"));
 
             GraphResponseDto responseDto = objectMapper.readValue(entity.getConfig(), GraphResponseDto.class);
 
-            repository.deleteByUser_NameAndConfigName(userBean.getUsername(), configName);
+            repository.deleteByUser_NameAndConfigName(userBeanUtil.getUsername(), configName);
 
             globalAuditEntryRepository.save(new GlobalAuditEntry(resource, UserOperationEnum.DELETE.getValue(),
                     entity.getUser().getId(), entity.getConfig(), null,
-                    userBean.getRemoteAdr()));
+                    userBeanUtil.getRemoteAdr()));
 
             return GraphMapper.toDto(responseDto, entity);
 
@@ -96,7 +95,7 @@ public class GraphDaoImpl implements GraphDao {
     public GraphResponseDto create(GraphRequestDto requestDto) throws Exception {
 
         String config = objectMapper.writeValueAsString(requestDto);
-        UserConfig toInsert = GraphMapper.toModel(requestDto, config, userRepository.findByUserName(userBean.getUsername()));
+        UserConfig toInsert = GraphMapper.toModel(requestDto, config, userRepository.findByUserName(userBeanUtil.getUsername()));
 
         UserConfig savedEntity = repository.save(toInsert);
 
@@ -104,7 +103,7 @@ public class GraphDaoImpl implements GraphDao {
 
         globalAuditEntryRepository.save(new GlobalAuditEntry(resource, UserOperationEnum.CREATE.getValue(),
                 savedEntity.getId(), null, objectMapper.writeValueAsString(responseDto),
-                userBean.getRemoteAdr()));
+                userBeanUtil.getRemoteAdr()));
 
         return responseDto;
     }
@@ -112,7 +111,7 @@ public class GraphDaoImpl implements GraphDao {
     @Override
     public GraphResponseDto update(String configName, GraphRequestDto requestDto) throws Exception {
 
-        UserConfig toBeUpdatedEntity = repository.findByUser_NameAndConfigName(userBean.getUsername(), configName).orElseThrow(() -> new NotFoundException("User Config not found"));
+        UserConfig toBeUpdatedEntity = repository.findByUser_NameAndConfigName(userBeanUtil.getUsername(), configName).orElseThrow(() -> new NotFoundException("User Config not found"));
         GraphResponseDto toBeUpdatedDto = objectMapper.readValue(toBeUpdatedEntity.getConfig(), GraphResponseDto.class);
 
         boolean updateRequired = false;
@@ -239,7 +238,7 @@ public class GraphDaoImpl implements GraphDao {
             repository.saveAndFlush(toBeUpdatedEntity);
             globalAuditEntryRepository.save(new GlobalAuditEntry(resource, UserOperationEnum.UPDATE.getValue(),
                     toBeUpdatedEntity.getId(), objectMapper.writeValueAsString(oldDataMap), objectMapper.writeValueAsString(newDataMap),
-                    userBean.getRemoteAdr()));
+                    userBeanUtil.getRemoteAdr()));
 
             return GraphMapper.toDto(toBeUpdatedDto, toBeUpdatedEntity);
 

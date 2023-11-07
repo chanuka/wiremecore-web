@@ -6,7 +6,7 @@ import com.cba.core.wiremeweb.dto.TokenRefreshResponseDto;
 import com.cba.core.wiremeweb.exception.TokenRefreshException;
 import com.cba.core.wiremeweb.model.TokenRefresh;
 import com.cba.core.wiremeweb.service.RefreshTokenService;
-import com.cba.core.wiremeweb.util.JwtUtils;
+import com.cba.core.wiremeweb.util.JwtUtil;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -22,7 +22,7 @@ import org.springframework.validation.annotation.Validated;
 public class RefreshTokenController implements RefreshTokenResource {
 
     private final RefreshTokenService refreshTokenService;
-    private final JwtUtils jwtUtils;
+    private final JwtUtil jwtUtil;
     private final JwtEncoder encoder;
 
     @Override
@@ -34,7 +34,7 @@ public class RefreshTokenController implements RefreshTokenResource {
                 .map(refreshTokenService::verifyExpiration)
                 .map(TokenRefresh::getUser)
                 .map(user -> {
-                    String token = jwtUtils.generateTokenFromUsername(user.getUserName(), encoder);
+                    String token = jwtUtil.generateTokenFromUsername(user.getUserName(), encoder);
                     return ResponseEntity.ok(new TokenRefreshResponseDto(token, requestRefreshToken));
                 })
                 .orElseThrow(() -> new TokenRefreshException(requestRefreshToken,

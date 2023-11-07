@@ -4,7 +4,7 @@ import com.cba.core.wiremeweb.dao.PermissionDao;
 import com.cba.core.wiremeweb.dto.PermissionRequestDto;
 import com.cba.core.wiremeweb.dto.PermissionResponseDto;
 import com.cba.core.wiremeweb.service.PermissionService;
-import com.cba.core.wiremeweb.util.UserBean;
+import com.cba.core.wiremeweb.util.UserBeanUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
@@ -18,7 +18,7 @@ import java.util.Map;
 public class PermissionServiceImpl implements PermissionService<PermissionResponseDto, PermissionRequestDto> {
 
     private final PermissionDao<PermissionResponseDto, PermissionRequestDto> dao;
-    private final UserBean userBean;
+    private final UserBeanUtil userBeanUtil;
 
     @Override
     public Page<PermissionResponseDto> findAll(int page, int pageSize) throws Exception {
