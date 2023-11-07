@@ -13,6 +13,7 @@ import com.cba.core.wiremeweb.model.UserType;
 import com.cba.core.wiremeweb.repository.GlobalAuditEntryRepository;
 import com.cba.core.wiremeweb.repository.UserRepository;
 import com.cba.core.wiremeweb.repository.specification.UserSpecification;
+import com.cba.core.wiremeweb.service.EmailService;
 import com.cba.core.wiremeweb.util.UserBean;
 import com.cba.core.wiremeweb.util.UserOperationEnum;
 import com.cba.core.wiremeweb.util.UserTypeEnum;
@@ -20,6 +21,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
@@ -30,6 +32,7 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -45,6 +48,7 @@ public class UserDaoImpl implements UserDao<UserResponseDto, UserRequestDto> {
     private final ObjectMapper objectMapper;
     private final PasswordEncoder passwordEncoder;
     private final UserBean userBean;
+    private final EmailService emailService;
 
     @Value("${application.resource.users}")
     private String resource;
@@ -203,7 +207,11 @@ public class UserDaoImpl implements UserDao<UserResponseDto, UserRequestDto> {
     @CacheEvict(value = "users", allEntries = true)
     public UserResponseDto create(UserRequestDto requestDto) throws Exception {
 
+        requestDto.setPassword(UserMapper.generateCommonLangPassword());
         User toInsert = UserMapper.toModel(requestDto);
+        requestDto.setPassword(null); // to protect the generated password
+
+        emailService.sendEmail(toInsert.getEmail(), requestDto.getPassword());
 
         User savedEntity = repository.save(toInsert);
         UserResponseDto responseDto = UserMapper.toDto(savedEntity);
@@ -248,7 +256,6 @@ public class UserDaoImpl implements UserDao<UserResponseDto, UserRequestDto> {
             userType.setId(UserTypeEnum.WEB.getValue());
 
             User entity = repository.findByUserNameAndUserType(userName, userType).orElseThrow(() -> new NotFoundException("User not found"));
-//            UserResponseDto responseDto = UserMapper.toDto(entity);
 
             entity.setPassword(passwordEncoder.encode(requestDto.getNewPassword()));
             repository.saveAndFlush(entity);

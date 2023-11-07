@@ -1,6 +1,7 @@
 package com.cba.core.wiremeweb.service.impl;
 
 import com.cba.core.wiremeweb.dto.EmailRequestDto;
+import com.cba.core.wiremeweb.model.User;
 import com.cba.core.wiremeweb.service.EmailService;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
@@ -42,6 +43,22 @@ public class EmailServiceImpl implements EmailService {
         helper.setTo(emailRequestDto.getMailTo());
         helper.setText(html, true);
         helper.setSubject(emailRequestDto.getSubject());
+//        helper.setFrom(emailRequestDto.getFrom());
+
+        javaMailSender.send(message);
+    }
+
+    @Override
+    public void sendEmail(String userMail, String password) throws MessagingException, IOException {
+        MimeMessage message = javaMailSender.createMimeMessage();
+
+        MimeMessageHelper helper = new MimeMessageHelper(message,
+                MimeMessageHelper.MULTIPART_MODE_MIXED_RELATED,
+                StandardCharsets.UTF_8.name());
+
+        helper.setTo(userMail);
+        helper.setText("Your Password for Wireme is : " + password);
+        helper.setSubject("This is auto generated email - include credentials");
 //        helper.setFrom(emailRequestDto.getFrom());
 
         javaMailSender.send(message);
