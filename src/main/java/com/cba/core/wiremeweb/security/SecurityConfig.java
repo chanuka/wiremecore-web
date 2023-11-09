@@ -19,6 +19,7 @@ import org.springframework.context.annotation.Profile;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
+import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -27,6 +28,11 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.jwt.JwtDecoder;
 import org.springframework.security.oauth2.jwt.JwtEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+
+import java.util.Arrays;
 
 @Configuration
 @EnableWebSecurity
@@ -48,7 +54,6 @@ public class SecurityConfig {
     private final MessageSource messageSource;
 
 
-
     @Bean
     public AuthenticationProvider authenticationProvider() {
         DaoAuthenticationProvider authenticationProvider = new DaoAuthenticationProvider();
@@ -63,9 +68,23 @@ public class SecurityConfig {
     }
 
     @Bean
+    CorsConfigurationSource corsConfigurationSource() {
+        CorsConfiguration configuration = new CorsConfiguration();
+        configuration.setAllowedOriginPatterns(Arrays.asList("*"));
+        configuration.setAllowedMethods(Arrays.asList("*"));
+        configuration.setAllowedHeaders(Arrays.asList("*"));
+        configuration.setExposedHeaders(Arrays.asList("*"));
+        configuration.setAllowCredentials(true);
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", configuration);
+        return source;
+    }
+
+    @Bean
     public SecurityFilterChain configure(HttpSecurity http) throws Exception {
         http
                 .csrf(csrf -> csrf.disable())
+                .cors(Customizer.withDefaults())
                 .exceptionHandling()
                 .authenticationEntryPoint(new AuthEntryPoint())
                 .and()
@@ -89,7 +108,7 @@ public class SecurityConfig {
 
         http.addFilter(new UserNamePasswordVerifyFilter(authenticationManager(http.getSharedObject(AuthenticationConfiguration.class)),
                 jwtConfig, refreshTokenServiceImpl, jwtUtil, encoder));
-        http.addFilterAfter(new AuthTokenVerifyFilter(jwtConfig, jwtUtil, permissionServiceImpl, decoder, userBeanUtil, tokenBlacklistServiceImpl,messageSource), UserNamePasswordVerifyFilter.class);
+        http.addFilterAfter(new AuthTokenVerifyFilter(jwtConfig, jwtUtil, permissionServiceImpl, decoder, userBeanUtil, tokenBlacklistServiceImpl, messageSource), UserNamePasswordVerifyFilter.class);
 
         return http.build();
     }
