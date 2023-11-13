@@ -246,4 +246,14 @@ public class PermissionDaoImpl implements PermissionDao<PermissionResponseDto, P
                         .collect(Collectors.toList());
         return result;
     }
+
+    @Override
+    public List<PermissionResponseDto> findAllPermissionsByUser() throws SQLException {
+        Iterable<Permission> irt = repository.findAllPermissionsByUser(userBeanUtil.getUsername());
+        List<PermissionResponseDto> result =
+                StreamSupport.stream(irt.spliterator(), false)
+                        .map(PermissionMapper::toDto)
+                        .collect(Collectors.toList());
+        return result;
+    }
 }

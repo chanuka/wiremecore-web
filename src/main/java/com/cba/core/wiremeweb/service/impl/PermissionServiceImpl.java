@@ -27,7 +27,7 @@ public class PermissionServiceImpl implements PermissionService<PermissionRespon
 
     @Override
     public List<PermissionResponseDto> findAll() throws Exception {
-        return dao.findAll();
+        return dao.findAllPermissionsByUser();
     }
 
     @Override

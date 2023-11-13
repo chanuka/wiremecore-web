@@ -1,6 +1,7 @@
 package com.cba.core.wiremeweb.controller;
 
 import com.cba.core.wiremeweb.controller.resource.GenericResource;
+import com.cba.core.wiremeweb.controller.resource.PermissionResource;
 import com.cba.core.wiremeweb.dto.PermissionRequestDto;
 import com.cba.core.wiremeweb.dto.PermissionResponseDto;
 import com.cba.core.wiremeweb.service.GenericService;
@@ -23,7 +24,7 @@ import java.util.Map;
 @RequiredArgsConstructor
 @RequestMapping("/${application.resource.permissions}")
 @Tag(name = "Permission Management", description = "Provides Permission Customer Management API's")
-public class PermissionController implements GenericResource<PermissionResponseDto, PermissionRequestDto> {
+public class PermissionController implements PermissionResource<PermissionResponseDto, PermissionRequestDto> {
 
 
     private static final Logger logger = LoggerFactory.getLogger(MerchantController.class);
@@ -38,6 +39,19 @@ public class PermissionController implements GenericResource<PermissionResponseD
         try {
             Page<PermissionResponseDto> responseDtoList = service.findAll(page, pageSize);
             return ResponseEntity.ok().body(responseDtoList.getContent());
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+            throw e;
+        }
+    }
+
+    @Override
+    public ResponseEntity<List<PermissionResponseDto>> findAllPermissionsByUser() throws Exception {
+        Locale currentLocale = LocaleContextHolder.getLocale();
+        logger.debug(messageSource.getMessage("PERMISSION_GET_ALL_DEBUG", null, currentLocale));
+        try {
+            List<PermissionResponseDto> responseDtoList = service.findAll();
+            return ResponseEntity.ok().body(responseDtoList);
         } catch (Exception e) {
             logger.error(e.getMessage());
             throw e;
@@ -140,4 +154,5 @@ public class PermissionController implements GenericResource<PermissionResponseD
     public ResponseEntity<byte[]> downloadJasper() throws Exception {
         return null;
     }
+
 }

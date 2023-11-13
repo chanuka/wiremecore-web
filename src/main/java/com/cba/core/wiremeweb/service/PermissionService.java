@@ -7,5 +7,6 @@ import java.util.List;
 
 public interface PermissionService<T, K> extends GenericService<T, K> {
 
-    public List<PermissionResponseDto> findAllPermissionsByUser(String username) throws SQLException;
+    List<PermissionResponseDto> findAllPermissionsByUser(String username) throws Exception;
+
 }

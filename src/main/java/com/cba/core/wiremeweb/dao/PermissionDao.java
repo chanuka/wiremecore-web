@@ -7,5 +7,7 @@ import java.util.List;
 
 public interface PermissionDao<T, K> extends GenericDao<T, K> {
 
-    public List<PermissionResponseDto> findAllPermissionsByUser(String username) throws SQLException;
+    List<PermissionResponseDto> findAllPermissionsByUser(String username) throws SQLException;
+
+    List<PermissionResponseDto> findAllPermissionsByUser() throws SQLException;
 }
