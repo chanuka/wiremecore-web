@@ -21,7 +21,7 @@ public class GraphResponseDto implements Serializable {
     private String dateClustering;
     private String graphType;
     private String tag;
-    private SelectionScope selectionScope;
+    private SelectionScopeDto selectionScopeDto;
     private String grouping;
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private String aggregator;

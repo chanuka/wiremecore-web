@@ -11,7 +11,7 @@ import java.io.Serializable;
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString
-public class SelectionScope implements Serializable {
+public class SelectionScopeDto implements Serializable {
     private String partner;
     private String merchant;
     private String province;

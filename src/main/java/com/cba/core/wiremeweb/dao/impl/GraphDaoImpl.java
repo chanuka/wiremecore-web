@@ -203,33 +203,33 @@ public class GraphDaoImpl implements GraphDao {
 
                 toBeUpdatedDto.setGraphType(requestDto.getGraphType());
             }
-            if (!toBeUpdatedDto.getSelectionScope().getDistrict().equals(requestDto.getSelectionScope().getDistrict())) {
+            if (!toBeUpdatedDto.getSelectionScopeDto().getDistrict().equals(requestDto.getSelectionScopeDto().getDistrict())) {
                 updateRequired = true;
-                oldDataMap.put("district", toBeUpdatedDto.getSelectionScope().getDistrict());
-                newDataMap.put("district", requestDto.getSelectionScope().getDistrict());
+                oldDataMap.put("district", toBeUpdatedDto.getSelectionScopeDto().getDistrict());
+                newDataMap.put("district", requestDto.getSelectionScopeDto().getDistrict());
 
-                toBeUpdatedDto.getSelectionScope().setDistrict(requestDto.getSelectionScope().getDistrict());
+                toBeUpdatedDto.getSelectionScopeDto().setDistrict(requestDto.getSelectionScopeDto().getDistrict());
             }
-            if (!toBeUpdatedDto.getSelectionScope().getMerchant().equals(requestDto.getSelectionScope().getMerchant())) {
+            if (!toBeUpdatedDto.getSelectionScopeDto().getMerchant().equals(requestDto.getSelectionScopeDto().getMerchant())) {
                 updateRequired = true;
-                oldDataMap.put("merchant", toBeUpdatedDto.getSelectionScope().getMerchant());
-                newDataMap.put("merchant", requestDto.getSelectionScope().getMerchant());
+                oldDataMap.put("merchant", toBeUpdatedDto.getSelectionScopeDto().getMerchant());
+                newDataMap.put("merchant", requestDto.getSelectionScopeDto().getMerchant());
 
-                toBeUpdatedDto.getSelectionScope().setMerchant(requestDto.getSelectionScope().getMerchant());
+                toBeUpdatedDto.getSelectionScopeDto().setMerchant(requestDto.getSelectionScopeDto().getMerchant());
             }
-            if (!toBeUpdatedDto.getSelectionScope().getPartner().equals(requestDto.getSelectionScope().getPartner())) {
+            if (!toBeUpdatedDto.getSelectionScopeDto().getPartner().equals(requestDto.getSelectionScopeDto().getPartner())) {
                 updateRequired = true;
-                oldDataMap.put("partner", toBeUpdatedDto.getSelectionScope().getPartner());
-                newDataMap.put("partner", requestDto.getSelectionScope().getPartner());
+                oldDataMap.put("partner", toBeUpdatedDto.getSelectionScopeDto().getPartner());
+                newDataMap.put("partner", requestDto.getSelectionScopeDto().getPartner());
 
-                toBeUpdatedDto.getSelectionScope().setPartner(requestDto.getSelectionScope().getPartner());
+                toBeUpdatedDto.getSelectionScopeDto().setPartner(requestDto.getSelectionScopeDto().getPartner());
             }
-            if (!toBeUpdatedDto.getSelectionScope().getProvince().equals(requestDto.getSelectionScope().getProvince())) {
+            if (!toBeUpdatedDto.getSelectionScopeDto().getProvince().equals(requestDto.getSelectionScopeDto().getProvince())) {
                 updateRequired = true;
-                oldDataMap.put("province", toBeUpdatedDto.getSelectionScope().getProvince());
-                newDataMap.put("province", requestDto.getSelectionScope().getProvince());
+                oldDataMap.put("province", toBeUpdatedDto.getSelectionScopeDto().getProvince());
+                newDataMap.put("province", requestDto.getSelectionScopeDto().getProvince());
 
-                toBeUpdatedDto.getSelectionScope().setProvince(requestDto.getSelectionScope().getProvince());
+                toBeUpdatedDto.getSelectionScopeDto().setProvince(requestDto.getSelectionScopeDto().getProvince());
             }
         }
         if (updateRequired) {
@@ -259,10 +259,10 @@ public class GraphDaoImpl implements GraphDao {
 
             String fromDate = requestDto.getFromDate();
             String toDate = requestDto.getToDate();
-            String partner = requestDto.getSelectionScope().getPartner();
-            String merchant = requestDto.getSelectionScope().getMerchant();
-            String province = requestDto.getSelectionScope().getProvince();
-            String district = requestDto.getSelectionScope().getDistrict();
+            String partner = requestDto.getSelectionScopeDto().getPartner();
+            String merchant = requestDto.getSelectionScopeDto().getMerchant();
+            String province = requestDto.getSelectionScopeDto().getProvince();
+            String district = requestDto.getSelectionScopeDto().getDistrict();
 
             String whereClause = setWhereCondition(requestDto);
             String selectClause = setSelectCondition(requestDto);
@@ -306,10 +306,10 @@ public class GraphDaoImpl implements GraphDao {
 
         String fromDate = requestDto.getFromDate();
         String toDate = requestDto.getToDate();
-        String partner = requestDto.getSelectionScope().getPartner();
-        String merchant = requestDto.getSelectionScope().getMerchant();
-        String province = requestDto.getSelectionScope().getProvince();
-        String district = requestDto.getSelectionScope().getDistrict();
+        String partner = requestDto.getSelectionScopeDto().getPartner();
+        String merchant = requestDto.getSelectionScopeDto().getMerchant();
+        String province = requestDto.getSelectionScopeDto().getProvince();
+        String district = requestDto.getSelectionScopeDto().getDistrict();
 
         String where = " 1=1 ";
 

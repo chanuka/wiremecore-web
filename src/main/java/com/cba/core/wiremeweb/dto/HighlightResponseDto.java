@@ -18,7 +18,7 @@ public class HighlightResponseDto implements Serializable {
     private String configTitle;
     private String dateClustering;
     private String tag;
-    private SelectionScope selectionScope;
+    private SelectionScopeDto selectionScopeDto;
     private String grouping;
     private String aggregator;
     private String status;

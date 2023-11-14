@@ -27,7 +27,7 @@ public class GraphRequestDto implements Serializable {
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private String tag;
     @JsonInclude(JsonInclude.Include.NON_NULL)
-    private SelectionScope selectionScope;
+    private SelectionScopeDto selectionScopeDto;
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private String grouping;
     @JsonInclude(JsonInclude.Include.NON_NULL)
