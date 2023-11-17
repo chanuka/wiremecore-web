@@ -45,9 +45,7 @@ public class User implements java.io.Serializable {
     private Date createdAt;
     @LastModifiedDate
     private Date updatedAt;
-    private Set<DeviceConfig> deviceConfigsForModifiedBy = new HashSet<DeviceConfig>(0);
     private Set<TokenRefresh> refreshTokens = new HashSet<TokenRefresh>(0);
-    private Set<DeviceConfig> deviceConfigsForCreatedBy = new HashSet<DeviceConfig>(0);
     private Set<UserRole> userRolesForUserId = new HashSet<UserRole>(0);
     private Set<OnetimePassword> onetimePasswords = new HashSet<OnetimePassword>(0);
     private Set<UserConfig> userConfigs = new HashSet<UserConfig>(0);
@@ -232,15 +230,6 @@ public class User implements java.io.Serializable {
         this.updatedAt = updatedAt;
     }
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "userByModifiedBy")
-    public Set<DeviceConfig> getDeviceConfigsForModifiedBy() {
-        return this.deviceConfigsForModifiedBy;
-    }
-
-    public void setDeviceConfigsForModifiedBy(Set<DeviceConfig> deviceConfigsForModifiedBy) {
-        this.deviceConfigsForModifiedBy = deviceConfigsForModifiedBy;
-    }
-
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "user")
     public Set<TokenRefresh> getRefreshTokens() {
         return this.refreshTokens;
@@ -248,15 +237,6 @@ public class User implements java.io.Serializable {
 
     public void setRefreshTokens(Set<TokenRefresh> refreshTokens) {
         this.refreshTokens = refreshTokens;
-    }
-
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "userByCreatedBy")
-    public Set<DeviceConfig> getDeviceConfigsForCreatedBy() {
-        return this.deviceConfigsForCreatedBy;
-    }
-
-    public void setDeviceConfigsForCreatedBy(Set<DeviceConfig> deviceConfigsForCreatedBy) {
-        this.deviceConfigsForCreatedBy = deviceConfigsForCreatedBy;
     }
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "userByUserId")

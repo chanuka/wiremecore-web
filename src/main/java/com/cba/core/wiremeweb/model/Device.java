@@ -44,6 +44,10 @@ public class Device implements java.io.Serializable {
     public Device() {
     }
 
+    public Device(int deviceId) {
+        this.id = deviceId;
+    }
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", unique = true, nullable = false)
