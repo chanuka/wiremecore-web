@@ -4,6 +4,7 @@ import com.cba.core.wiremeweb.controller.resource.GenericResource;
 import com.cba.core.wiremeweb.dto.DeviceRequestDto;
 import com.cba.core.wiremeweb.dto.DeviceResponseDto;
 import com.cba.core.wiremeweb.service.GenericService;
+import com.cba.core.wiremeweb.util.PaginationResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import io.swagger.v3.oas.annotations.tags.Tags;
 import lombok.RequiredArgsConstructor;
@@ -36,13 +37,14 @@ public class DeviceController implements GenericResource<DeviceResponseDto, Devi
 
 
     @Override
-    public ResponseEntity<List<DeviceResponseDto>> getAllByPageWise(int page, int pageSize) throws Exception {
+    public ResponseEntity<PaginationResponse<DeviceResponseDto>> getAllByPageWise(int page, int pageSize) throws Exception {
 
         Locale currentLocale = LocaleContextHolder.getLocale();
         logger.debug(messageSource.getMessage("DEVICE_GET_ALL_DEBUG", null, currentLocale));
         try {
             Page<DeviceResponseDto> responseDtoList = service.findAll(page, pageSize);
-            return ResponseEntity.ok().body(responseDtoList.getContent());
+
+            return ResponseEntity.ok().body(new PaginationResponse<DeviceResponseDto>(responseDtoList.getContent(), responseDtoList.getTotalElements()));
         } catch (Exception e) {
             logger.error(e.getMessage());
             throw e;

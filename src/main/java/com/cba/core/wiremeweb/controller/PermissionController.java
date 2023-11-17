@@ -2,9 +2,12 @@ package com.cba.core.wiremeweb.controller;
 
 import com.cba.core.wiremeweb.controller.resource.GenericResource;
 import com.cba.core.wiremeweb.controller.resource.PermissionResource;
+import com.cba.core.wiremeweb.dto.DeviceResponseDto;
+import com.cba.core.wiremeweb.dto.MerchantCustomerResponseDto;
 import com.cba.core.wiremeweb.dto.PermissionRequestDto;
 import com.cba.core.wiremeweb.dto.PermissionResponseDto;
 import com.cba.core.wiremeweb.service.GenericService;
+import com.cba.core.wiremeweb.util.PaginationResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
@@ -33,12 +36,12 @@ public class PermissionController implements PermissionResource<PermissionRespon
     private final MessageSource messageSource;
 
     @Override
-    public ResponseEntity<List<PermissionResponseDto>> getAllByPageWise(int page, int pageSize) throws Exception {
+    public ResponseEntity<PaginationResponse<PermissionResponseDto>> getAllByPageWise(int page, int pageSize) throws Exception {
         Locale currentLocale = LocaleContextHolder.getLocale();
         logger.debug(messageSource.getMessage("PERMISSION_GET_ALL_DEBUG", null, currentLocale));
         try {
             Page<PermissionResponseDto> responseDtoList = service.findAll(page, pageSize);
-            return ResponseEntity.ok().body(responseDtoList.getContent());
+            return ResponseEntity.ok().body(new PaginationResponse<PermissionResponseDto>(responseDtoList.getContent(), responseDtoList.getTotalElements()));
         } catch (Exception e) {
             logger.error(e.getMessage());
             throw e;

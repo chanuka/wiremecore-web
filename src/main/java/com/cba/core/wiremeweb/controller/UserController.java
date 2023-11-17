@@ -2,9 +2,11 @@ package com.cba.core.wiremeweb.controller;
 
 import com.cba.core.wiremeweb.controller.resource.UserResource;
 import com.cba.core.wiremeweb.dto.ChangePasswordRequestDto;
+import com.cba.core.wiremeweb.dto.TerminalResponseDto;
 import com.cba.core.wiremeweb.dto.UserRequestDto;
 import com.cba.core.wiremeweb.dto.UserResponseDto;
 import com.cba.core.wiremeweb.service.UserService;
+import com.cba.core.wiremeweb.util.PaginationResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
@@ -35,13 +37,13 @@ public class UserController implements UserResource<UserResponseDto, UserRequest
     private final MessageSource messageSource;
 
     @Override
-    public ResponseEntity<List<UserResponseDto>> getAllByPageWise(int page, int pageSize) throws Exception {
+    public ResponseEntity<PaginationResponse<UserResponseDto>> getAllByPageWise(int page, int pageSize) throws Exception {
 
         Locale currentLocale = LocaleContextHolder.getLocale();
         logger.debug(messageSource.getMessage("USER_GET_ALL_DEBUG", null, currentLocale));
         try {
             Page<UserResponseDto> responseDtolist = service.findAll(page, pageSize);
-            return ResponseEntity.ok().body(responseDtolist.getContent());
+            return ResponseEntity.ok().body(new PaginationResponse<UserResponseDto>(responseDtolist.getContent(), responseDtolist.getTotalElements()));
         } catch (Exception e) {
             logger.error(e.getMessage());
             throw e;

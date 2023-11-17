@@ -1,9 +1,12 @@
 package com.cba.core.wiremeweb.controller;
 
 import com.cba.core.wiremeweb.controller.resource.GenericResource;
+import com.cba.core.wiremeweb.dto.DeviceResponseDto;
+import com.cba.core.wiremeweb.dto.PermissionResponseDto;
 import com.cba.core.wiremeweb.dto.RoleRequestDto;
 import com.cba.core.wiremeweb.dto.RoleResponseDto;
 import com.cba.core.wiremeweb.service.GenericService;
+import com.cba.core.wiremeweb.util.PaginationResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
@@ -34,12 +37,12 @@ public class RoleController implements GenericResource<RoleResponseDto, RoleRequ
     private final MessageSource messageSource;
 
     @Override
-    public ResponseEntity<List<RoleResponseDto>> getAllByPageWise(int page, int pageSize) throws Exception {
+    public ResponseEntity<PaginationResponse<RoleResponseDto>> getAllByPageWise(int page, int pageSize) throws Exception {
         Locale currentLocale = LocaleContextHolder.getLocale();
         logger.debug(messageSource.getMessage("ROLE_GET_ALL_DEBUG", null, currentLocale));
         try {
             Page<RoleResponseDto> responseDtolist = service.findAll(page, pageSize);
-            return ResponseEntity.ok().body(responseDtolist.getContent());
+            return ResponseEntity.ok().body(new PaginationResponse<RoleResponseDto>(responseDtolist.getContent(), responseDtolist.getTotalElements()));
         } catch (Exception e) {
             logger.error(e.getMessage());
             throw e;

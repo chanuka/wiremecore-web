@@ -1,12 +1,10 @@
 package com.cba.core.wiremeweb.controller;
 
 import com.cba.core.wiremeweb.controller.resource.MerchantCustomerResource;
-import com.cba.core.wiremeweb.dto.MerchantCustomerRequestDto;
-import com.cba.core.wiremeweb.dto.MerchantCustomerResponseDto;
-import com.cba.core.wiremeweb.dto.MerchantRequestDto;
-import com.cba.core.wiremeweb.dto.MerchantResponseDto;
+import com.cba.core.wiremeweb.dto.*;
 import com.cba.core.wiremeweb.service.GenericService;
 import com.cba.core.wiremeweb.service.MerchantService;
+import com.cba.core.wiremeweb.util.PaginationResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
@@ -38,12 +36,12 @@ public class MerchantCustomerController implements MerchantCustomerResource<Merc
     private final MessageSource messageSource;
 
     @Override
-    public ResponseEntity<List<MerchantCustomerResponseDto>> getAllByPageWise(int page, int pageSize) throws Exception {
+    public ResponseEntity<PaginationResponse<MerchantCustomerResponseDto>> getAllByPageWise(int page, int pageSize) throws Exception {
         Locale currentLocale = LocaleContextHolder.getLocale();
         logger.debug(messageSource.getMessage("MERCHANT_CUSTOMER_GET_ALL_DEBUG", null, currentLocale));
         try {
             Page<MerchantCustomerResponseDto> responseDtolist = service.findAll(page, pageSize);
-            return ResponseEntity.ok().body(responseDtolist.getContent());
+            return ResponseEntity.ok().body(new PaginationResponse<MerchantCustomerResponseDto>(responseDtolist.getContent(), responseDtolist.getTotalElements()));
         } catch (Exception e) {
             logger.error(e.getMessage());
             throw e;

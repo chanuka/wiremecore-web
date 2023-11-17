@@ -1,5 +1,7 @@
 package com.cba.core.wiremeweb.controller.resource;
 
+import com.cba.core.wiremeweb.dto.DeviceResponseDto;
+import com.cba.core.wiremeweb.util.PaginationResponse;
 import jakarta.validation.Valid;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -14,8 +16,8 @@ import java.util.Map;
 public interface GenericResource<T,K> {
 
     @GetMapping
-    ResponseEntity<List<T>> getAllByPageWise(@RequestParam(defaultValue = "0") int page,
-                                                    @RequestParam(defaultValue = "5") int pageSize) throws Exception;
+    ResponseEntity<PaginationResponse<T>> getAllByPageWise(@RequestParam(defaultValue = "0") int page,
+                                                           @RequestParam(defaultValue = "5") int pageSize) throws Exception;
 
     @GetMapping("/{id}")
     ResponseEntity<T> getOne(@PathVariable int id) throws Exception;
