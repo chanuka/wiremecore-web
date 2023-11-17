@@ -4,6 +4,7 @@ import com.cba.core.wiremeweb.dto.MerchantCustomerResponseDto;
 import com.cba.core.wiremeweb.dto.MerchantResponseDto;
 import com.cba.core.wiremeweb.dto.TerminalResponseDto;
 import com.cba.core.wiremeweb.dto.TransactionCoreResponseDto;
+import com.cba.core.wiremeweb.util.PaginationResponse;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -28,10 +29,10 @@ public interface TransactionResource {
     ResponseEntity<List<MerchantCustomerResponseDto>> getAllMerchantCustomers() throws Exception;
 
     @GetMapping()
-    ResponseEntity<List<TransactionCoreResponseDto>> getAllTransactions(@RequestParam(defaultValue = "") String dateFrom,
-                                                                        @RequestParam(defaultValue = "") String dateTo,
-                                                                        @RequestParam(defaultValue = "0") int page,
-                                                                        @RequestParam(defaultValue = "5") int pageSize) throws Exception;
+    ResponseEntity<PaginationResponse<TransactionCoreResponseDto>> getAllTransactions(@RequestParam(defaultValue = "") String dateFrom,
+                                                                                      @RequestParam(defaultValue = "") String dateTo,
+                                                                                      @RequestParam(defaultValue = "0") int page,
+                                                                                      @RequestParam(defaultValue = "5") int pageSize) throws Exception;
 
     @GetMapping("summary")
     ResponseEntity<Map<String, ArrayList<Map<String, Object>>>> getAllTransactionSummary(@RequestParam(defaultValue = "") String dateFrom,

@@ -61,7 +61,7 @@ public class UserRoleController implements GenericResource<UserRoleResponseDto, 
     }
 
     @Override
-    public ResponseEntity<List<UserRoleResponseDto>> searchAllByPageWise(List<Map<String, String>> searchParamList, int page, int pageSize) throws Exception {
+    public ResponseEntity<PaginationResponse<UserRoleResponseDto>> searchAllByPageWise(List<Map<String, String>> searchParamList, int page, int pageSize) throws Exception {
         return null;
     }
 

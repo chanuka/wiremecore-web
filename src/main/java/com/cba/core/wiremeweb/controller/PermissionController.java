@@ -76,7 +76,7 @@ public class PermissionController implements PermissionResource<PermissionRespon
     }
 
     @Override
-    public ResponseEntity<List<PermissionResponseDto>> searchAllByPageWise(List<Map<String, String>> searchParamList, int page, int pageSize) throws Exception {
+    public ResponseEntity<PaginationResponse<PermissionResponseDto>> searchAllByPageWise(List<Map<String, String>> searchParamList, int page, int pageSize) throws Exception {
         return null;
     }
 

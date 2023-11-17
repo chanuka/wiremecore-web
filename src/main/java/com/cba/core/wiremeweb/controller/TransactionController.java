@@ -4,6 +4,7 @@ import com.cba.core.wiremeweb.controller.resource.TransactionResource;
 import com.cba.core.wiremeweb.dto.*;
 import com.cba.core.wiremeweb.service.GenericService;
 import com.cba.core.wiremeweb.service.TransactionService;
+import com.cba.core.wiremeweb.util.PaginationResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
@@ -69,12 +70,12 @@ public class TransactionController implements TransactionResource {
     }
 
     @Override
-    public ResponseEntity<List<TransactionCoreResponseDto>> getAllTransactions(String dateFrom, String dateTo, int page, int pageSize) throws Exception {
+    public ResponseEntity<PaginationResponse<TransactionCoreResponseDto>> getAllTransactions(String dateFrom, String dateTo, int page, int pageSize) throws Exception {
         Locale currentLocale = LocaleContextHolder.getLocale();
         logger.debug(messageSource.getMessage("TRANSACTION_GET_ALL_DEBUG", null, currentLocale));
         try {
             Page<TransactionCoreResponseDto> responseDtolist = transactionService.getAllTransactions(dateFrom, dateTo, page, pageSize);
-            return ResponseEntity.ok().body(responseDtolist.getContent());
+            return ResponseEntity.ok().body(new PaginationResponse<TransactionCoreResponseDto>(responseDtolist.getContent(), responseDtolist.getTotalElements()));
         } catch (Exception e) {
             logger.error(e.getMessage());
             throw e;

@@ -64,13 +64,13 @@ public class TerminalController implements GenericResource<TerminalResponseDto, 
     }
 
     @Override
-    public ResponseEntity<List<TerminalResponseDto>> searchAllByPageWise(List<Map<String, String>> searchParamList, int page, int pageSize) throws Exception {
+    public ResponseEntity<PaginationResponse<TerminalResponseDto>> searchAllByPageWise(List<Map<String, String>> searchParamList, int page, int pageSize) throws Exception {
         Locale currentLocale = LocaleContextHolder.getLocale();// works only when as local statement
         logger.debug(messageSource.getMessage("TERMINAL_GET_SEARCH_DEBUG", null, currentLocale));
 
         try {
             Page<TerminalResponseDto> responseDtolist = service.findBySearchParamLike(searchParamList, page, pageSize);
-            return ResponseEntity.ok().body(responseDtolist.getContent());
+            return ResponseEntity.ok().body(new PaginationResponse<TerminalResponseDto>(responseDtolist.getContent(), responseDtolist.getTotalElements()));
         } catch (Exception e) {
             e.printStackTrace();
             logger.error(e.getMessage());
