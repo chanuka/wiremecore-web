@@ -1,8 +1,10 @@
 package com.cba.core.wiremeweb.controller;
 
 import com.cba.core.wiremeweb.controller.resource.TransactionResource;
-import com.cba.core.wiremeweb.dto.*;
-import com.cba.core.wiremeweb.service.GenericService;
+import com.cba.core.wiremeweb.dto.MerchantCustomerResponseDto;
+import com.cba.core.wiremeweb.dto.MerchantResponseDto;
+import com.cba.core.wiremeweb.dto.TerminalResponseDto;
+import com.cba.core.wiremeweb.dto.TransactionCoreResponseDto;
 import com.cba.core.wiremeweb.service.TransactionService;
 import com.cba.core.wiremeweb.util.PaginationResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -15,9 +17,11 @@ import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
 
 @Component
 @RequiredArgsConstructor

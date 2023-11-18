@@ -1,6 +1,5 @@
 package com.cba.core.wiremeweb.controller.resource;
 
-import com.cba.core.wiremeweb.dto.DeviceResponseDto;
 import com.cba.core.wiremeweb.util.PaginationResponse;
 import jakarta.validation.Valid;
 import org.springframework.http.MediaType;

@@ -1,9 +1,6 @@
 package com.cba.core.wiremeweb.controller;
 
-import com.cba.core.wiremeweb.controller.resource.GenericResource;
 import com.cba.core.wiremeweb.controller.resource.PermissionResource;
-import com.cba.core.wiremeweb.dto.DeviceResponseDto;
-import com.cba.core.wiremeweb.dto.MerchantCustomerResponseDto;
 import com.cba.core.wiremeweb.dto.PermissionRequestDto;
 import com.cba.core.wiremeweb.dto.PermissionResponseDto;
 import com.cba.core.wiremeweb.service.GenericService;
@@ -26,7 +23,7 @@ import java.util.Map;
 @Component
 @RequiredArgsConstructor
 @RequestMapping("/${application.resource.permissions}")
-@Tag(name = "Permission Management", description = "Provides Permission Customer Management API's")
+@Tag(name = "Permission Management", description = "Provides Customer Permission Management API's")
 public class PermissionController implements PermissionResource<PermissionResponseDto, PermissionRequestDto> {
 
 

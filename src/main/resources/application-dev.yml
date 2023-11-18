@@ -49,6 +49,8 @@ application:
   resource:
     devices: devices
     deviceconfig: deviceconfig
+    device_model: devicemodel
+    device_vendor: devicevendor
     users: users
     roles: roles
     terminals: terminals

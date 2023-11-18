@@ -16,7 +16,7 @@ import java.util.Map;
 @RestController
 @RequiredArgsConstructor
 @Validated
-@Tag(name = "Email Management", description = "Provides Email Sending API's")
+@Tag(name = "Email Management(Optional)", description = "Provides Email Sending API's")
 public class EmailController {
 
     private final EmailService emailService;

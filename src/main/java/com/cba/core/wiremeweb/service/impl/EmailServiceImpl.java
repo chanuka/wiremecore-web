@@ -1,7 +1,6 @@
 package com.cba.core.wiremeweb.service.impl;
 
 import com.cba.core.wiremeweb.dto.EmailRequestDto;
-import com.cba.core.wiremeweb.model.User;
 import com.cba.core.wiremeweb.service.EmailService;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;

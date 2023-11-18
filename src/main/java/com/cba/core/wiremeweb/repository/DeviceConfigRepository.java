@@ -1,7 +1,6 @@
 package com.cba.core.wiremeweb.repository;
 
 import com.cba.core.wiremeweb.model.DeviceConfig;
-import com.cba.core.wiremeweb.model.UserConfig;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 

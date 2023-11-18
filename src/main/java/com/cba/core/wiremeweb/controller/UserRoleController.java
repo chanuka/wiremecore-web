@@ -1,8 +1,6 @@
 package com.cba.core.wiremeweb.controller;
 
 import com.cba.core.wiremeweb.controller.resource.GenericResource;
-import com.cba.core.wiremeweb.dto.DeviceResponseDto;
-import com.cba.core.wiremeweb.dto.UserResponseDto;
 import com.cba.core.wiremeweb.dto.UserRoleRequestDto;
 import com.cba.core.wiremeweb.dto.UserRoleResponseDto;
 import com.cba.core.wiremeweb.service.GenericService;

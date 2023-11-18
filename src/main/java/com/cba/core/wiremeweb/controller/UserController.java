@@ -2,7 +2,6 @@ package com.cba.core.wiremeweb.controller;
 
 import com.cba.core.wiremeweb.controller.resource.UserResource;
 import com.cba.core.wiremeweb.dto.ChangePasswordRequestDto;
-import com.cba.core.wiremeweb.dto.TerminalResponseDto;
 import com.cba.core.wiremeweb.dto.UserRequestDto;
 import com.cba.core.wiremeweb.dto.UserResponseDto;
 import com.cba.core.wiremeweb.service.UserService;

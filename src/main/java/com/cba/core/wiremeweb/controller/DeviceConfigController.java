@@ -3,7 +3,6 @@ package com.cba.core.wiremeweb.controller;
 import com.cba.core.wiremeweb.controller.resource.DeviceConfigResource;
 import com.cba.core.wiremeweb.dto.DeviceConfigRequestDto;
 import com.cba.core.wiremeweb.dto.DeviceConfigResponseDto;
-import com.cba.core.wiremeweb.dto.HighlightResponseDto;
 import com.cba.core.wiremeweb.service.DeviceConfigService;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;

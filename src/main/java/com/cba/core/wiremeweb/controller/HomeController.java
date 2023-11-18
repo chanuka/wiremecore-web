@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequiredArgsConstructor
-@Tag(name = "Home Controller", description = "Just to Check whether the API is up and running")
+@Tag(name = "Home Controller(Optional)", description = "Just to Check whether the API is up and running")
 public class HomeController {
 
     @GetMapping("/")

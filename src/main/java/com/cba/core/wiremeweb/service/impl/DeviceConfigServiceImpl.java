@@ -1,11 +1,8 @@
 package com.cba.core.wiremeweb.service.impl;
 
 import com.cba.core.wiremeweb.dao.DeviceConfigDao;
-import com.cba.core.wiremeweb.dao.GenericDao;
 import com.cba.core.wiremeweb.dto.DeviceConfigRequestDto;
 import com.cba.core.wiremeweb.dto.DeviceConfigResponseDto;
-import com.cba.core.wiremeweb.dto.DeviceRequestDto;
-import com.cba.core.wiremeweb.dto.DeviceResponseDto;
 import com.cba.core.wiremeweb.service.DeviceConfigService;
 import com.cba.core.wiremeweb.util.UserBeanUtil;
 import lombok.RequiredArgsConstructor;

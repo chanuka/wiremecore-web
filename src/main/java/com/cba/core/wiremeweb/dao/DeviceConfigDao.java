@@ -2,7 +2,6 @@ package com.cba.core.wiremeweb.dao;
 
 import com.cba.core.wiremeweb.dto.DeviceConfigRequestDto;
 import com.cba.core.wiremeweb.dto.DeviceConfigResponseDto;
-import com.cba.core.wiremeweb.model.DeviceConfig;
 
 public interface DeviceConfigDao {
 

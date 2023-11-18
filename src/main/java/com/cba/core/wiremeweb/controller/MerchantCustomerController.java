@@ -1,7 +1,10 @@
 package com.cba.core.wiremeweb.controller;
 
 import com.cba.core.wiremeweb.controller.resource.MerchantCustomerResource;
-import com.cba.core.wiremeweb.dto.*;
+import com.cba.core.wiremeweb.dto.MerchantCustomerRequestDto;
+import com.cba.core.wiremeweb.dto.MerchantCustomerResponseDto;
+import com.cba.core.wiremeweb.dto.MerchantRequestDto;
+import com.cba.core.wiremeweb.dto.MerchantResponseDto;
 import com.cba.core.wiremeweb.service.GenericService;
 import com.cba.core.wiremeweb.service.MerchantService;
 import com.cba.core.wiremeweb.util.PaginationResponse;

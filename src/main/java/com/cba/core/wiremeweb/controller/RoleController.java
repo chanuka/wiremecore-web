@@ -1,7 +1,8 @@
 package com.cba.core.wiremeweb.controller;
 
 import com.cba.core.wiremeweb.controller.resource.GenericResource;
-import com.cba.core.wiremeweb.dto.*;
+import com.cba.core.wiremeweb.dto.RoleRequestDto;
+import com.cba.core.wiremeweb.dto.RoleResponseDto;
 import com.cba.core.wiremeweb.service.GenericService;
 import com.cba.core.wiremeweb.util.PaginationResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
