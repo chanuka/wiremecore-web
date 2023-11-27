@@ -98,6 +98,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests(authorize -> {
                     authorize.requestMatchers("/").permitAll();
                     authorize.requestMatchers("/refreshtoken").permitAll();
+                    authorize.requestMatchers("/general/**").permitAll();
                     authorize.requestMatchers("/swagger-doc/**").permitAll();
                     authorize.requestMatchers("/swagger-ui/**", "/swagger-ui.html", "/v3/api-docs/**").permitAll();
                     authorize.requestMatchers("/actuator/**").permitAll()
