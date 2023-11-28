@@ -13,9 +13,13 @@ public class MerchantMapper {
         responseDto.setName(entity.getName());
         responseDto.setMerchantId(entity.getMerchantId());
         responseDto.setPartnerId(entity.getMerchantCustomer().getId());
+        responseDto.setPartnerName(entity.getMerchantCustomer().getName());
         responseDto.setEmail(entity.getEmail());
         responseDto.setDistrict(entity.getDistrict());
         responseDto.setProvince(entity.getProvince());
+        responseDto.setLat(entity.getLat());
+        responseDto.setLon(entity.getLon());
+        responseDto.setRadius(entity.getRadius());
         responseDto.setStatus(entity.getStatus().getStatusCode());
         responseDto.setId(entity.getId());
         return responseDto;
@@ -30,6 +34,9 @@ public class MerchantMapper {
         entity.setStatus(new Status(requestDto.getStatus()));
         entity.setMerchantCustomer(new MerchantCustomer(requestDto.getPartnerId()));
         entity.setEmail(requestDto.getEmail());
+        entity.setLat(requestDto.getLat());
+        entity.setLon(requestDto.getLon());
+        entity.setRadius(requestDto.getRadius());
         return entity;
     }
 }

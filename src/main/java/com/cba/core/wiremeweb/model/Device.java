@@ -25,6 +25,7 @@ public class Device implements java.io.Serializable {
 
     private Integer id;
     private Status status;
+    private DeviceModel deviceModel;
     @CreatedBy
     private String userByCreatedBy;
     @LastModifiedBy
@@ -40,6 +41,8 @@ public class Device implements java.io.Serializable {
     private Set<PushDevice> pushDevices = new HashSet<PushDevice>(0);
     private Set<DeviceConfig> deviceConfigs = new HashSet<DeviceConfig>(0);
     private Set<User> users = new HashSet<User>(0);
+    private Set<Terminal> terminals = new HashSet<Terminal>(0);
+
 
     public Device() {
     }
@@ -67,6 +70,16 @@ public class Device implements java.io.Serializable {
 
     public void setStatus(Status status) {
         this.status = status;
+    }
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "model_Id", nullable = false)
+    public DeviceModel getDeviceModel() {
+        return deviceModel;
+    }
+
+    public void setDeviceModel(DeviceModel deviceModel) {
+        this.deviceModel = deviceModel;
     }
 
     @Column(name = "created_by", nullable = false, length = 45)
@@ -168,6 +181,15 @@ public class Device implements java.io.Serializable {
 
     public void setUsers(Set<User> users) {
         this.users = users;
+    }
+
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "device")
+    public Set<Terminal> getTerminals() {
+        return this.terminals;
+    }
+
+    public void setTerminals(Set<Terminal> terminals) {
+        this.terminals = terminals;
     }
 
 }

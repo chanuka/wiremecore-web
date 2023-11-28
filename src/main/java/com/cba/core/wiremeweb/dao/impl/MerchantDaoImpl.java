@@ -197,6 +197,27 @@ public class MerchantDaoImpl implements MerchantDao<MerchantResponseDto, Merchan
 
             toBeUpdated.setStatus(new Status(requestDto.getStatus()));
         }
+        if (toBeUpdated.getLat() != requestDto.getLat()) {
+            updateRequired = true;
+            oldDataMap.put("lat", toBeUpdated.getLat());
+            newDataMap.put("lat", requestDto.getLat());
+
+            toBeUpdated.setLat(requestDto.getLat());
+        }
+        if (toBeUpdated.getLon() != requestDto.getLon()) {
+            updateRequired = true;
+            oldDataMap.put("lon", toBeUpdated.getLon());
+            newDataMap.put("lon", requestDto.getLon());
+
+            toBeUpdated.setLon(requestDto.getLon());
+        }
+        if (toBeUpdated.getRadius() != requestDto.getRadius()) {
+            updateRequired = true;
+            oldDataMap.put("lat", toBeUpdated.getRadius());
+            newDataMap.put("lat", requestDto.getRadius());
+
+            toBeUpdated.setRadius(requestDto.getRadius());
+        }
         if (updateRequired) {
 
             repository.saveAndFlush(toBeUpdated);

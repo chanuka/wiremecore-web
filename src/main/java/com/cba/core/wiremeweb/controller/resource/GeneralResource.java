@@ -1,8 +1,6 @@
 package com.cba.core.wiremeweb.controller.resource;
 
-import com.cba.core.wiremeweb.dto.DeviceResponseDto;
 import com.cba.core.wiremeweb.dto.DistrictDto;
-import com.cba.core.wiremeweb.util.PaginationResponse;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;

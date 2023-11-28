@@ -12,7 +12,9 @@ public class UserRoleMapper {
     public static UserRoleResponseDto toDto(UserRole entity) {
         UserRoleResponseDto responseDto = new UserRoleResponseDto();
         responseDto.setUserId(entity.getUserByUserId().getId());
+        responseDto.setUserName(entity.getUserByUserId().getUserName());
         responseDto.setRoleId(entity.getRole().getId());
+        responseDto.setRoleName(entity.getRole().getRoleName());
         responseDto.setStatus(entity.getStatus().getStatusCode());
         responseDto.setId(entity.getId());
         return responseDto;

@@ -5,10 +5,7 @@ import com.cba.core.wiremeweb.dto.TerminalRequestDto;
 import com.cba.core.wiremeweb.dto.TerminalResponseDto;
 import com.cba.core.wiremeweb.exception.NotFoundException;
 import com.cba.core.wiremeweb.mapper.TerminalMapper;
-import com.cba.core.wiremeweb.model.GlobalAuditEntry;
-import com.cba.core.wiremeweb.model.Merchant;
-import com.cba.core.wiremeweb.model.Status;
-import com.cba.core.wiremeweb.model.Terminal;
+import com.cba.core.wiremeweb.model.*;
 import com.cba.core.wiremeweb.repository.GlobalAuditEntryRepository;
 import com.cba.core.wiremeweb.repository.TerminalRepository;
 import com.cba.core.wiremeweb.repository.specification.TerminalSpecification;
@@ -164,12 +161,12 @@ public class TerminalDaoImpl implements TerminalDao<TerminalResponseDto, Termina
 
             toBeUpdated.setMerchant(new Merchant(requestDto.getMerchantId()));
         }
-        if (toBeUpdated.getDeviceId() != requestDto.getDeviceId()) {
+        if (toBeUpdated.getDevice().getId() != requestDto.getDeviceId()) {
             updateRequired = true;
-            oldDataMap.put("deviceId", toBeUpdated.getDeviceId());
+            oldDataMap.put("deviceId", toBeUpdated.getDevice().getId());
             newDataMap.put("deviceId", requestDto.getDeviceId());
 
-            toBeUpdated.setDeviceId(requestDto.getDeviceId());
+            toBeUpdated.setDevice(new Device(requestDto.getDeviceId()));
         }
         if (!toBeUpdated.getStatus().getStatusCode().equals(requestDto.getStatus())) {
             updateRequired = true;

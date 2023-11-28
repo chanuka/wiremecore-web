@@ -1,5 +1,6 @@
 package com.cba.core.wiremeweb.dto;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
@@ -32,6 +33,8 @@ public class MerchantRequestDto implements Serializable {
     private String district;
     @NotBlank(message = "Status is required")
     private String status;
-
+    private Float lat;
+    private Float lon;
+    private Integer radius;
 
 }

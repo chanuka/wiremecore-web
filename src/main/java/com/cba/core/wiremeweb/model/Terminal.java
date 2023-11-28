@@ -25,13 +25,13 @@ public class Terminal implements java.io.Serializable {
 
     private Integer id;
     private Merchant merchant;
+    private Device device;
     private Status status;
     @LastModifiedBy
     private String userByModifiedBy;
     @CreatedBy
     private String userByCreatedBy;
     private String terminalId;
-    private Integer deviceId;
     @CreatedDate
     private Date createdAt;
     @LastModifiedDate
@@ -60,6 +60,16 @@ public class Terminal implements java.io.Serializable {
 
     public void setMerchant(Merchant merchant) {
         this.merchant = merchant;
+    }
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "device_id", nullable = false)
+    public Device getDevice() {
+        return device;
+    }
+
+    public void setDevice(Device device) {
+        this.device = device;
     }
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -97,15 +107,6 @@ public class Terminal implements java.io.Serializable {
 
     public void setTerminalId(String terminalId) {
         this.terminalId = terminalId;
-    }
-
-    @Column(name = "device_id")
-    public Integer getDeviceId() {
-        return this.deviceId;
-    }
-
-    public void setDeviceId(Integer deviceId) {
-        this.deviceId = deviceId;
     }
 
     @Temporal(TemporalType.TIMESTAMP)

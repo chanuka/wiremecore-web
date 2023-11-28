@@ -24,4 +24,12 @@ public class TerminalResponseDto implements Serializable {
     private String status;
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private Integer deviceId;
+    @JsonInclude(JsonInclude.Include.NON_NULL)
+    private String deviceType;
+    @JsonInclude(JsonInclude.Include.NON_NULL)
+    private String serialNo;
+    @JsonInclude(JsonInclude.Include.NON_NULL)
+    private String merchantName;
+    @JsonInclude(JsonInclude.Include.NON_NULL)
+    private String partnerName;
 }

@@ -37,6 +37,9 @@ public class Merchant implements java.io.Serializable {
     private String contactNo;
     private String province;
     private String district;
+    private Float lat;
+    private Float lon;
+    private Integer radius;
     @CreatedDate
     private Date createdAt;
     @LastModifiedDate
@@ -164,6 +167,33 @@ public class Merchant implements java.io.Serializable {
         this.district = district;
     }
 
+    @Column(name = "lat")
+    public Float getLat() {
+        return lat;
+    }
+
+    public void setLat(Float lat) {
+        this.lat = lat;
+    }
+
+    @Column(name = "lon")
+    public Float getLon() {
+        return lon;
+    }
+
+    public void setLon(Float lon) {
+        this.lon = lon;
+    }
+
+    @Column(name = "radius")
+    public Integer getRadius() {
+        return radius;
+    }
+
+    public void setRadius(Integer radius) {
+        this.radius = radius;
+    }
+
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "created_at", nullable = false, length = 19)
     public Date getCreatedAt() {
@@ -201,7 +231,6 @@ public class Merchant implements java.io.Serializable {
     public void setUsers(Set<User> users) {
         this.users = users;
     }
-
 }
 
 

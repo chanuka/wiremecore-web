@@ -22,6 +22,8 @@ public class MerchantResponseDto implements Serializable {
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private Integer partnerId;
     @JsonInclude(JsonInclude.Include.NON_NULL)
+    private String partnerName;
+    @JsonInclude(JsonInclude.Include.NON_NULL)
     private String name;
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private String email;
@@ -31,4 +33,10 @@ public class MerchantResponseDto implements Serializable {
     private String district;
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private String status;
+    @JsonInclude(JsonInclude.Include.NON_NULL)
+    private Float lat;
+    @JsonInclude(JsonInclude.Include.NON_NULL)
+    private Float lon;
+    @JsonInclude(JsonInclude.Include.NON_NULL)
+    private Integer radius;
 }

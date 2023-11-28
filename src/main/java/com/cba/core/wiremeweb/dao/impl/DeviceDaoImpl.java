@@ -6,6 +6,7 @@ import com.cba.core.wiremeweb.dto.DeviceResponseDto;
 import com.cba.core.wiremeweb.exception.NotFoundException;
 import com.cba.core.wiremeweb.mapper.DeviceMapper;
 import com.cba.core.wiremeweb.model.Device;
+import com.cba.core.wiremeweb.model.DeviceModel;
 import com.cba.core.wiremeweb.model.GlobalAuditEntry;
 import com.cba.core.wiremeweb.model.Status;
 import com.cba.core.wiremeweb.repository.DeviceRepository;
@@ -171,6 +172,13 @@ public class DeviceDaoImpl implements GenericDao<DeviceResponseDto, DeviceReques
             newDataMap.put("serialNo", requestDto.getSerialNo());
 
             toBeUpdated.setSerialNo(requestDto.getSerialNo());
+        }
+        if ((toBeUpdated.getDeviceModel() != null ? toBeUpdated.getDeviceModel().getId() : null) != requestDto.getModelId()) {
+            updateRequired = true;
+            oldDataMap.put("modelId", (toBeUpdated.getDeviceModel() != null ? toBeUpdated.getDeviceModel().getId() : null));
+            newDataMap.put("modelId", requestDto.getModelId());
+
+            toBeUpdated.setDeviceModel(new DeviceModel(requestDto.getModelId()));
         }
         if (!toBeUpdated.getStatus().getStatusCode().equals(requestDto.getStatus())) {
             updateRequired = true;
