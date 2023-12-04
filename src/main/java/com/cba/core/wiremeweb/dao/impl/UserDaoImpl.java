@@ -17,7 +17,7 @@ import com.cba.core.wiremeweb.service.EmailService;
 import com.cba.core.wiremeweb.util.UserBeanUtil;
 import com.cba.core.wiremeweb.util.UserOperationEnum;
 import com.cba.core.wiremeweb.util.UserPasswordUtil;
-import com.cba.core.wiremeweb.util.UserTypeEnum;
+import com.cba.core.wiremeweb.util.DeviceTypeEnum;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import jakarta.transaction.Transactional;
@@ -252,7 +252,7 @@ public class UserDaoImpl implements UserDao<UserResponseDto, UserRequestDto> {
             Map<String, Object> map = new HashMap<>();
 
             UserType userType = new UserType();
-            userType.setId(UserTypeEnum.WEB.getValue());
+            userType.setId(DeviceTypeEnum.WEB.getValue());
 
             User entity = repository.findByUserNameAndUserType(userName, userType).orElseThrow(() -> new NotFoundException("User not found"));
 

@@ -7,7 +7,7 @@ import com.cba.core.wiremeweb.model.User;
 import com.cba.core.wiremeweb.model.UserRole;
 import com.cba.core.wiremeweb.model.UserType;
 import com.cba.core.wiremeweb.repository.UserRepository;
-import com.cba.core.wiremeweb.util.UserTypeEnum;
+import com.cba.core.wiremeweb.util.DeviceTypeEnum;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -28,7 +28,7 @@ public class CustomUserDetailsDaoImpl implements CustomUserDetailsDao {
     public ApplicationUserDto loadUserByUsername(String userName) throws UsernameNotFoundException {
         try {
             UserType userType = new UserType();
-            userType.setId(UserTypeEnum.WEB.getValue()); // only web users are allowed in this module
+            userType.setId(DeviceTypeEnum.WEB.getValue()); // only web users are allowed in this module
 
             User user = userRepository.findByUserNameAndUserType(userName, userType).orElseThrow(() -> new NotFoundException("User not found"));
 

@@ -2,6 +2,7 @@ package com.cba.core.wiremeweb.filter;
 
 import com.cba.core.wiremeweb.config.JwtConfig;
 import com.cba.core.wiremeweb.controller.DeviceController;
+import com.cba.core.wiremeweb.service.TokenBlacklistService;
 import com.cba.core.wiremeweb.service.impl.TokenBlacklistServiceImpl;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -25,7 +26,7 @@ public class CustomLogoutHandler implements LogoutHandler {
     private static final Logger logger = LoggerFactory.getLogger(DeviceController.class);
 
     private final JwtConfig jwtConfig;
-    private final TokenBlacklistServiceImpl tokenBlacklistServiceImpl;
+    private final TokenBlacklistService tokenBlacklistService;
     private final MessageSource messageSource;
 
 
@@ -43,7 +44,7 @@ public class CustomLogoutHandler implements LogoutHandler {
             String token = authorizationHeader.replace(jwtConfig.getTokenPrefix(), "").trim();
 
             try {
-                if (tokenBlacklistServiceImpl.createBlacklistToken(token) == null)
+                if (tokenBlacklistService.createBlacklistToken(token) == null)
                     message = "Token Already Blacklisted...";
                 else {
                     message = "Token Successfully Blacklisted...";

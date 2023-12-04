@@ -33,7 +33,7 @@ public class JwtUtil {
                 .expiresAt(now.plus(jwtConfig.getTokenExpirationAfterMillis(), ChronoUnit.MILLIS))
                 .subject(username)
                 .claim("authorities", customUserDetailsServiceImpl.loadUserByUsername(username).getAuthorities())
-                .claim("Validity",UserTypeEnum.WEB.getValue())
+                .claim("Validity", DeviceTypeEnum.WEB.getValue())
                 .build();
         return encoder.encode(JwtEncoderParameters.from(claims)).getTokenValue();
     }
@@ -47,7 +47,7 @@ public class JwtUtil {
                 .expiresAt(now.plus(jwtConfig.getTokenExpirationAfterMillis(), ChronoUnit.MILLIS))
                 .subject(authResult.getName())
                 .claim("authorities", authResult.getAuthorities())
-                .claim("Validity",UserTypeEnum.WEB.getValue())
+                .claim("Validity", DeviceTypeEnum.WEB.getValue())
                 .build();
         return encoder.encode(JwtEncoderParameters.from(claims)).getTokenValue();
     }

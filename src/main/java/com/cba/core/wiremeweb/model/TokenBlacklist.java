@@ -1,6 +1,8 @@
 package com.cba.core.wiremeweb.model;
 
 import jakarta.persistence.*;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.time.Instant;
 
@@ -8,42 +10,18 @@ import java.time.Instant;
 @Table(name = "token_blacklist",
         uniqueConstraints = @UniqueConstraint(columnNames = "token")
 )
+@Data
+@NoArgsConstructor
 public class TokenBlacklist implements java.io.Serializable {
-
-    private Long id;
-    private String token;
-    private Instant expiration;
-
-    public TokenBlacklist() {
-    }
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", unique = true, nullable = false)
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
+    private Long id;
     @Column(name = "token", unique = true, nullable = false, length = 1500)
-    public String getToken() {
-        return token;
-    }
-
-    public void setToken(String token) {
-        this.token = token;
-    }
-
+    private String token;
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "expiration", nullable = false, length = 19)
-    public Instant getExpiration() {
-        return expiration;
-    }
+    private Instant expiration;
 
-    public void setExpiration(Instant expiration) {
-        this.expiration = expiration;
-    }
 }

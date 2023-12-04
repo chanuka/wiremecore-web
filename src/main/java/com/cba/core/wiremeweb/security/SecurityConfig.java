@@ -1,10 +1,16 @@
 package com.cba.core.wiremeweb.security;
 
 import com.cba.core.wiremeweb.config.JwtConfig;
+import com.cba.core.wiremeweb.dto.PermissionRequestDto;
+import com.cba.core.wiremeweb.dto.PermissionResponseDto;
 import com.cba.core.wiremeweb.exception.AuthEntryPoint;
 import com.cba.core.wiremeweb.filter.AuthTokenVerifyFilter;
 import com.cba.core.wiremeweb.filter.CustomLogoutHandler;
 import com.cba.core.wiremeweb.filter.UserNamePasswordVerifyFilter;
+import com.cba.core.wiremeweb.service.CustomUserDetailsService;
+import com.cba.core.wiremeweb.service.PermissionService;
+import com.cba.core.wiremeweb.service.RefreshTokenService;
+import com.cba.core.wiremeweb.service.TokenBlacklistService;
 import com.cba.core.wiremeweb.service.impl.CustomUserDetailsServiceImpl;
 import com.cba.core.wiremeweb.service.impl.PermissionServiceImpl;
 import com.cba.core.wiremeweb.service.impl.RefreshTokenServiceImpl;
@@ -40,16 +46,16 @@ import java.util.Arrays;
 @Profile(value = {"dev", "stage"})
 public class SecurityConfig {
 
-    private final CustomUserDetailsServiceImpl customUserDetailsServiceImpl;
+    private final CustomUserDetailsService customUserDetailsService;
     private final PasswordEncoder passwordEncoder;
     private final JwtConfig jwtConfig;
-    private final RefreshTokenServiceImpl refreshTokenServiceImpl;
-    private final PermissionServiceImpl permissionServiceImpl;// autowired not worked in the context of creating new object using new key word, has to manually inject.
+    private final RefreshTokenService refreshTokenService;
+    private final PermissionService<PermissionResponseDto, PermissionRequestDto> permissionService;// autowired not worked in the context of creating new object using new key word, has to manually inject.
     private final JwtUtil jwtUtil;
     private final JwtEncoder encoder;
     private final JwtDecoder decoder;
     private final UserBeanUtil userBeanUtil;
-    private final TokenBlacklistServiceImpl tokenBlacklistServiceImpl;
+    private final TokenBlacklistService tokenBlacklistService;
     private final CustomLogoutHandler customLogoutHandler;
     private final MessageSource messageSource;
 
@@ -57,7 +63,7 @@ public class SecurityConfig {
     @Bean
     public AuthenticationProvider authenticationProvider() {
         DaoAuthenticationProvider authenticationProvider = new DaoAuthenticationProvider();
-        authenticationProvider.setUserDetailsService(customUserDetailsServiceImpl);
+        authenticationProvider.setUserDetailsService(customUserDetailsService);
         authenticationProvider.setPasswordEncoder(passwordEncoder);
         return authenticationProvider;
     }
@@ -108,8 +114,8 @@ public class SecurityConfig {
 //        http.authenticationProvider(authenticationProvider()); // no need, auto detect
 
         http.addFilter(new UserNamePasswordVerifyFilter(authenticationManager(http.getSharedObject(AuthenticationConfiguration.class)),
-                jwtConfig, refreshTokenServiceImpl, jwtUtil, encoder));
-        http.addFilterAfter(new AuthTokenVerifyFilter(jwtConfig, jwtUtil, permissionServiceImpl, decoder, userBeanUtil, tokenBlacklistServiceImpl, messageSource), UserNamePasswordVerifyFilter.class);
+                jwtConfig, refreshTokenService, jwtUtil, encoder));
+        http.addFilterAfter(new AuthTokenVerifyFilter(jwtConfig, jwtUtil, permissionService, decoder, userBeanUtil, tokenBlacklistService, messageSource), UserNamePasswordVerifyFilter.class);
 
         return http.build();
     }

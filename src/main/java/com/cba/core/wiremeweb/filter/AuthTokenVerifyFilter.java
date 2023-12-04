@@ -1,13 +1,14 @@
 package com.cba.core.wiremeweb.filter;
 
 import com.cba.core.wiremeweb.config.JwtConfig;
+import com.cba.core.wiremeweb.dto.PermissionRequestDto;
 import com.cba.core.wiremeweb.dto.PermissionResponseDto;
 import com.cba.core.wiremeweb.exception.JwtTokenException;
-import com.cba.core.wiremeweb.service.impl.PermissionServiceImpl;
-import com.cba.core.wiremeweb.service.impl.TokenBlacklistServiceImpl;
+import com.cba.core.wiremeweb.service.PermissionService;
+import com.cba.core.wiremeweb.service.TokenBlacklistService;
 import com.cba.core.wiremeweb.util.JwtUtil;
 import com.cba.core.wiremeweb.util.UserBeanUtil;
-import com.cba.core.wiremeweb.util.UserTypeEnum;
+import com.cba.core.wiremeweb.util.DeviceTypeEnum;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -36,10 +37,10 @@ public class AuthTokenVerifyFilter extends OncePerRequestFilter {
 
     private final JwtConfig jwtConfig;
     private final JwtUtil jwtUtil;
-    private final PermissionServiceImpl permissionServiceImpl;
+    private final PermissionService<PermissionResponseDto, PermissionRequestDto> permissionService;
     private final JwtDecoder decoder;
     private final UserBeanUtil userBeanUtil;
-    private final TokenBlacklistServiceImpl tokenBlacklistServiceImpl;
+    private final TokenBlacklistService tokenBlacklistService;
     private final MessageSource messageSource;
 
     @Override
@@ -69,26 +70,26 @@ public class AuthTokenVerifyFilter extends OncePerRequestFilter {
             userBeanUtil.setUsername(username); // set user data in request scope for db updating
             userBeanUtil.setRemoteAdr(request.getRemoteAddr()); // set remote address in request scope for db updating
 
-            if (!validity.equals(String.valueOf(UserTypeEnum.WEB.getValue()))) {
+            if (!validity.equals(String.valueOf(DeviceTypeEnum.WEB.getValue()))) {
                 throw new JwtTokenException(token, messageSource.getMessage("GLOBAL_TOKEN_MODULE_ERROR", null, currentLocale));
             }
 
-            if (tokenBlacklistServiceImpl.isTokenBlacklisted(token)) {
+            if (tokenBlacklistService.isTokenBlacklisted(token)) {
                 throw new JwtTokenException(token, messageSource.getMessage("GLOBAL_TOKEN_BLACK_ERROR", null, currentLocale));
             }
 
             String[] resourceArray = request.getRequestURI().split("\\/");
             boolean access = false;
             String method = request.getMethod();
-            List<PermissionResponseDto> permissionResponseDtoList = permissionServiceImpl.findAllPermissionsByUser(username);
+            List<PermissionResponseDto> permissionResponseDtoList = permissionService.findAllPermissionsByUser(username);
 
             access = permissionResponseDtoList.stream()
                     .filter(permission -> permission.getResourceName().equals(resourceArray[2]))
                     .anyMatch(permission -> (
                             (method.equals("GET") && (permission.getReadd() != 0)) ||
-                            (method.equals("POST") && (permission.getCreated() != 0)) ||
-                            (method.equals("PUT") && (permission.getUpdated() != 0) ||
-                            (method.equals("DELETE") && (permission.getDeleted() != 0)))
+                                    (method.equals("POST") && (permission.getCreated() != 0)) ||
+                                    (method.equals("PUT") && (permission.getUpdated() != 0) ||
+                                            (method.equals("DELETE") && (permission.getDeleted() != 0)))
                     ));
 
             if (!access) {
