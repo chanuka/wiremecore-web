@@ -1,9 +1,13 @@
 package com.cba.core.wiremeweb.dto;
 
+import com.cba.core.wiremeweb.model.DeviceModel;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
+
+import java.util.List;
 
 @Data
 @NoArgsConstructor
@@ -15,6 +19,8 @@ public class DeviceVendorResponseDto implements java.io.Serializable {
     private String name;
     private String img;
     private String status;
+    @JsonInclude(JsonInclude.Include.NON_NULL)
+    private List<DeviceModelResponseDto> deviceModels;
 
     private static final long serialVersionUID = 1L;
 }

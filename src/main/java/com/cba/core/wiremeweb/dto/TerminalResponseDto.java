@@ -19,7 +19,7 @@ public class TerminalResponseDto implements Serializable {
     private Integer id;
     private String terminalId;
     @JsonInclude(JsonInclude.Include.NON_NULL)
-    private Integer merchantId;
+    private String merchantId;
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private String status;
     @JsonInclude(JsonInclude.Include.NON_NULL)

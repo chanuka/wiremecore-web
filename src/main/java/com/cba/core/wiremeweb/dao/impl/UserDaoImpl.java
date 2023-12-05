@@ -256,15 +256,18 @@ public class UserDaoImpl implements UserDao<UserResponseDto, UserRequestDto> {
 
             User entity = repository.findByUserNameAndUserType(userName, userType).orElseThrow(() -> new NotFoundException("User not found"));
 
-            entity.setPassword(passwordEncoder.encode(requestDto.getNewPassword()));
-            repository.saveAndFlush(entity);
+            if (passwordEncoder.matches(requestDto.getCurrentPassword(), entity.getPassword())) {
+                entity.setPassword(passwordEncoder.encode(requestDto.getNewPassword()));
+                repository.saveAndFlush(entity);
+                map.put("password", "xxxxxxxx");
+                String maskValue = objectMapper.writeValueAsString(map);
 
-            map.put("password", "xxxxxxxx");
-            String maskValue = objectMapper.writeValueAsString(map);
-
-            globalAuditEntryRepository.save(new GlobalAuditEntry(resource, UserOperationEnum.UPDATE.getValue(),
-                    entity.getId(), maskValue, maskValue,
-                    userBeanUtil.getRemoteAdr()));
+                globalAuditEntryRepository.save(new GlobalAuditEntry(resource, UserOperationEnum.UPDATE.getValue(),
+                        entity.getId(), maskValue, maskValue,
+                        userBeanUtil.getRemoteAdr()));
+            } else {
+                throw new NotFoundException("Fail - Old Password mismatch");
+            }
 
             return "success";
 

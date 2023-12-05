@@ -14,7 +14,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 @Entity
-@Table(name = "merchant"
+@Table(name = "merchant", uniqueConstraints = {@UniqueConstraint(name = "merchant_un", columnNames = {"merchant_id"})}
 )
 @EntityListeners(AuditingEntityListener.class) // enable entity level auditing for create,modified attributes
 @Data
@@ -42,7 +42,7 @@ public class Merchant implements java.io.Serializable {
     private String modifiedBy;
     @Column(name = "name", nullable = false, length = 50)
     private String name;
-    @Column(name = "merchant_id", nullable = false, length = 16)
+    @Column(name = "merchant_id", nullable = false, length = 16, unique = true)
     private String merchantId;
     @Column(name = "email", nullable = false, length = 40)
     private String email;
@@ -70,10 +70,6 @@ public class Merchant implements java.io.Serializable {
     private Set<Terminal> terminals = new HashSet<Terminal>(0);
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "merchant")
     private Set<User> users = new HashSet<User>(0);
-
-    public Merchant(Integer id) {
-        this.id = id;
-    }
 
 }
 

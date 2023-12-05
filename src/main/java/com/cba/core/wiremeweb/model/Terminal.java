@@ -14,7 +14,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 @Entity
-@Table(name = "terminal"
+@Table(name = "terminal", uniqueConstraints = {@UniqueConstraint(name = "terminal_un", columnNames = {"terminal_id"})}
 )
 @EntityListeners(AuditingEntityListener.class) // enable entity level auditing for create,modified attributes
 @Data
@@ -26,7 +26,7 @@ public class Terminal implements java.io.Serializable {
     @Column(name = "id", unique = true, nullable = false)
     private Integer id;
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "merchant_id", nullable = false)
+    @JoinColumn(name = "merchant_id", referencedColumnName = "merchant_id", nullable = false)
     private Merchant merchant;
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "device_id", nullable = false)
@@ -40,7 +40,7 @@ public class Terminal implements java.io.Serializable {
     @Column(name = "created_by", nullable = false, length = 45)
     @CreatedBy
     private String userByCreatedBy;
-    @Column(name = "terminal_id", nullable = false, length = 9)
+    @Column(name = "terminal_id", nullable = false, length = 9, unique = true)
     private String terminalId;
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "created_at", nullable = false, length = 19)

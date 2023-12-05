@@ -75,7 +75,9 @@ public class MerchantDaoImpl implements MerchantDao<MerchantResponseDto, Merchan
         Pageable pageable = PageRequest.of(page, pageSize);
         Specification<Merchant> spec = MerchantSpecification.
                 nameLikeAndStatusLike(searchParamList.get(0).get("merchantName"),
-                        searchParamList.get(0).get("status"));
+                        searchParamList.get(0).get("status"),
+                        searchParamList.get(0).get("merchantId"),
+                        searchParamList.get(0).get("partnerName"));
 
         Page<Merchant> entitiesPage = repository.findAll(spec, pageable);
 

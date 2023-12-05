@@ -7,6 +7,7 @@ import com.cba.core.wiremeweb.exception.NotFoundException;
 import com.cba.core.wiremeweb.mapper.TerminalMapper;
 import com.cba.core.wiremeweb.model.*;
 import com.cba.core.wiremeweb.repository.GlobalAuditEntryRepository;
+import com.cba.core.wiremeweb.repository.MerchantRepository;
 import com.cba.core.wiremeweb.repository.TerminalRepository;
 import com.cba.core.wiremeweb.repository.specification.TerminalSpecification;
 import com.cba.core.wiremeweb.util.UserBeanUtil;
@@ -35,6 +36,7 @@ import java.util.stream.Collectors;
 public class TerminalDaoImpl implements TerminalDao<TerminalResponseDto, TerminalRequestDto> {
 
     private final TerminalRepository repository;
+    private final MerchantRepository merchantRepository;
     private final GlobalAuditEntryRepository globalAuditEntryRepository;
     private final ObjectMapper objectMapper;
     private final UserBeanUtil userBeanUtil;
@@ -154,12 +156,13 @@ public class TerminalDaoImpl implements TerminalDao<TerminalResponseDto, Termina
 
             toBeUpdated.setTerminalId(requestDto.getTerminalId());
         }
-        if (toBeUpdated.getMerchant().getId() != requestDto.getMerchantId()) {
+        if (!toBeUpdated.getMerchant().getMerchantId().equals(requestDto.getMerchantId())) {
             updateRequired = true;
-            oldDataMap.put("merchantId", toBeUpdated.getMerchant().getId());
+            oldDataMap.put("merchantId", toBeUpdated.getMerchant().getMerchantId());
             newDataMap.put("merchantId", requestDto.getMerchantId());
-
-            toBeUpdated.setMerchant(new Merchant(requestDto.getMerchantId()));
+            Merchant merchant = merchantRepository.findByMerchantId(requestDto.getMerchantId())
+                    .orElseThrow(() -> new NotFoundException("Merchant Not Found"));
+            toBeUpdated.setMerchant(merchant);
         }
         if (toBeUpdated.getDevice().getId() != requestDto.getDeviceId()) {
             updateRequired = true;
@@ -193,7 +196,11 @@ public class TerminalDaoImpl implements TerminalDao<TerminalResponseDto, Termina
     @CacheEvict(value = "terminals", allEntries = true)
     public TerminalResponseDto create(TerminalRequestDto requestDto) throws Exception {
 
-        Terminal toInsert = TerminalMapper.toModel(requestDto);
+
+        Merchant merchant = merchantRepository.findByMerchantId(requestDto.getMerchantId())
+                .orElseThrow(() -> new NotFoundException("Merchant Not Found"));
+
+        Terminal toInsert = TerminalMapper.toModel(requestDto, merchant);
 
         Terminal savedEntity = repository.save(toInsert);
         TerminalResponseDto responseDto = TerminalMapper.toDto(savedEntity);
@@ -210,7 +217,11 @@ public class TerminalDaoImpl implements TerminalDao<TerminalResponseDto, Termina
 
         List<Terminal> entityList = requestDtoList
                 .stream()
-                .map(TerminalMapper::toModel)
+                .map((terminalDto) -> {
+                    Merchant merchant = merchantRepository.findByMerchantId(terminalDto.getMerchantId())
+                            .orElseThrow(() -> new NotFoundException("Merchant Not Found"));
+                    return TerminalMapper.toModel(terminalDto, merchant);
+                })
                 .collect(Collectors.toList());
 
         return repository.saveAll(entityList)

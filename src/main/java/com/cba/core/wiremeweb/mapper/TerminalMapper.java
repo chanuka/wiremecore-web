@@ -13,7 +13,7 @@ public class TerminalMapper {
         TerminalResponseDto responseDto = new TerminalResponseDto();
         responseDto.setTerminalId(entity.getTerminalId());
         responseDto.setDeviceId(entity.getDevice().getId());
-        responseDto.setMerchantId(entity.getMerchant().getId());
+        responseDto.setMerchantId(entity.getMerchant().getMerchantId());
         responseDto.setStatus(entity.getStatus().getStatusCode());
         responseDto.setPartnerName(entity.getMerchant().getMerchantCustomer().getName());
         responseDto.setDeviceType(entity.getDevice().getDeviceType());
@@ -23,10 +23,10 @@ public class TerminalMapper {
         return responseDto;
     }
 
-    public static Terminal toModel(TerminalRequestDto requestDto) {
+    public static Terminal toModel(TerminalRequestDto requestDto,Merchant merchant) {
         Terminal entity = new Terminal();
         entity.setTerminalId(requestDto.getTerminalId());
-        entity.setMerchant(new Merchant(requestDto.getMerchantId()));
+        entity.setMerchant(merchant);
         entity.setStatus(new Status(requestDto.getStatus()));
         entity.setDevice(new Device(requestDto.getDeviceId()));
         return entity;

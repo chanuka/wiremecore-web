@@ -125,8 +125,8 @@ public class TerminalServiceImpl implements TerminalService<TerminalResponseDto,
                 cell.setCellValue((String) responseDto.getStatus());
             }
             cell = row.createCell(columnCount++);
-            if (responseDto.getMerchantId() instanceof Integer) {
-                cell.setCellValue((Integer) responseDto.getMerchantId());
+            if (responseDto.getMerchantId() instanceof String) {
+                cell.setCellValue((String) responseDto.getMerchantId());
             }
             cell = row.createCell(columnCount++);
             if (responseDto.getDeviceId() instanceof Integer) {

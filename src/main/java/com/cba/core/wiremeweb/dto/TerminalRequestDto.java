@@ -1,6 +1,8 @@
 package com.cba.core.wiremeweb.dto;
 
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -16,12 +18,14 @@ public class TerminalRequestDto implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    @NotBlank(message = "Terminal ID is required")
+    @NotBlank(message = "{validation.terminal.empty}")
+    @Size(max = 8, message = "{validation.terminal.maxlength}")
     private String terminalId;
-//    @NotEmpty(message = "Merchant ID is required")
-    private Integer merchantId;
-//    @NotEmpty(message = "Device ID is required")
+    @NotBlank(message = "{validation.merchant.empty}")
+    @Size(max = 16, message = "{validation.merchant.maxlength}")
+    private String merchantId;
+//    @NotBlank(message = "{validation.device.empty}")
     private Integer deviceId;
-    @NotBlank(message = "Status is required")
+    @NotBlank(message = "{validation.status.empty}")
     private String status;
 }

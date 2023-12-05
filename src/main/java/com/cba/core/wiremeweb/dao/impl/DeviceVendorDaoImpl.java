@@ -1,15 +1,21 @@
 package com.cba.core.wiremeweb.dao.impl;
 
 import com.cba.core.wiremeweb.dao.GenericDao;
+import com.cba.core.wiremeweb.dto.DeviceModelRequestDto;
+import com.cba.core.wiremeweb.dto.DeviceModelResponseDto;
 import com.cba.core.wiremeweb.dto.DeviceVendorRequestDto;
 import com.cba.core.wiremeweb.dto.DeviceVendorResponseDto;
 import com.cba.core.wiremeweb.exception.NotFoundException;
+import com.cba.core.wiremeweb.mapper.DeviceModelMapper;
 import com.cba.core.wiremeweb.mapper.DeviceVendorMapper;
+import com.cba.core.wiremeweb.model.DeviceModel;
 import com.cba.core.wiremeweb.model.DeviceVendor;
 import com.cba.core.wiremeweb.model.GlobalAuditEntry;
 import com.cba.core.wiremeweb.model.Status;
+import com.cba.core.wiremeweb.repository.DeviceModelRepository;
 import com.cba.core.wiremeweb.repository.DeviceVendorRepository;
 import com.cba.core.wiremeweb.repository.GlobalAuditEntryRepository;
+import com.cba.core.wiremeweb.service.impl.DeviceModelServiceImpl;
 import com.cba.core.wiremeweb.util.UserBeanUtil;
 import com.cba.core.wiremeweb.util.UserOperationEnum;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -33,6 +39,7 @@ import java.util.stream.Collectors;
 public class DeviceVendorDaoImpl implements GenericDao<DeviceVendorResponseDto, DeviceVendorRequestDto> {
 
     private final DeviceVendorRepository repository;
+    private final DeviceModelRepository deviceModelRepository;
     private final GlobalAuditEntryRepository globalAuditEntryRepository;
     private final ObjectMapper objectMapper;
     private final UserBeanUtil userBeanUtil;
@@ -71,7 +78,11 @@ public class DeviceVendorDaoImpl implements GenericDao<DeviceVendorResponseDto, 
     @Override
     public DeviceVendorResponseDto findById(int id) throws Exception {
         DeviceVendor entity = repository.findById(id).orElseThrow(() -> new NotFoundException("Device Vendor not found"));
-        return DeviceVendorMapper.toDto(entity);
+        List<DeviceModel> deviceModels = deviceModelRepository.findAllByDeviceVendor_Id(entity.getId());
+
+        DeviceVendorResponseDto deviceVendorResponseDto = DeviceVendorMapper.toDto(entity);
+        deviceVendorResponseDto.setDeviceModels(deviceModels.stream().map(DeviceModelMapper::toDto).collect(Collectors.toList()));
+        return deviceVendorResponseDto;
     }
 
     @Override

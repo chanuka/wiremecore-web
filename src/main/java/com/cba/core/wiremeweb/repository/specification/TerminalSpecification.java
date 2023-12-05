@@ -13,7 +13,7 @@ public interface TerminalSpecification {
             Join<Terminal, Merchant> merchantJoin = root.join("merchant", JoinType.INNER);
             return criteriaBuilder.and(
 //                    criteriaBuilder.like(criteriaBuilder.concat("", merchantJoin.get("id")), "%" + merchantId + "%"),
-                    criteriaBuilder.equal(merchantJoin.get("id"), Integer.parseInt(merchantId)),
+                    criteriaBuilder.like(criteriaBuilder.lower(merchantJoin.get("merchantId")), "%" + merchantId.toLowerCase() + "%"),
                     criteriaBuilder.like(criteriaBuilder.lower(root.get("terminalId")), "%" + terminalId.toLowerCase() + "%")
             );
         };
