@@ -209,7 +209,8 @@ public class UserDaoImpl implements UserDao<UserResponseDto, UserRequestDto> {
         requestDto.setPassword(UserPasswordUtil.generateCommonLangPassword());
         User toInsert = UserMapper.toModel(requestDto);
 
-        emailService.sendEmail(toInsert.getEmail(), requestDto.getPassword());
+        String message = "Your Password for Wireme is : " + requestDto.getPassword();
+        emailService.sendEmail(toInsert.getEmail(), message);
         requestDto.setPassword(null); // to protect the generated password
 
         User savedEntity = repository.save(toInsert);

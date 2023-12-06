@@ -7,6 +7,7 @@ import com.cba.core.wiremeweb.exception.NotFoundException;
 import com.cba.core.wiremeweb.mapper.GraphMapper;
 import com.cba.core.wiremeweb.model.GlobalAuditEntry;
 import com.cba.core.wiremeweb.model.Status;
+import com.cba.core.wiremeweb.model.User;
 import com.cba.core.wiremeweb.model.UserConfig;
 import com.cba.core.wiremeweb.repository.DashBoardRepository;
 import com.cba.core.wiremeweb.repository.GlobalAuditEntryRepository;
@@ -98,7 +99,8 @@ public class GraphDaoImpl implements GraphDao {
     public GraphResponseDto create(GraphRequestDto requestDto) throws Exception {
 
         String config = objectMapper.writeValueAsString(requestDto);
-        UserConfig toInsert = GraphMapper.toModel(requestDto, config, userRepository.findByUserName(userBeanUtil.getUsername()));
+        User user = userRepository.findByUserName(userBeanUtil.getUsername()).orElseThrow(() -> new NotFoundException("User Not Found"));
+        UserConfig toInsert = GraphMapper.toModel(requestDto, config, user);
 
         UserConfig savedEntity = repository.save(toInsert);
 

@@ -18,10 +18,10 @@ public class OnetimePassword implements java.io.Serializable {
     @Column(name = "id", unique = true, nullable = false)
     private Integer id;
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id")
+    @JoinColumn(name = "user_name", referencedColumnName = "user_name")
     private User user;
-    @Column(name = "value", nullable = false)
-    private int value;
+    @Column(name = "value", length = 65535, columnDefinition = "TEXT", nullable = false)
+    private String value;
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "expireson", length = 19)
     private Date expireson;

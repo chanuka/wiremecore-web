@@ -2,8 +2,10 @@ package com.cba.core.wiremeweb.dao.impl;
 
 import com.cba.core.wiremeweb.config.RefreshTokenConfig;
 import com.cba.core.wiremeweb.dao.RefreshTokenDao;
+import com.cba.core.wiremeweb.exception.NotFoundException;
 import com.cba.core.wiremeweb.exception.TokenRefreshException;
 import com.cba.core.wiremeweb.model.TokenRefresh;
+import com.cba.core.wiremeweb.model.User;
 import com.cba.core.wiremeweb.repository.RefreshTokenRepository;
 import com.cba.core.wiremeweb.repository.UserRepository;
 import jakarta.transaction.Transactional;
@@ -32,7 +34,8 @@ public class RefreshTokenDaoImpl implements RefreshTokenDao {
     @Override
     public TokenRefresh createRefreshToken(String userName) throws IOException {
         TokenRefresh refreshToken = new TokenRefresh();
-        refreshToken.setUser(userRepository.findByUserName(userName));
+        User user = userRepository.findByUserName(userName).orElseThrow(() -> new NotFoundException("User Not Found"));
+        refreshToken.setUser(user);
         refreshToken.setExpiryDate(Instant.now().plusMillis(refreshTokenConfig.getTokenExpirationAfterMillis()));
         refreshToken.setToken(UUID.randomUUID().toString());
 

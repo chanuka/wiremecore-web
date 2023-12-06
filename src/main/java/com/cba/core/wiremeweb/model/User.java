@@ -14,7 +14,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 @Entity
-@Table(name = "user"
+@Table(name = "user", uniqueConstraints = {@UniqueConstraint(name = "user_un", columnNames = {"user_name"})}
 )
 @EntityListeners(AuditingEntityListener.class) // enable entity level auditing for create,modified attributes
 @Data
@@ -42,7 +42,7 @@ public class User implements java.io.Serializable {
     private UserType userType;
     @JoinColumn(name = "name", nullable = false)
     private String name;
-    @Column(name = "user_name", nullable = false, length = 45)
+    @Column(name = "user_name", nullable = false, length = 45, unique = true)
     private String userName;
     @Column(name = "password", length = 65535, columnDefinition = "TEXT")
     private String password;

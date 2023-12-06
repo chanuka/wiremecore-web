@@ -17,7 +17,7 @@ spring:
         jdbc:
           batch_size: 50
   datasource:
-    url: jdbc:mysql://${DB_HOST}:${DB_PORT}/${DB_NAME}?createDatabaseIfNotExist=true
+    url: jdbc:mysql://${DB_HOST}:${DB_PORT}/${DB_NAME}?serverTimezone=Asia/Colombo&createDatabaseIfNotExist=true&cachePrepStmts=true&useServerPrepStmts=true&rewriteBatchedStatements=true
     username: ${DB_USER}
     password: ${DB_PASSWORD}
     hikari:

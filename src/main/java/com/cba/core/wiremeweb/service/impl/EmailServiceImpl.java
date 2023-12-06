@@ -48,7 +48,7 @@ public class EmailServiceImpl implements EmailService {
     }
 
     @Override
-    public void sendEmail(String userMail, String password) throws MessagingException, IOException {
+    public void sendEmail(String userMail, String messageBody) throws MessagingException, IOException {
         MimeMessage message = javaMailSender.createMimeMessage();
 
         MimeMessageHelper helper = new MimeMessageHelper(message,
@@ -56,8 +56,8 @@ public class EmailServiceImpl implements EmailService {
                 StandardCharsets.UTF_8.name());
 
         helper.setTo(userMail);
-        helper.setText("Your Password for Wireme is : " + password);
-        helper.setSubject("This is auto generated email - include credentials");
+        helper.setText(messageBody);
+        helper.setSubject("This is auto generated email - include credentials/OTP");
 //        helper.setFrom(emailRequestDto.getFrom());
 
         javaMailSender.send(message);

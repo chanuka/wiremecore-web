@@ -7,10 +7,7 @@ import com.cba.core.wiremeweb.dto.TransactionCoreResponseDto;
 import com.cba.core.wiremeweb.exception.NotFoundException;
 import com.cba.core.wiremeweb.mapper.HighlightMapper;
 import com.cba.core.wiremeweb.mapper.TransactionCoreMapper;
-import com.cba.core.wiremeweb.model.GlobalAuditEntry;
-import com.cba.core.wiremeweb.model.Status;
-import com.cba.core.wiremeweb.model.TransactionCore;
-import com.cba.core.wiremeweb.model.UserConfig;
+import com.cba.core.wiremeweb.model.*;
 import com.cba.core.wiremeweb.repository.DashBoardRepository;
 import com.cba.core.wiremeweb.repository.GlobalAuditEntryRepository;
 import com.cba.core.wiremeweb.repository.UserRepository;
@@ -99,7 +96,8 @@ public class HighlightDaoImpl implements HighlightDao {
     public HighlightResponseDto create(HighlightRequestDto requestDto) throws Exception {
 
         String config = objectMapper.writeValueAsString(requestDto);
-        UserConfig toInsert = HighlightMapper.toModel(requestDto, config, userRepository.findByUserName(userBeanUtil.getUsername()));
+        User user = userRepository.findByUserName(userBeanUtil.getUsername()).orElseThrow(() -> new NotFoundException("User Not Found"));
+        UserConfig toInsert = HighlightMapper.toModel(requestDto, config, user);
 
         UserConfig savedEntity = repository.save(toInsert);
 
@@ -328,8 +326,7 @@ public class HighlightDaoImpl implements HighlightDao {
             }
             if (filterKey != null && !"".equals(filterKey) && filterValue != null && !"".equals(filterValue)) {
                 query.setParameter("filterValue", filterValue);
-            }
-            else {
+            } else {
             }
 
             List<TransactionCore> list = query.getResultList();
@@ -381,7 +378,7 @@ public class HighlightDaoImpl implements HighlightDao {
                     select += " sum(p.amount) ";
                 }
                 if ("Count".equalsIgnoreCase(aggregator)) {
-                        select += " count(p) ";
+                    select += " count(p) ";
                 }
             }
             if ("PaymentMode".equalsIgnoreCase(grouping)) {
@@ -418,7 +415,7 @@ public class HighlightDaoImpl implements HighlightDao {
         String province = requestDto.getSelectionScopeDto().getProvince();
         String district = requestDto.getSelectionScopeDto().getDistrict();
         String filterKey = "", filterValue = "";
-        
+
         if (requestDto.getFilter() != null) {
             for (Map.Entry<String, String> entry : requestDto.getFilter().entrySet()) {
                 filterKey = entry.getKey();
@@ -453,8 +450,7 @@ public class HighlightDaoImpl implements HighlightDao {
             if ("TranType".equalsIgnoreCase(filterKey)) {
                 where += " AND p.tranType=:filterValue";
             }
-        }
-        else {
+        } else {
         }
 
         return where;
