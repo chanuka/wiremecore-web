@@ -1,8 +1,6 @@
 package com.cba.core.wiremeweb.dao.impl;
 
 import com.cba.core.wiremeweb.dao.GenericDao;
-import com.cba.core.wiremeweb.dto.DeviceModelRequestDto;
-import com.cba.core.wiremeweb.dto.DeviceModelResponseDto;
 import com.cba.core.wiremeweb.dto.DeviceVendorRequestDto;
 import com.cba.core.wiremeweb.dto.DeviceVendorResponseDto;
 import com.cba.core.wiremeweb.exception.NotFoundException;
@@ -15,7 +13,6 @@ import com.cba.core.wiremeweb.model.Status;
 import com.cba.core.wiremeweb.repository.DeviceModelRepository;
 import com.cba.core.wiremeweb.repository.DeviceVendorRepository;
 import com.cba.core.wiremeweb.repository.GlobalAuditEntryRepository;
-import com.cba.core.wiremeweb.service.impl.DeviceModelServiceImpl;
 import com.cba.core.wiremeweb.util.UserBeanUtil;
 import com.cba.core.wiremeweb.util.UserOperationEnum;
 import com.fasterxml.jackson.databind.ObjectMapper;

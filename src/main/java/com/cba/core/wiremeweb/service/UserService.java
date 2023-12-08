@@ -6,4 +6,6 @@ public interface UserService<T, K> extends GenericService<T, K> {
 
     String changePassword(ChangePasswordRequestDto requestDto) throws Exception;
 
+    String accountLockReset(String userName) throws Exception;
+
 }

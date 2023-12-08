@@ -3,7 +3,6 @@ package com.cba.core.wiremeweb.filter;
 import com.cba.core.wiremeweb.config.JwtConfig;
 import com.cba.core.wiremeweb.controller.DeviceController;
 import com.cba.core.wiremeweb.service.TokenBlacklistService;
-import com.cba.core.wiremeweb.service.impl.TokenBlacklistServiceImpl;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;

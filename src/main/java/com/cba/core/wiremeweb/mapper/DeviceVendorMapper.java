@@ -2,11 +2,8 @@ package com.cba.core.wiremeweb.mapper;
 
 import com.cba.core.wiremeweb.dto.DeviceVendorRequestDto;
 import com.cba.core.wiremeweb.dto.DeviceVendorResponseDto;
-import com.cba.core.wiremeweb.model.DeviceModel;
 import com.cba.core.wiremeweb.model.DeviceVendor;
 import com.cba.core.wiremeweb.model.Status;
-
-import java.util.ArrayList;
 
 public class DeviceVendorMapper {
 

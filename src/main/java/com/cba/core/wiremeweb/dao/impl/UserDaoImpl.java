@@ -14,10 +14,10 @@ import com.cba.core.wiremeweb.repository.GlobalAuditEntryRepository;
 import com.cba.core.wiremeweb.repository.UserRepository;
 import com.cba.core.wiremeweb.repository.specification.UserSpecification;
 import com.cba.core.wiremeweb.service.EmailService;
+import com.cba.core.wiremeweb.util.DeviceTypeEnum;
 import com.cba.core.wiremeweb.util.UserBeanUtil;
 import com.cba.core.wiremeweb.util.UserOperationEnum;
 import com.cba.core.wiremeweb.util.UserPasswordUtil;
-import com.cba.core.wiremeweb.util.DeviceTypeEnum;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import jakarta.transaction.Transactional;
@@ -32,6 +32,7 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -275,5 +276,27 @@ public class UserDaoImpl implements UserDao<UserResponseDto, UserRequestDto> {
         } catch (Exception rr) {
             throw rr;
         }
+    }
+
+    @Override
+    public String accountLockReset(String userName) throws Exception {
+        User toBeUpdated = repository.findByUserName(userName).orElseThrow(() -> new NotFoundException("User not found"));
+        Map<String, Object> oldValueMap = new HashMap<>();
+        Map<String, Object> newValueMap = new HashMap<>();
+        oldValueMap.put("loginAttempt", toBeUpdated.getLoginAttempt());
+        oldValueMap.put("status", toBeUpdated.getStatus().getStatusCode());
+
+        toBeUpdated.setLoginAttempt(0);
+        toBeUpdated.setStatus(new Status("ACTV"));
+        newValueMap.put("loginAttempt", toBeUpdated.getLoginAttempt());
+        newValueMap.put("status", toBeUpdated.getStatus().getStatusCode());
+
+        /*
+        Old and new values are not set to JSON
+         */
+        globalAuditEntryRepository.save(new GlobalAuditEntry(resource, UserOperationEnum.UPDATE.getValue(),
+                toBeUpdated.getId(), objectMapper.writeValueAsString(oldValueMap), objectMapper.writeValueAsString(newValueMap),
+                userBeanUtil.getRemoteAdr()));
+        return null;
     }
 }

@@ -6,6 +6,8 @@ import com.cba.core.wiremeweb.dto.UserRequestDto;
 import com.cba.core.wiremeweb.dto.UserResponseDto;
 import com.cba.core.wiremeweb.service.UserService;
 import com.cba.core.wiremeweb.util.PaginationResponse;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
@@ -34,6 +36,7 @@ public class UserController implements UserResource<UserResponseDto, UserRequest
 
     private final UserService<UserResponseDto, UserRequestDto> service;
     private final MessageSource messageSource;
+    private final ObjectMapper objectMapper;
 
     @Override
     public ResponseEntity<PaginationResponse<UserResponseDto>> getAllByPageWise(int page, int pageSize) throws Exception {
@@ -207,6 +210,25 @@ public class UserController implements UserResource<UserResponseDto, UserRequest
         try {
             service.changePassword(requestDto);
             return ResponseEntity.ok().body(messageSource.getMessage("USER_CHANGE_PASSWORD_SUCCESS", null, currentLocale));
+
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+            throw e;
+        }
+    }
+
+    @Override
+    public ResponseEntity<String> accountLockReset(String userName) throws Exception {
+        Locale currentLocale = LocaleContextHolder.getLocale();// works only when as local statement
+        logger.debug(messageSource.getMessage("USER_ACCOUNT_RESET_DEBUG", null, currentLocale));
+
+        try {
+
+            JsonNode jsonNode = objectMapper.readTree(userName);
+            String propertyValue = jsonNode.get("userName").asText();
+
+            service.accountLockReset(propertyValue);
+            return ResponseEntity.ok().body(messageSource.getMessage("USER_ACCOUNT_RESET_SUCCESS", null, currentLocale));
 
         } catch (Exception e) {
             logger.error(e.getMessage());

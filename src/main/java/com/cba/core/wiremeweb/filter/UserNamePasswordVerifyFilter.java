@@ -4,7 +4,6 @@ import com.cba.core.wiremeweb.config.JwtConfig;
 import com.cba.core.wiremeweb.dto.UsernameAndPasswordAuthenticationRequestDto;
 import com.cba.core.wiremeweb.model.TokenRefresh;
 import com.cba.core.wiremeweb.service.RefreshTokenService;
-import com.cba.core.wiremeweb.service.impl.RefreshTokenServiceImpl;
 import com.cba.core.wiremeweb.util.JwtUtil;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.FilterChain;

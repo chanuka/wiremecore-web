@@ -145,4 +145,9 @@ public class UserServiceImpl implements UserService<UserResponseDto, UserRequest
     public String changePassword(ChangePasswordRequestDto requestDto) throws Exception {
         return dao.changePassword(requestDto, userBeanUtil.getUsername());
     }
+
+    @Override
+    public String accountLockReset(String userName) throws Exception {
+        return dao.accountLockReset(userName);
+    }
 }

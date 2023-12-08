@@ -11,4 +11,7 @@ public interface UserResource<T, K> extends GenericResource<T, K> {
     @PostMapping("/changePassword")
     ResponseEntity<String> changePassword(@Valid @RequestBody ChangePasswordRequestDto requestDto) throws Exception;
 
+    @PostMapping("/accountLockReset")
+    ResponseEntity<String> accountLockReset(@Valid @RequestBody String userName) throws Exception;
+
 }
