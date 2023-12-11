@@ -55,6 +55,10 @@ public class HighlightDaoImpl implements HighlightDao {
             throw new NotFoundException("No User Config found");
         }
 
+        for(UserConfig u : entityList){
+            System.out.println("uu:"+u.getConfig());
+        }
+
         return entityList
                 .stream()
                 .map((userConfig -> {
@@ -181,33 +185,33 @@ public class HighlightDaoImpl implements HighlightDao {
 
                 toBeUpdatedDto.setTag(requestDto.getTag());
             }
-            if (!toBeUpdatedDto.getSelectionScopeDto().getDistrict().equals(requestDto.getSelectionScopeDto().getDistrict())) {
+            if (!toBeUpdatedDto.getSelectionScope().getDistrict().equals(requestDto.getSelectionScope().getDistrict())) {
                 updateRequired = true;
-                oldDataMap.put("district", toBeUpdatedDto.getSelectionScopeDto().getDistrict());
-                newDataMap.put("district", requestDto.getSelectionScopeDto().getDistrict());
+                oldDataMap.put("district", toBeUpdatedDto.getSelectionScope().getDistrict());
+                newDataMap.put("district", requestDto.getSelectionScope().getDistrict());
 
-                toBeUpdatedDto.getSelectionScopeDto().setDistrict(requestDto.getSelectionScopeDto().getDistrict());
+                toBeUpdatedDto.getSelectionScope().setDistrict(requestDto.getSelectionScope().getDistrict());
             }
-            if (!toBeUpdatedDto.getSelectionScopeDto().getMerchant().equals(requestDto.getSelectionScopeDto().getMerchant())) {
+            if (!toBeUpdatedDto.getSelectionScope().getMerchant().equals(requestDto.getSelectionScope().getMerchant())) {
                 updateRequired = true;
-                oldDataMap.put("merchant", toBeUpdatedDto.getSelectionScopeDto().getMerchant());
-                newDataMap.put("merchant", requestDto.getSelectionScopeDto().getMerchant());
+                oldDataMap.put("merchant", toBeUpdatedDto.getSelectionScope().getMerchant());
+                newDataMap.put("merchant", requestDto.getSelectionScope().getMerchant());
 
-                toBeUpdatedDto.getSelectionScopeDto().setMerchant(requestDto.getSelectionScopeDto().getMerchant());
+                toBeUpdatedDto.getSelectionScope().setMerchant(requestDto.getSelectionScope().getMerchant());
             }
-            if (!toBeUpdatedDto.getSelectionScopeDto().getPartner().equals(requestDto.getSelectionScopeDto().getPartner())) {
+            if (!toBeUpdatedDto.getSelectionScope().getPartner().equals(requestDto.getSelectionScope().getPartner())) {
                 updateRequired = true;
-                oldDataMap.put("partner", toBeUpdatedDto.getSelectionScopeDto().getPartner());
-                newDataMap.put("partner", requestDto.getSelectionScopeDto().getPartner());
+                oldDataMap.put("partner", toBeUpdatedDto.getSelectionScope().getPartner());
+                newDataMap.put("partner", requestDto.getSelectionScope().getPartner());
 
-                toBeUpdatedDto.getSelectionScopeDto().setPartner(requestDto.getSelectionScopeDto().getPartner());
+                toBeUpdatedDto.getSelectionScope().setPartner(requestDto.getSelectionScope().getPartner());
             }
-            if (!toBeUpdatedDto.getSelectionScopeDto().getProvince().equals(requestDto.getSelectionScopeDto().getProvince())) {
+            if (!toBeUpdatedDto.getSelectionScope().getProvince().equals(requestDto.getSelectionScope().getProvince())) {
                 updateRequired = true;
-                oldDataMap.put("province", toBeUpdatedDto.getSelectionScopeDto().getProvince());
-                newDataMap.put("province", requestDto.getSelectionScopeDto().getProvince());
+                oldDataMap.put("province", toBeUpdatedDto.getSelectionScope().getProvince());
+                newDataMap.put("province", requestDto.getSelectionScope().getProvince());
 
-                toBeUpdatedDto.getSelectionScopeDto().setProvince(requestDto.getSelectionScopeDto().getProvince());
+                toBeUpdatedDto.getSelectionScope().setProvince(requestDto.getSelectionScope().getProvince());
             }
         }
         if (updateRequired) {
@@ -238,10 +242,10 @@ public class HighlightDaoImpl implements HighlightDao {
 
             String fromDate = requestDto.getFromDate();
             String toDate = requestDto.getToDate();
-            String partner = requestDto.getSelectionScopeDto().getPartner();
-            String merchant = requestDto.getSelectionScopeDto().getMerchant();
-            String province = requestDto.getSelectionScopeDto().getProvince();
-            String district = requestDto.getSelectionScopeDto().getDistrict();
+            String partner = requestDto.getSelectionScope().getPartner();
+            String merchant = requestDto.getSelectionScope().getMerchant();
+            String province = requestDto.getSelectionScope().getProvince();
+            String district = requestDto.getSelectionScope().getDistrict();
 
             String whereClause = setWhereCondition(requestDto);
             String selectClause = setSelectCondition(requestDto);
@@ -295,10 +299,10 @@ public class HighlightDaoImpl implements HighlightDao {
             }
             String fromDate = requestDto.getFromDate();
             String toDate = requestDto.getToDate();
-            String partner = requestDto.getSelectionScopeDto().getPartner();
-            String merchant = requestDto.getSelectionScopeDto().getMerchant();
-            String province = requestDto.getSelectionScopeDto().getProvince();
-            String district = requestDto.getSelectionScopeDto().getDistrict();
+            String partner = requestDto.getSelectionScope().getPartner();
+            String merchant = requestDto.getSelectionScope().getMerchant();
+            String province = requestDto.getSelectionScope().getProvince();
+            String district = requestDto.getSelectionScope().getDistrict();
 
             String whereClause = setWhereCondition(requestDto);
 
@@ -410,10 +414,10 @@ public class HighlightDaoImpl implements HighlightDao {
 
         String fromDate = requestDto.getFromDate();
         String toDate = requestDto.getToDate();
-        String partner = requestDto.getSelectionScopeDto().getPartner();
-        String merchant = requestDto.getSelectionScopeDto().getMerchant();
-        String province = requestDto.getSelectionScopeDto().getProvince();
-        String district = requestDto.getSelectionScopeDto().getDistrict();
+        String partner = requestDto.getSelectionScope().getPartner();
+        String merchant = requestDto.getSelectionScope().getMerchant();
+        String province = requestDto.getSelectionScope().getProvince();
+        String district = requestDto.getSelectionScope().getDistrict();
         String filterKey = "", filterValue = "";
 
         if (requestDto.getFilter() != null) {

@@ -26,7 +26,7 @@ public class HighlightRequestDto implements Serializable {
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private String tag;
     @JsonInclude(JsonInclude.Include.NON_NULL)
-    private SelectionScopeDto selectionScopeDto;
+    private SelectionScopeDto selectionScope;
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private String grouping;
     @JsonInclude(JsonInclude.Include.NON_NULL)
