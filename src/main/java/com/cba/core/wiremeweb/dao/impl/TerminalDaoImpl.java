@@ -75,7 +75,8 @@ public class TerminalDaoImpl implements TerminalDao<TerminalResponseDto, Termina
         Pageable pageable = PageRequest.of(page, pageSize);
         Specification<Terminal> spec = TerminalSpecification.
                 terminalIdLikeAndMerchantIdLike(searchParamList.get(0).get("terminalId"),
-                        searchParamList.get(0).get("merchantId"));
+                        searchParamList.get(0).get("merchantId"), searchParamList.get(0).get("merchantName")
+                        , searchParamList.get(0).get("serialNo"), searchParamList.get(0).get("status"));
 
         Page<Terminal> entitiesPage = repository.findAll(spec, pageable);
 

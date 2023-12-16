@@ -27,7 +27,7 @@ public interface HighlightResource {
     ResponseEntity<HighlightResponseDto> updateHighlightConfig(@PathVariable(value = "configName") String configName,
                                                           @RequestBody HighlightRequestDto requestDto) throws Exception;
 
-    @GetMapping("/getHighlights")
+    @PostMapping("/getHighlights")
     ResponseEntity<Map<String, Map<String, Object>>> getHighlights(@RequestBody HighlightRequestDto requestDto) throws Exception;
 
     @GetMapping("/getHighlightsDetail")

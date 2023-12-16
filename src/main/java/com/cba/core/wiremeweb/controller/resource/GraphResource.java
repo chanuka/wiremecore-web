@@ -26,7 +26,7 @@ public interface GraphResource {
     ResponseEntity<GraphResponseDto> updateGraph(@PathVariable(value = "configName") String configName,
                                                       @RequestBody GraphRequestDto requestDto) throws Exception;
 
-    @GetMapping("/getGraphs")
+    @PostMapping("/getGraphs")
     ResponseEntity<Map<String, Object>> getGraphs(@RequestBody GraphRequestDto requestDto) throws Exception;
 
 

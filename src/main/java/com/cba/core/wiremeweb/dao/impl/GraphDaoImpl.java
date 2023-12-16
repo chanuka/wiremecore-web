@@ -208,33 +208,33 @@ public class GraphDaoImpl implements GraphDao {
 
                 toBeUpdatedDto.setGraphType(requestDto.getGraphType());
             }
-            if (!toBeUpdatedDto.getSelectionScopeDto().getDistrict().equals(requestDto.getSelectionScopeDto().getDistrict())) {
+            if (!toBeUpdatedDto.getSelectionScope().getDistrict().equals(requestDto.getSelectionScope().getDistrict())) {
                 updateRequired = true;
-                oldDataMap.put("district", toBeUpdatedDto.getSelectionScopeDto().getDistrict());
-                newDataMap.put("district", requestDto.getSelectionScopeDto().getDistrict());
+                oldDataMap.put("district", toBeUpdatedDto.getSelectionScope().getDistrict());
+                newDataMap.put("district", requestDto.getSelectionScope().getDistrict());
 
-                toBeUpdatedDto.getSelectionScopeDto().setDistrict(requestDto.getSelectionScopeDto().getDistrict());
+                toBeUpdatedDto.getSelectionScope().setDistrict(requestDto.getSelectionScope().getDistrict());
             }
-            if (!toBeUpdatedDto.getSelectionScopeDto().getMerchant().equals(requestDto.getSelectionScopeDto().getMerchant())) {
+            if (!toBeUpdatedDto.getSelectionScope().getMerchant().equals(requestDto.getSelectionScope().getMerchant())) {
                 updateRequired = true;
-                oldDataMap.put("merchant", toBeUpdatedDto.getSelectionScopeDto().getMerchant());
-                newDataMap.put("merchant", requestDto.getSelectionScopeDto().getMerchant());
+                oldDataMap.put("merchant", toBeUpdatedDto.getSelectionScope().getMerchant());
+                newDataMap.put("merchant", requestDto.getSelectionScope().getMerchant());
 
-                toBeUpdatedDto.getSelectionScopeDto().setMerchant(requestDto.getSelectionScopeDto().getMerchant());
+                toBeUpdatedDto.getSelectionScope().setMerchant(requestDto.getSelectionScope().getMerchant());
             }
-            if (!toBeUpdatedDto.getSelectionScopeDto().getPartner().equals(requestDto.getSelectionScopeDto().getPartner())) {
+            if (!toBeUpdatedDto.getSelectionScope().getPartner().equals(requestDto.getSelectionScope().getPartner())) {
                 updateRequired = true;
-                oldDataMap.put("partner", toBeUpdatedDto.getSelectionScopeDto().getPartner());
-                newDataMap.put("partner", requestDto.getSelectionScopeDto().getPartner());
+                oldDataMap.put("partner", toBeUpdatedDto.getSelectionScope().getPartner());
+                newDataMap.put("partner", requestDto.getSelectionScope().getPartner());
 
-                toBeUpdatedDto.getSelectionScopeDto().setPartner(requestDto.getSelectionScopeDto().getPartner());
+                toBeUpdatedDto.getSelectionScope().setPartner(requestDto.getSelectionScope().getPartner());
             }
-            if (!toBeUpdatedDto.getSelectionScopeDto().getProvince().equals(requestDto.getSelectionScopeDto().getProvince())) {
+            if (!toBeUpdatedDto.getSelectionScope().getProvince().equals(requestDto.getSelectionScope().getProvince())) {
                 updateRequired = true;
-                oldDataMap.put("province", toBeUpdatedDto.getSelectionScopeDto().getProvince());
-                newDataMap.put("province", requestDto.getSelectionScopeDto().getProvince());
+                oldDataMap.put("province", toBeUpdatedDto.getSelectionScope().getProvince());
+                newDataMap.put("province", requestDto.getSelectionScope().getProvince());
 
-                toBeUpdatedDto.getSelectionScopeDto().setProvince(requestDto.getSelectionScopeDto().getProvince());
+                toBeUpdatedDto.getSelectionScope().setProvince(requestDto.getSelectionScope().getProvince());
             }
         }
         if (updateRequired) {
@@ -264,10 +264,10 @@ public class GraphDaoImpl implements GraphDao {
 
             String fromDate = requestDto.getFromDate();
             String toDate = requestDto.getToDate();
-            String partner = requestDto.getSelectionScopeDto().getPartner();
-            String merchant = requestDto.getSelectionScopeDto().getMerchant();
-            String province = requestDto.getSelectionScopeDto().getProvince();
-            String district = requestDto.getSelectionScopeDto().getDistrict();
+            String partner = requestDto.getSelectionScope().getPartner();
+            String merchant = requestDto.getSelectionScope().getMerchant();
+            String province = requestDto.getSelectionScope().getProvince();
+            String district = requestDto.getSelectionScope().getDistrict();
 
             String whereClause = setWhereCondition(requestDto);
             String selectClause = setSelectCondition(requestDto);
@@ -311,10 +311,10 @@ public class GraphDaoImpl implements GraphDao {
 
         String fromDate = requestDto.getFromDate();
         String toDate = requestDto.getToDate();
-        String partner = requestDto.getSelectionScopeDto().getPartner();
-        String merchant = requestDto.getSelectionScopeDto().getMerchant();
-        String province = requestDto.getSelectionScopeDto().getProvince();
-        String district = requestDto.getSelectionScopeDto().getDistrict();
+        String partner = requestDto.getSelectionScope().getPartner();
+        String merchant = requestDto.getSelectionScope().getMerchant();
+        String province = requestDto.getSelectionScope().getProvince();
+        String district = requestDto.getSelectionScope().getDistrict();
 
         String where = " 1=1 ";
 
@@ -350,69 +350,66 @@ public class GraphDaoImpl implements GraphDao {
 
         if ((aggregator != null && !"".equals(aggregator)) && (aggregator != null && !"".equals(aggregator))) {
             if ("CardLabel".equalsIgnoreCase(grouping)) {
-                select += " p.cardLabel,";
                 if ("Revenue".equalsIgnoreCase(aggregator)) {
                     if ("Districts".equalsIgnoreCase(xAxis)) {
-                        select += " m.district, ";
+                        select = " m.district ";
                     } else if ("Provinces".equalsIgnoreCase(xAxis)) {
-                        select += " m.province, ";
+                        select = " m.province ";
                     } else if ("Merchants".equalsIgnoreCase(xAxis)) {
-                        select += " m.merchantId, ";
+                        select = " m.merchantId ";
                     } else if ("Partners".equalsIgnoreCase(xAxis)) {
-                        select += " m.merchantCustomer.name, ";
+                        select = " m.merchantCustomer.name ";
                     } else {
 
                     }
-                    select += " sum(p.amount) ";
+                    select += " ,p.cardLabel,sum(p.amount) ";
                 }
                 if ("Count".equalsIgnoreCase(aggregator)) {
                     if ("Districts".equalsIgnoreCase(xAxis)) {
-                        select += " m.district, ";
+                        select += " m.district ";
                     } else if ("Provinces".equalsIgnoreCase(xAxis)) {
-                        select += " m.province, ";
+                        select += " m.province ";
                     } else if ("Merchants".equalsIgnoreCase(xAxis)) {
-                        select += " m.merchantId, ";
+                        select += " m.merchantId ";
                     } else if ("Partners".equalsIgnoreCase(xAxis)) {
-                        select += " m.merchantCustomer.name, ";
+                        select += " m.merchantCustomer.name ";
                     } else {
 
                     }
-                    select += " count(p) ";
+                    select += " ,p.cardLabel,count(p) ";
                 }
             }
             if ("PaymentMode".equalsIgnoreCase(grouping)) {
-                select += " p.paymentMode,";
                 if ("Revenue".equalsIgnoreCase(aggregator)) {
                     if ("Districts".equalsIgnoreCase(xAxis)) {
-                        select += " m.district, ";
+                        select += " m.district ";
                     } else if ("Provinces".equalsIgnoreCase(xAxis)) {
-                        select += " m.province, ";
+                        select += " m.province ";
                     } else if ("Merchants".equalsIgnoreCase(xAxis)) {
-                        select += " m.merchantId, ";
+                        select += " m.merchantId ";
                     } else if ("Partners".equalsIgnoreCase(xAxis)) {
-                        select += " m.merchantCustomer.name, ";
+                        select += " m.merchantCustomer.name ";
                     } else {
 
                     }
-                    select += " sum(p.amount) ";
+                    select += " ,p.paymentMode,sum(p.amount) ";
                 }
                 if ("Count".equalsIgnoreCase(aggregator)) {
                     if ("Districts".equalsIgnoreCase(xAxis)) {
-                        select += " m.district, ";
+                        select += " m.district ";
                     } else if ("Provinces".equalsIgnoreCase(xAxis)) {
-                        select += " m.province, ";
+                        select += " m.province ";
                     } else if ("Merchants".equalsIgnoreCase(xAxis)) {
-                        select += " m.merchantId, ";
+                        select += " m.merchantId ";
                     } else if ("Partners".equalsIgnoreCase(xAxis)) {
-                        select += " m.merchantCustomer.name, ";
+                        select += " m.merchantCustomer.name ";
                     } else {
 
                     }
-                    select += " count(p) ";
+                    select += " ,p.paymentMode,count(p) ";
                 }
             }
             if ("TranType".equalsIgnoreCase(grouping)) {
-                select += " p.tranType,";
                 if ("Revenue".equalsIgnoreCase(aggregator)) {
                     if ("Districts".equalsIgnoreCase(xAxis)) {
                         select += " m.district, ";
@@ -425,21 +422,21 @@ public class GraphDaoImpl implements GraphDao {
                     } else {
 
                     }
-                    select += " sum(p.amount) ";
+                    select += " ,p.tranType,sum(p.amount) ";
                 }
                 if ("Count".equalsIgnoreCase(aggregator)) {
                     if ("Districts".equalsIgnoreCase(xAxis)) {
-                        select += " m.district, ";
+                        select += " m.district ";
                     } else if ("Provinces".equalsIgnoreCase(xAxis)) {
-                        select += " m.province, ";
+                        select += " m.province ";
                     } else if ("Merchants".equalsIgnoreCase(xAxis)) {
-                        select += " m.merchantId, ";
+                        select += " m.merchantId ";
                     } else if ("Partners".equalsIgnoreCase(xAxis)) {
-                        select += " m.merchantCustomer.name, ";
+                        select += " m.merchantCustomer.name ";
                     } else {
 
                     }
-                    select += " count(p) ";
+                    select += " ,p.tranType,count(p) ";
                 }
             }
 
@@ -456,21 +453,20 @@ public class GraphDaoImpl implements GraphDao {
         String groupBy = " ";
         if (grouping != null && !"".equals(grouping)) {
             if ("CardLabel".equalsIgnoreCase(grouping)) {
-                groupBy += " p.cardLabel,";
                 if ("Districts".equalsIgnoreCase(xAxis)) {
-                    groupBy += " m.district ";
+                    groupBy = " m.district ";
                 } else if ("Provinces".equalsIgnoreCase(xAxis)) {
-                    groupBy += " m.province ";
+                    groupBy = " m.province ";
                 } else if ("Merchants".equalsIgnoreCase(xAxis)) {
-                    groupBy += " m.merchantId ";
+                    groupBy = " m.merchantId";
                 } else if ("Partners".equalsIgnoreCase(xAxis)) {
-                    groupBy += " m.merchantCustomer.name ";
+                    groupBy = " m.merchantCustomer.name ";
                 } else {
                     throw new NotFoundException("No Record Found");
                 }
+                groupBy += ",p.cardLabel";
             }
             if ("PaymentMode".equalsIgnoreCase(grouping)) {
-                groupBy += " p.paymentMode,";
                 if ("Districts".equalsIgnoreCase(xAxis)) {
                     groupBy += " m.district ";
                 } else if ("Provinces".equalsIgnoreCase(xAxis)) {
@@ -482,9 +478,10 @@ public class GraphDaoImpl implements GraphDao {
                 } else {
                     throw new NotFoundException("No Record Found");
                 }
+                groupBy += ",p.paymentMode";
+
             }
             if ("TranType".equalsIgnoreCase(grouping)) {
-                groupBy += " p.tranType,";
                 if ("Districts".equalsIgnoreCase(xAxis)) {
                     groupBy += " m.district ";
                 } else if ("Provinces".equalsIgnoreCase(xAxis)) {
@@ -496,6 +493,7 @@ public class GraphDaoImpl implements GraphDao {
                 } else {
                     throw new NotFoundException("No Record Found");
                 }
+                groupBy += ",p.tranType";
             }
         } else {
             throw new NotFoundException("No Record Found");
