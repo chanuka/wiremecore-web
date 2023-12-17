@@ -21,7 +21,7 @@ import java.util.Map;
 @Tag(name = "General API Management", description = "This is included all general purpose API list")
 public class GeneralController implements GeneralResource {
 
-    private static final Logger logger = LoggerFactory.getLogger(DeviceController.class);
+    private static final Logger logger = LoggerFactory.getLogger(GeneralController.class);
     private final MessageSource messageSource;
     private final GeneralService service;
 
