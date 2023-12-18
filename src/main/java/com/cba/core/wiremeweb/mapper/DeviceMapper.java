@@ -16,6 +16,9 @@ public class DeviceMapper {
         responseDto.setSerialNo(device.getSerialNo());
         responseDto.setStatus(device.getStatus().getStatusCode());
         responseDto.setModelId(device.getDeviceModel() != null ? device.getDeviceModel().getId() : null);
+        responseDto.setDeviceModel(device.getDeviceModel() != null ? device.getDeviceModel().getName() : null);
+        responseDto.setDeviceVendor((device.getDeviceModel() != null && device.getDeviceModel().getDeviceVendor() != null) ? device.getDeviceModel().getDeviceVendor().getName() : null);
+        responseDto.setVendorId((device.getDeviceModel() != null && device.getDeviceModel().getDeviceVendor() != null) ? device.getDeviceModel().getDeviceVendor().getId() : null);
         return responseDto;
     }
 

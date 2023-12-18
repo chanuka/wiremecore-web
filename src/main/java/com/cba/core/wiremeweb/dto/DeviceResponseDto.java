@@ -23,12 +23,12 @@ public class DeviceResponseDto implements java.io.Serializable {
     private Integer modelId;
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private String status;
-//    private String statusDescription;
-//    private String createdUser;
-//    private String lastUpdatedUser;
-//    private String uniqueId;
-//    private String createdAt;
-//    private String updatedAt;
+    @JsonInclude(JsonInclude.Include.NON_NULL)
+    private String deviceVendor;
+    @JsonInclude(JsonInclude.Include.NON_NULL)
+    private String deviceModel;
+    @JsonInclude(JsonInclude.Include.NON_NULL)
+    private Integer vendorId;
 
     private static final long serialVersionUID = 1L;
 }
