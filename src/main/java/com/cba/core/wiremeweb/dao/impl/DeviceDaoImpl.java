@@ -76,7 +76,11 @@ public class DeviceDaoImpl implements GenericDao<DeviceResponseDto, DeviceReques
         Pageable pageable = PageRequest.of(page, pageSize);
         Specification<Device> spec = DeviceSpecification.serialNoLikeAndDeviceTypeLike(
                 searchParamList.get(0).get("serialNumber"),
-                searchParamList.get(0).get("deviceType"));
+                searchParamList.get(0).get("deviceType"),
+                searchParamList.get(0).get("status"),
+                searchParamList.get(0).get("deviceModel"),
+                searchParamList.get(0).get("deviceVendor")
+                );
 
         Page<Device> entitiesPage = repository.findAll(spec, pageable);
 
