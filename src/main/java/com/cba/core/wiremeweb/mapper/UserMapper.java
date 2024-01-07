@@ -2,9 +2,7 @@ package com.cba.core.wiremeweb.mapper;
 
 import com.cba.core.wiremeweb.dto.UserRequestDto;
 import com.cba.core.wiremeweb.dto.UserResponseDto;
-import com.cba.core.wiremeweb.model.Status;
-import com.cba.core.wiremeweb.model.User;
-import com.cba.core.wiremeweb.model.UserType;
+import com.cba.core.wiremeweb.model.*;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 public class UserMapper {
@@ -26,12 +24,21 @@ public class UserMapper {
     public static User toModel(UserRequestDto requestDto) {
         User entity = new User();
         entity.setName(requestDto.getName());
-        entity.setPassword(new BCryptPasswordEncoder().encode(requestDto.getPassword()));
         entity.setUserName(requestDto.getUserName());
         entity.setContactNo(requestDto.getContactNo());
         entity.setEmail(requestDto.getEmail());
         entity.setStatus(new Status(requestDto.getStatus()));
         entity.setUserType(new UserType(requestDto.getUserType()));
+
+        Device device = new Device(requestDto.getDeviceId() != null ? requestDto.getDeviceId() : null);
+        entity.setDevice(device);
+
+        Merchant merchant = new Merchant(requestDto.getMerchantId() != null ? requestDto.getMerchantId() : null);
+        entity.setMerchant(merchant);
+
+        MerchantCustomer merchantCustomer = new MerchantCustomer(requestDto.getPartnerId() != null ? requestDto.getPartnerId() : null);
+        entity.setMerchantCustomer(merchantCustomer);
+
         return entity;
     }
 

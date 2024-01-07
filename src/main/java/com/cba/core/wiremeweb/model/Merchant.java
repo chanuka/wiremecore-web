@@ -66,11 +66,18 @@ public class Merchant implements java.io.Serializable {
     @Column(name = "updated_at", nullable = false, length = 19)
     @LastModifiedDate
     private Date updatedAt;
+    @Column(name = "is_email_enabled")
+    private Boolean isEmailEnabled;
+    @Column(name = "is_sms_enabled")
+    private Boolean isSmsEnabled;
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "merchant")
     private Set<Terminal> terminals = new HashSet<Terminal>(0);
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "merchant")
     private Set<User> users = new HashSet<User>(0);
 
+    public Merchant(Integer id) {
+        this.id = id;
+    }
 }
 
 

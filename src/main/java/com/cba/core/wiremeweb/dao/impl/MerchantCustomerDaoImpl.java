@@ -74,7 +74,7 @@ public class MerchantCustomerDaoImpl implements GenericDao<MerchantCustomerRespo
         Pageable pageable = PageRequest.of(page, pageSize);
         Specification<MerchantCustomer> spec = MerchantCustomerSpecification.
                 nameLikeAndStatusLike(searchParamList.get(0).get("merchantCustomerName"),
-                        searchParamList.get(0).get("status"));
+                        searchParamList.get(0).get("status"),searchParamList.get(0).get("address"));
 
         Page<MerchantCustomer> entitiesPage = repository.findAll(spec, pageable);
 

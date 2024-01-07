@@ -207,4 +207,17 @@ public class MerchantCustomerController implements MerchantCustomerResource<Merc
             throw e;
         }
     }
+
+    @Override
+    public ResponseEntity<List<MerchantCustomerResponseDto>> getAllMerchantCustomers() throws Exception {
+        Locale currentLocale = LocaleContextHolder.getLocale();
+        logger.debug(messageSource.getMessage("MERCHANT_CUSTOMER_GET_ALL_DEBUG", null, currentLocale));
+        try {
+            List<MerchantCustomerResponseDto> responseDtolist = service.findAll();
+            return ResponseEntity.ok().body(responseDtolist);
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+            throw e;
+        }
+    }
 }

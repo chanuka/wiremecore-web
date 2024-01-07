@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.thymeleaf.context.Context;
 import org.thymeleaf.spring5.SpringTemplateEngine;
@@ -24,6 +25,8 @@ public class EmailServiceImpl implements EmailService {
     private final SpringTemplateEngine templateEngine;
 
 
+    @Override
+    @Async("asyncExecutor")
     public void sendEmail(EmailRequestDto emailRequestDto) throws MessagingException, IOException {
         MimeMessage message = javaMailSender.createMimeMessage();
 
@@ -48,6 +51,7 @@ public class EmailServiceImpl implements EmailService {
     }
 
     @Override
+    @Async("asyncExecutor")
     public void sendEmail(String userMail, String messageBody) throws MessagingException, IOException {
         MimeMessage message = javaMailSender.createMimeMessage();
 

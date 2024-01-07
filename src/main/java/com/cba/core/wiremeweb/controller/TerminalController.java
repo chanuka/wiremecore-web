@@ -1,6 +1,7 @@
 package com.cba.core.wiremeweb.controller;
 
 import com.cba.core.wiremeweb.controller.resource.GenericResource;
+import com.cba.core.wiremeweb.controller.resource.TerminalResource;
 import com.cba.core.wiremeweb.dto.TerminalRequestDto;
 import com.cba.core.wiremeweb.dto.TerminalResponseDto;
 import com.cba.core.wiremeweb.service.GenericService;
@@ -27,7 +28,7 @@ import java.util.Map;
 @RequiredArgsConstructor
 @RequestMapping("/${application.resource.terminals}")
 @Tag(name = "Terminal Management", description = "Provides Terminal Management API's")
-public class TerminalController implements GenericResource<TerminalResponseDto, TerminalRequestDto> {
+public class TerminalController implements TerminalResource<TerminalResponseDto, TerminalRequestDto> {
 
     private static final Logger logger = LoggerFactory.getLogger(TerminalController.class);
 
@@ -189,6 +190,19 @@ public class TerminalController implements GenericResource<TerminalResponseDto, 
             headers.setContentDispositionFormData("filename", "terminal-details.pdf");
             return new ResponseEntity<byte[]>(pdfBytes, headers, HttpStatus.OK);
 
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+            throw e;
+        }
+    }
+
+    @Override
+    public ResponseEntity<List<TerminalResponseDto>> getAllTerminals() throws Exception {
+        Locale currentLocale = LocaleContextHolder.getLocale();
+        logger.debug(messageSource.getMessage("TERMINAL_GET_ALL_DEBUG", null, currentLocale));
+        try {
+            List<TerminalResponseDto> responseDtolist = service.findAll();
+            return ResponseEntity.ok().body(responseDtolist);
         } catch (Exception e) {
             logger.error(e.getMessage());
             throw e;

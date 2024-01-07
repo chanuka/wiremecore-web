@@ -39,6 +39,14 @@ spring:
     protocol: smtp
     test-connection: false
 
+  # Asynchronous Task Executor Configuration
+  task:
+    execution:
+      pool:
+        core-size: 10
+        max-size: 20
+        queue-capacity: 100
+
 application:
   jwt:
     secretKey: securesecuresecuresecuresecuresecuresecuresecuresecuresecuresecure

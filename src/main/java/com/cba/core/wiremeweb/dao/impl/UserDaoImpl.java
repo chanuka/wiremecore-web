@@ -6,10 +6,7 @@ import com.cba.core.wiremeweb.dto.UserRequestDto;
 import com.cba.core.wiremeweb.dto.UserResponseDto;
 import com.cba.core.wiremeweb.exception.NotFoundException;
 import com.cba.core.wiremeweb.mapper.UserMapper;
-import com.cba.core.wiremeweb.model.GlobalAuditEntry;
-import com.cba.core.wiremeweb.model.Status;
-import com.cba.core.wiremeweb.model.User;
-import com.cba.core.wiremeweb.model.UserType;
+import com.cba.core.wiremeweb.model.*;
 import com.cba.core.wiremeweb.repository.GlobalAuditEntryRepository;
 import com.cba.core.wiremeweb.repository.UserRepository;
 import com.cba.core.wiremeweb.repository.specification.UserSpecification;
@@ -29,6 +26,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
@@ -81,7 +79,8 @@ public class UserDaoImpl implements UserDao<UserResponseDto, UserRequestDto> {
     @Override
     public Page<UserResponseDto> findBySearchParamLike(List<Map<String, String>> searchParamList, int page, int pageSize) throws Exception {
         Pageable pageable = PageRequest.of(page, pageSize);
-        Specification<User> spec = UserSpecification.userNameLike(searchParamList.get(0).get("userName"));
+        Specification<User> spec = UserSpecification.userNameLike(searchParamList.get(0).get("userName"),
+                searchParamList.get(0).get("name"));
         Page<User> entitiesPage = repository.findAll(spec, pageable);
 
         if (entitiesPage.isEmpty()) {
@@ -189,9 +188,41 @@ public class UserDaoImpl implements UserDao<UserResponseDto, UserRequestDto> {
 
             toBeUpdated.setStatus(new Status(requestDto.getStatus()));
         }
+
+
+        if ((toBeUpdated.getDevice() != null ? toBeUpdated.getDevice().getId() : null) != requestDto.getDeviceId()) {
+            updateRequired = true;
+            oldDataMap.put("deviceId", (toBeUpdated.getDevice() != null ? toBeUpdated.getDevice().getId() : null));
+            newDataMap.put("deviceId", requestDto.getDeviceId());
+            if (requestDto.getDeviceId() != null) {
+                toBeUpdated.setDevice(new Device(requestDto.getDeviceId()));
+            } else {
+                toBeUpdated.setDevice(null);
+            }
+        }
+        if ((toBeUpdated.getMerchant() != null ? toBeUpdated.getMerchant().getId() : null) != requestDto.getMerchantId()) {
+            updateRequired = true;
+            oldDataMap.put("merchantId", (toBeUpdated.getMerchant() != null ? toBeUpdated.getMerchant().getId() : null));
+            newDataMap.put("merchantId", requestDto.getMerchantId());
+            if (requestDto.getMerchantId() != null) {
+                toBeUpdated.setMerchant(new Merchant(requestDto.getMerchantId()));
+            } else {
+                toBeUpdated.setMerchant(null);
+            }
+        }
+        if ((toBeUpdated.getMerchantCustomer() != null ? toBeUpdated.getMerchantCustomer().getId() : null) != requestDto.getPartnerId()) {
+            updateRequired = true;
+            oldDataMap.put("partnerId", (toBeUpdated.getMerchantCustomer() != null ? toBeUpdated.getMerchantCustomer().getId() : null));
+            newDataMap.put("partnerId", requestDto.getPartnerId());
+            if (requestDto.getPartnerId() != null) {
+                toBeUpdated.setMerchantCustomer(new MerchantCustomer(requestDto.getPartnerId()));
+            } else {
+                toBeUpdated.setMerchantCustomer(null);
+            }
+        }
         if (updateRequired) {
 
-            repository.saveAndFlush(toBeUpdated);
+            repository.save(toBeUpdated);
             globalAuditEntryRepository.save(new GlobalAuditEntry(resource, UserOperationEnum.UPDATE.getValue(),
                     id, objectMapper.writeValueAsString(oldDataMap), objectMapper.writeValueAsString(newDataMap),
                     userBeanUtil.getRemoteAdr()));
@@ -207,18 +238,18 @@ public class UserDaoImpl implements UserDao<UserResponseDto, UserRequestDto> {
     @CacheEvict(value = "users", allEntries = true)
     public UserResponseDto create(UserRequestDto requestDto) throws Exception {
 
-        requestDto.setPassword(UserPasswordUtil.generateCommonLangPassword());
+        char[] pwd = UserPasswordUtil.generateCommonLangPassword().toCharArray();
         User toInsert = UserMapper.toModel(requestDto);
-
-        String message = "Your Password for Wireme is : " + requestDto.getPassword();
-        emailService.sendEmail(toInsert.getEmail(), message);
-        requestDto.setPassword(null); // to protect the generated password
+        toInsert.setPassword(new BCryptPasswordEncoder().encode(pwd.toString()));
 
         User savedEntity = repository.save(toInsert);
         UserResponseDto responseDto = UserMapper.toDto(savedEntity);
         globalAuditEntryRepository.save(new GlobalAuditEntry(resource, UserOperationEnum.CREATE.getValue(),
                 savedEntity.getId(), null, objectMapper.writeValueAsString(responseDto),
                 userBeanUtil.getRemoteAdr()));
+
+        String message = "Your Password for Wireme is : " + pwd.toString();
+        emailService.sendEmail(toInsert.getEmail(), message);
 
         return responseDto;
     }

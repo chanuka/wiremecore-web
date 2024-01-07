@@ -1,10 +1,7 @@
 package com.cba.core.wiremeweb.controller;
 
 import com.cba.core.wiremeweb.controller.resource.MerchantResource;
-import com.cba.core.wiremeweb.dto.MerchantRequestDto;
-import com.cba.core.wiremeweb.dto.MerchantResponseDto;
-import com.cba.core.wiremeweb.dto.TerminalRequestDto;
-import com.cba.core.wiremeweb.dto.TerminalResponseDto;
+import com.cba.core.wiremeweb.dto.*;
 import com.cba.core.wiremeweb.service.GenericService;
 import com.cba.core.wiremeweb.service.TerminalService;
 import com.cba.core.wiremeweb.util.PaginationResponse;
@@ -201,6 +198,19 @@ public class MerchantController implements MerchantResource<MerchantResponseDto,
         try {
             Page<TerminalResponseDto> responseDtoList = terminalService.findTerminalsByMerchant(id, page, pageSize);
             return ResponseEntity.ok().body(responseDtoList.getContent());
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+            throw e;
+        }
+    }
+
+    @Override
+    public ResponseEntity<List<MerchantResponseDto>> getAllMerchants() throws Exception {
+        Locale currentLocale = LocaleContextHolder.getLocale();
+        logger.debug(messageSource.getMessage("MERCHANT_GET_ALL_DEBUG", null, currentLocale));
+        try {
+            List<MerchantResponseDto> responseDtolist = service.findAll();
+            return ResponseEntity.ok().body(responseDtolist);
         } catch (Exception e) {
             logger.error(e.getMessage());
             throw e;

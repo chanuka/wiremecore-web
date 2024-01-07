@@ -1,5 +1,6 @@
 package com.cba.core.wiremeweb.dto;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
@@ -26,8 +27,12 @@ public class UserRequestDto implements Serializable {
     @NotBlank(message = "Email is required")
     @Email(message = "Email is Invalid")
     private String email;
-    private String deviceId;
+    @JsonInclude(JsonInclude.Include.NON_NULL)
+    private Integer deviceId;
     private String status;
-    private String password;
     private Integer userType;
+    @JsonInclude(JsonInclude.Include.NON_NULL)
+    private Integer merchantId;
+    @JsonInclude(JsonInclude.Include.NON_NULL)
+    private Integer partnerId;
 }

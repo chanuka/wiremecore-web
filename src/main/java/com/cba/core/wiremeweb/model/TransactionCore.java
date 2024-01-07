@@ -3,6 +3,9 @@ package com.cba.core.wiremeweb.model;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.util.Date;
 import java.util.HashSet;
@@ -11,6 +14,7 @@ import java.util.Set;
 @Entity
 @Table(name = "transaction_core"
 )
+@EntityListeners(AuditingEntityListener.class) // enable entity level auditing for create,modified attributes
 @Data
 @NoArgsConstructor
 public class TransactionCore implements java.io.Serializable {
@@ -45,7 +49,7 @@ public class TransactionCore implements java.io.Serializable {
     private Integer invoiceNo;
 
     @Column(name = "amount", nullable = false)
-    private int amount;
+    private Integer amount;
 
     @Column(name = "currency", nullable = false, length = 6)
     private String currency;
@@ -95,10 +99,12 @@ public class TransactionCore implements java.io.Serializable {
 
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "created_at", nullable = false, length = 19)
+    @CreatedDate
     private Date createdAt;
 
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "updated_at", nullable = false, length = 19)
+    @LastModifiedDate
     private Date updatedAt;
 
     @Column(name = "merchant_id", length = 16)
@@ -106,6 +112,9 @@ public class TransactionCore implements java.io.Serializable {
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "transactionCore")
     private Set<SettlementInfo> settlementInfos = new HashSet<SettlementInfo>(0);
+
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "transactionCore")
+    private Set<EReceipt> eReceipts = new HashSet<EReceipt>(0);
 
 }
 

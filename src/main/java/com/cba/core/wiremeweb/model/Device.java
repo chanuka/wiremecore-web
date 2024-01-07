@@ -62,8 +62,7 @@ public class Device implements java.io.Serializable {
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "device")
     private Set<Terminal> terminals = new HashSet<Terminal>(0);
 
-
-    public Device(int deviceId) {
+    public Device(Integer deviceId) {
         this.id = deviceId;
     }
 

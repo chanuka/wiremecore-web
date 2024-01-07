@@ -39,11 +39,19 @@ spring:
     protocol: smtp
     test-connection: false
 
+  # Asynchronous Task Executor Configuration
+  task:
+    execution:
+      pool:
+        core-size: 10
+        max-size: 20
+        queue-capacity: 100
+
 application:
   jwt:
     secretKey: securesecuresecuresecuresecuresecuresecuresecuresecuresecuresecure
     tokenPrefix: Bearer
-    tokenExpirationAfterMillis: 84400000
+    tokenExpirationAfterMillis: 604800000       #86400000,3600000,60,000  Token is issued for a week, has to change once go live
   refresh:
     tokenExpirationAfterMillis: 120000
   resource:

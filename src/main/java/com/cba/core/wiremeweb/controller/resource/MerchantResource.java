@@ -1,5 +1,7 @@
 package com.cba.core.wiremeweb.controller.resource;
 
+import com.cba.core.wiremeweb.dto.MerchantCustomerResponseDto;
+import com.cba.core.wiremeweb.dto.MerchantResponseDto;
 import com.cba.core.wiremeweb.dto.TerminalResponseDto;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -14,5 +16,8 @@ public interface MerchantResource<T, K> extends GenericResource<T, K> {
     ResponseEntity<List<TerminalResponseDto>> findTerminalsByMerchant(@PathVariable(value = "id") int id,
                                                                       @RequestParam(defaultValue = "0") int page,
                                                                       @RequestParam(defaultValue = "5") int pageSize) throws Exception;
+
+    @GetMapping("/all")
+    ResponseEntity<List<MerchantResponseDto>> getAllMerchants() throws Exception;
 
 }
