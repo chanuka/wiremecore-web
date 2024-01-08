@@ -41,8 +41,13 @@ public class MerchantServiceImpl implements MerchantService<MerchantResponseDto,
     }
 
     @Override
-    public Page<MerchantResponseDto> findBySearchParamLike(List<Map<String, String>> searchParamList, int page, int pageSize) throws Exception {
+    public Page<MerchantResponseDto> findBySearchParamLike(Map<String, String> searchParamList, int page, int pageSize) throws Exception {
         return dao.findBySearchParamLike(searchParamList, page, pageSize);
+    }
+
+    @Override
+    public Page<MerchantResponseDto> findBySearchParamLikeByKeyWord(Map<String, String> searchParameter, int page, int pageSize) throws Exception {
+        return dao.findBySearchParamLikeByKeyWord(searchParameter, page, pageSize);
     }
 
     @Override

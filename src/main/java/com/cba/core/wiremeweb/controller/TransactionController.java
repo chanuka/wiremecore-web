@@ -79,7 +79,7 @@ public class TransactionController implements TransactionResource {
         logger.debug(messageSource.getMessage("TRANSACTION_GET_ALL_DEBUG", null, currentLocale));
         try {
             Page<TransactionCoreResponseDto> responseDtolist = transactionService.getAllTransactions(dateFrom, dateTo, page, pageSize);
-            return ResponseEntity.ok().body(new PaginationResponse<TransactionCoreResponseDto>(responseDtolist.getContent(), responseDtolist.getTotalElements()));
+            return ResponseEntity.ok().body(new PaginationResponse<>(responseDtolist.getContent(), responseDtolist.getTotalElements()));
         } catch (Exception e) {
             logger.error(e.getMessage());
             throw e;

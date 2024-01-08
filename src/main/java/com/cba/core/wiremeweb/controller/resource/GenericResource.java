@@ -22,7 +22,7 @@ public interface GenericResource<T,K> {
     ResponseEntity<T> getOne(@PathVariable int id) throws Exception;
 
     @PostMapping("/search")
-    ResponseEntity<PaginationResponse<T>> searchAllByPageWise(@RequestBody List<Map<String, String>> searchParamList,
+    ResponseEntity<PaginationResponse<T>> searchAllByPageWise(@RequestBody Map<String, String> searchParamList,
                                                           @RequestParam(defaultValue = "0") int page,
                                                           @RequestParam(defaultValue = "5") int pageSize)  throws Exception;
 

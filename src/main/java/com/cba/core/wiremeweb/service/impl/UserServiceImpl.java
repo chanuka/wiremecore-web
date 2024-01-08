@@ -42,8 +42,13 @@ public class UserServiceImpl implements UserService<UserResponseDto, UserRequest
     }
 
     @Override
-    public Page<UserResponseDto> findBySearchParamLike(List<Map<String, String>> searchParamList, int page, int pageSize) throws Exception {
+    public Page<UserResponseDto> findBySearchParamLike(Map<String, String> searchParamList, int page, int pageSize) throws Exception {
         return dao.findBySearchParamLike(searchParamList, page, pageSize);
+    }
+
+    @Override
+    public Page<UserResponseDto> findBySearchParamLikeByKeyWord(Map<String, String> searchParameter, int page, int pageSize) throws Exception {
+        return null;
     }
 
     @Override

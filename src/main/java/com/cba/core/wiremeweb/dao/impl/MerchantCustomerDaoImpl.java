@@ -70,11 +70,11 @@ public class MerchantCustomerDaoImpl implements GenericDao<MerchantCustomerRespo
     }
 
     @Override
-    public Page<MerchantCustomerResponseDto> findBySearchParamLike(List<Map<String, String>> searchParamList, int page, int pageSize) throws Exception {
+    public Page<MerchantCustomerResponseDto> findBySearchParamLike(Map<String, String> searchParamList, int page, int pageSize) throws Exception {
         Pageable pageable = PageRequest.of(page, pageSize);
         Specification<MerchantCustomer> spec = MerchantCustomerSpecification.
-                nameLikeAndStatusLike(searchParamList.get(0).get("merchantCustomerName"),
-                        searchParamList.get(0).get("status"),searchParamList.get(0).get("address"));
+                nameLikeAndStatusLike(searchParamList.get("merchantCustomerName"),
+                        searchParamList.get("status"),searchParamList.get("address"));
 
         Page<MerchantCustomer> entitiesPage = repository.findAll(spec, pageable);
 
@@ -82,6 +82,11 @@ public class MerchantCustomerDaoImpl implements GenericDao<MerchantCustomerRespo
             throw new NotFoundException("No Merchant Customers found");
         }
         return entitiesPage.map(MerchantCustomerMapper::toDto);
+    }
+
+    @Override
+    public Page<MerchantCustomerResponseDto> findBySearchParamLikeByKeyWord(Map<String, String> searchParameter, int page, int pageSize) throws Exception {
+        return null;
     }
 
     @Override

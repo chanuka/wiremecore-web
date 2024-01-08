@@ -70,13 +70,17 @@ public class TerminalDaoImpl implements TerminalDao<TerminalResponseDto, Termina
     }
 
     @Override
-    public Page<TerminalResponseDto> findBySearchParamLike(List<Map<String, String>> searchParamList, int page, int pageSize) throws Exception {
+    public Page<TerminalResponseDto> findBySearchParamLike(Map<String, String> searchParamList, int page, int pageSize) throws Exception {
 
         Pageable pageable = PageRequest.of(page, pageSize);
         Specification<Terminal> spec = TerminalSpecification.
-                terminalIdLikeAndMerchantIdLike(searchParamList.get(0).get("terminalId"),
-                        searchParamList.get(0).get("merchantId"), searchParamList.get(0).get("merchantName")
-                        , searchParamList.get(0).get("serialNo"), searchParamList.get(0).get("status"));
+                terminalIdLikeAndMerchantIdLike(
+                        searchParamList.get("terminalId"),
+                        searchParamList.get("merchantId"),
+                        searchParamList.get("merchantName"),
+                        searchParamList.get("serialNo"),
+                        searchParamList.get("status")
+                );
 
         Page<Terminal> entitiesPage = repository.findAll(spec, pageable);
 
@@ -84,6 +88,11 @@ public class TerminalDaoImpl implements TerminalDao<TerminalResponseDto, Termina
             throw new NotFoundException("No Terminals found");
         }
         return entitiesPage.map(TerminalMapper::toDto);
+    }
+
+    @Override
+    public Page<TerminalResponseDto> findBySearchParamLikeByKeyWord(Map<String, String> searchParameter, int page, int pageSize) throws Exception {
+        return null;
     }
 
     @Override

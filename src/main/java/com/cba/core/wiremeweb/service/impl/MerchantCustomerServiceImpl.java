@@ -41,7 +41,12 @@ public class MerchantCustomerServiceImpl implements GenericService<MerchantCusto
     }
 
     @Override
-    public Page<MerchantCustomerResponseDto> findBySearchParamLike(List searchParamList, int page, int pageSize) throws Exception {
+    public Page<MerchantCustomerResponseDto> findBySearchParamLikeByKeyWord(Map<String, String> searchParameter, int page, int pageSize) throws Exception {
+        return null;
+    }
+
+    @Override
+    public Page<MerchantCustomerResponseDto> findBySearchParamLike(Map<String, String> searchParamList, int page, int pageSize) throws Exception {
         return dao.findBySearchParamLike(searchParamList, page, pageSize);
     }
 

@@ -11,7 +11,9 @@ public interface GenericService<T, K> {
 
     List<T> findAll() throws Exception;
 
-    Page<T> findBySearchParamLike(List<Map<String, String>> searchParamList, int page, int pageSize) throws Exception;
+    Page<T> findBySearchParamLike(Map<String, String> searchParamList, int page, int pageSize) throws Exception;
+
+    Page<T> findBySearchParamLikeByKeyWord(Map<String, String> searchParameter, int page, int pageSize) throws Exception;
 
     T findById(int id) throws Exception;
 

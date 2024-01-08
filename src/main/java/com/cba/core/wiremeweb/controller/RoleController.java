@@ -62,13 +62,13 @@ public class RoleController implements GenericResource<RoleResponseDto, RoleRequ
     }
 
     @Override
-    public ResponseEntity<PaginationResponse<RoleResponseDto>> searchAllByPageWise(List<Map<String, String>> searchParamList, int page, int pageSize) throws Exception {
+    public ResponseEntity<PaginationResponse<RoleResponseDto>> searchAllByPageWise(Map<String, String> searchParamList, int page, int pageSize) throws Exception {
         Locale currentLocale = LocaleContextHolder.getLocale();// works only when as local statement
         logger.debug(messageSource.getMessage("ROLE_GET_SEARCH_DEBUG", null, currentLocale));
 
         try {
             Page<RoleResponseDto> responseDtolist = service.findBySearchParamLike(searchParamList, page, pageSize);
-            return ResponseEntity.ok().body(new PaginationResponse<RoleResponseDto>(responseDtolist.getContent(), responseDtolist.getTotalElements()));
+            return ResponseEntity.ok().body(new PaginationResponse<>(responseDtolist.getContent(), responseDtolist.getTotalElements()));
         } catch (Exception e) {
             logger.error(e.getMessage());
             throw e;

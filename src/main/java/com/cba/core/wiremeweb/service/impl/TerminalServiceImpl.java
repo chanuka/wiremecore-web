@@ -41,8 +41,13 @@ public class TerminalServiceImpl implements TerminalService<TerminalResponseDto,
     }
 
     @Override
-    public Page<TerminalResponseDto> findBySearchParamLike(List<Map<String, String>> searchParamList, int page, int pageSize) throws Exception {
+    public Page<TerminalResponseDto> findBySearchParamLike(Map<String, String> searchParamList, int page, int pageSize) throws Exception {
         return dao.findBySearchParamLike(searchParamList, page, pageSize);
+    }
+
+    @Override
+    public Page<TerminalResponseDto> findBySearchParamLikeByKeyWord(Map<String, String> searchParameter, int page, int pageSize) throws Exception {
+        return null;
     }
 
     @Override

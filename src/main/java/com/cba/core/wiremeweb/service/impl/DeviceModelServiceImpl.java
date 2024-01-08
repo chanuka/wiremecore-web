@@ -30,8 +30,13 @@ public class DeviceModelServiceImpl implements GenericService<DeviceModelRespons
     }
 
     @Override
-    public Page<DeviceModelResponseDto> findBySearchParamLike(List<Map<String, String>> searchParamList, int page, int pageSize) throws Exception {
+    public Page<DeviceModelResponseDto> findBySearchParamLike(Map<String, String> searchParamList, int page, int pageSize) throws Exception {
         return dao.findBySearchParamLike(searchParamList, page, pageSize);
+    }
+
+    @Override
+    public Page<DeviceModelResponseDto> findBySearchParamLikeByKeyWord(Map<String, String> searchParameter, int page, int pageSize) throws Exception {
+        return null;
     }
 
     @Override

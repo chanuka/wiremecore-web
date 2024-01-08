@@ -77,16 +77,21 @@ public class UserDaoImpl implements UserDao<UserResponseDto, UserRequestDto> {
     }
 
     @Override
-    public Page<UserResponseDto> findBySearchParamLike(List<Map<String, String>> searchParamList, int page, int pageSize) throws Exception {
+    public Page<UserResponseDto> findBySearchParamLike(Map<String, String> searchParamList, int page, int pageSize) throws Exception {
         Pageable pageable = PageRequest.of(page, pageSize);
-        Specification<User> spec = UserSpecification.userNameLike(searchParamList.get(0).get("userName"),
-                searchParamList.get(0).get("name"));
+        Specification<User> spec = UserSpecification.userNameLike(searchParamList.get("userName"),
+                searchParamList.get("name"));
         Page<User> entitiesPage = repository.findAll(spec, pageable);
 
         if (entitiesPage.isEmpty()) {
             throw new NotFoundException("No Users found");
         }
         return entitiesPage.map(UserMapper::toDto);
+    }
+
+    @Override
+    public Page<UserResponseDto> findBySearchParamLikeByKeyWord(Map<String, String> searchParameter, int page, int pageSize) throws Exception {
+        return null;
     }
 
     @Override

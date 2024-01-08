@@ -38,7 +38,7 @@ public class PermissionController implements PermissionResource<PermissionRespon
         logger.debug(messageSource.getMessage("PERMISSION_GET_ALL_DEBUG", null, currentLocale));
         try {
             Page<PermissionResponseDto> responseDtoList = service.findAll(page, pageSize);
-            return ResponseEntity.ok().body(new PaginationResponse<PermissionResponseDto>(responseDtoList.getContent(), responseDtoList.getTotalElements()));
+            return ResponseEntity.ok().body(new PaginationResponse<>(responseDtoList.getContent(), responseDtoList.getTotalElements()));
         } catch (Exception e) {
             logger.error(e.getMessage());
             throw e;
@@ -73,7 +73,7 @@ public class PermissionController implements PermissionResource<PermissionRespon
     }
 
     @Override
-    public ResponseEntity<PaginationResponse<PermissionResponseDto>> searchAllByPageWise(List<Map<String, String>> searchParamList, int page, int pageSize) throws Exception {
+    public ResponseEntity<PaginationResponse<PermissionResponseDto>> searchAllByPageWise(Map<String, String> searchParamList, int page, int pageSize) throws Exception {
         return null;
     }
 

@@ -31,7 +31,12 @@ public class PermissionServiceImpl implements PermissionService<PermissionRespon
     }
 
     @Override
-    public Page<PermissionResponseDto> findBySearchParamLike(List<Map<String, String>> searchParamList, int page, int pageSize) throws Exception {
+    public Page<PermissionResponseDto> findBySearchParamLike(Map<String, String> searchParamList, int page, int pageSize) throws Exception {
+        return null;
+    }
+
+    @Override
+    public Page<PermissionResponseDto> findBySearchParamLikeByKeyWord(Map<String, String> searchParameter, int page, int pageSize) throws Exception {
         return null;
     }
 

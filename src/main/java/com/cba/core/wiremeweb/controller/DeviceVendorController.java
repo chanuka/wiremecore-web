@@ -60,13 +60,13 @@ public class DeviceVendorController implements GenericResource<DeviceVendorRespo
     }
 
     @Override
-    public ResponseEntity<PaginationResponse<DeviceVendorResponseDto>> searchAllByPageWise(List<Map<String, String>> searchParamList, int page, int pageSize) throws Exception {
+    public ResponseEntity<PaginationResponse<DeviceVendorResponseDto>> searchAllByPageWise(Map<String, String> searchParamList, int page, int pageSize) throws Exception {
         Locale currentLocale = LocaleContextHolder.getLocale();// works only when as local statement
         logger.debug(messageSource.getMessage("DEVICEVENDOR_GET_SEARCH_DEBUG", null, currentLocale));
 
         try {
             Page<DeviceVendorResponseDto> responseDtolist = service.findBySearchParamLike(searchParamList, page, pageSize);
-            return ResponseEntity.ok().body(new PaginationResponse<DeviceVendorResponseDto>(responseDtolist.getContent(), responseDtolist.getTotalElements()));
+            return ResponseEntity.ok().body(new PaginationResponse<>(responseDtolist.getContent(), responseDtolist.getTotalElements()));
         } catch (Exception e) {
             logger.error(e.getMessage());
             throw e;

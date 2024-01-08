@@ -37,7 +37,7 @@ public class UserRoleController implements GenericResource<UserRoleResponseDto, 
         logger.debug(messageSource.getMessage("USERROLE_GET_ALL_DEBUG", null, currentLocale));
         try {
             Page<UserRoleResponseDto> responseDtolist = service.findAll(page, pageSize);
-            return ResponseEntity.ok().body(new PaginationResponse<UserRoleResponseDto>(responseDtolist.getContent(), responseDtolist.getTotalElements()));
+            return ResponseEntity.ok().body(new PaginationResponse<>(responseDtolist.getContent(), responseDtolist.getTotalElements()));
         } catch (Exception e) {
             logger.error(e.getMessage());
             throw e;
@@ -59,7 +59,7 @@ public class UserRoleController implements GenericResource<UserRoleResponseDto, 
     }
 
     @Override
-    public ResponseEntity<PaginationResponse<UserRoleResponseDto>> searchAllByPageWise(List<Map<String, String>> searchParamList, int page, int pageSize) throws Exception {
+    public ResponseEntity<PaginationResponse<UserRoleResponseDto>> searchAllByPageWise(Map<String, String> searchParamList, int page, int pageSize) throws Exception {
         return null;
     }
 

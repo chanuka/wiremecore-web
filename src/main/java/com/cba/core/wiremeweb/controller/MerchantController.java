@@ -41,7 +41,7 @@ public class MerchantController implements MerchantResource<MerchantResponseDto,
         logger.debug(messageSource.getMessage("MERCHANT_GET_ALL_DEBUG", null, currentLocale));
         try {
             Page<MerchantResponseDto> responseDtoList = service.findAll(page, pageSize);
-            return ResponseEntity.ok().body(new PaginationResponse<MerchantResponseDto>(responseDtoList.getContent(), responseDtoList.getTotalElements()));
+            return ResponseEntity.ok().body(new PaginationResponse<>(responseDtoList.getContent(), responseDtoList.getTotalElements()));
         } catch (Exception e) {
             logger.error(e.getMessage());
             throw e;
@@ -63,13 +63,13 @@ public class MerchantController implements MerchantResource<MerchantResponseDto,
     }
 
     @Override
-    public ResponseEntity<PaginationResponse<MerchantResponseDto>> searchAllByPageWise(List<Map<String, String>> searchParamList, int page, int pageSize) throws Exception {
+    public ResponseEntity<PaginationResponse<MerchantResponseDto>> searchAllByPageWise(Map<String, String> searchParamList, int page, int pageSize) throws Exception {
         Locale currentLocale = LocaleContextHolder.getLocale();// works only when as local statement
         logger.debug(messageSource.getMessage("MERCHANT_GET_SEARCH_DEBUG", null, currentLocale));
 
         try {
             Page<MerchantResponseDto> responseDtolist = service.findBySearchParamLike(searchParamList, page, pageSize);
-            return ResponseEntity.ok().body(new PaginationResponse<MerchantResponseDto>(responseDtolist.getContent(), responseDtolist.getTotalElements()));
+            return ResponseEntity.ok().body(new PaginationResponse<>(responseDtolist.getContent(), responseDtolist.getTotalElements()));
         } catch (Exception e) {
             e.printStackTrace();
             logger.error(e.getMessage());
@@ -212,6 +212,21 @@ public class MerchantController implements MerchantResource<MerchantResponseDto,
             List<MerchantResponseDto> responseDtolist = service.findAll();
             return ResponseEntity.ok().body(responseDtolist);
         } catch (Exception e) {
+            logger.error(e.getMessage());
+            throw e;
+        }
+    }
+
+    @Override
+    public ResponseEntity<PaginationResponse<MerchantResponseDto>> searchAllByPageWiseByKey(Map<String, String> searchParameter, int page, int pageSize) throws Exception {
+        Locale currentLocale = LocaleContextHolder.getLocale();// works only when as local statement
+        logger.debug(messageSource.getMessage("MERCHANT_GET_SEARCH_DEBUG", null, currentLocale));
+
+        try {
+            Page<MerchantResponseDto> responseDtolist = service.findBySearchParamLikeByKeyWord(searchParameter, page, pageSize);
+            return ResponseEntity.ok().body(new PaginationResponse<>(responseDtolist.getContent(), responseDtolist.getTotalElements()));
+        } catch (Exception e) {
+            e.printStackTrace();
             logger.error(e.getMessage());
             throw e;
         }

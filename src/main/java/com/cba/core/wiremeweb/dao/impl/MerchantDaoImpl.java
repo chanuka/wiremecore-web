@@ -71,13 +71,26 @@ public class MerchantDaoImpl implements MerchantDao<MerchantResponseDto, Merchan
     }
 
     @Override
-    public Page<MerchantResponseDto> findBySearchParamLike(List<Map<String, String>> searchParamList, int page, int pageSize) throws Exception {
+    public Page<MerchantResponseDto> findBySearchParamLike(Map<String, String> searchParamList, int page, int pageSize) throws Exception {
         Pageable pageable = PageRequest.of(page, pageSize);
         Specification<Merchant> spec = MerchantSpecification.
-                nameLikeAndStatusLike(searchParamList.get(0).get("merchantName"),
-                        searchParamList.get(0).get("status"),
-                        searchParamList.get(0).get("merchantId"),
-                        searchParamList.get(0).get("partnerName"));
+                nameLikeAndStatusLike(searchParamList.get("merchantName"),
+                        searchParamList.get("status"),
+                        searchParamList.get("merchantId"),
+                        searchParamList.get("partnerName"));
+
+        Page<Merchant> entitiesPage = repository.findAll(spec, pageable);
+
+        if (entitiesPage.isEmpty()) {
+            throw new NotFoundException("No Merchants found");
+        }
+        return entitiesPage.map(MerchantMapper::toDto);
+    }
+
+    @Override
+    public Page<MerchantResponseDto> findBySearchParamLikeByKeyWord(Map<String, String> searchParameter, int page, int pageSize) throws Exception {
+        Pageable pageable = PageRequest.of(page, pageSize);
+        Specification<Merchant> spec = MerchantSpecification.allLike(searchParameter.get("keyWord"));
 
         Page<Merchant> entitiesPage = repository.findAll(spec, pageable);
 

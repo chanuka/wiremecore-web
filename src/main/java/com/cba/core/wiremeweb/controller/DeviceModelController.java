@@ -38,7 +38,7 @@ public class DeviceModelController implements GenericResource<DeviceModelRespons
         try {
             Page<DeviceModelResponseDto> responseDtoList = service.findAll(page, pageSize);
 
-            return ResponseEntity.ok().body(new PaginationResponse<DeviceModelResponseDto>(responseDtoList.getContent(), responseDtoList.getTotalElements()));
+            return ResponseEntity.ok().body(new PaginationResponse<>(responseDtoList.getContent(), responseDtoList.getTotalElements()));
         } catch (Exception e) {
             logger.error(e.getMessage());
             throw e;
@@ -60,7 +60,7 @@ public class DeviceModelController implements GenericResource<DeviceModelRespons
     }
 
     @Override
-    public ResponseEntity<PaginationResponse<DeviceModelResponseDto>> searchAllByPageWise(List<Map<String, String>> searchParamList, int page, int pageSize) throws Exception {
+    public ResponseEntity<PaginationResponse<DeviceModelResponseDto>> searchAllByPageWise(Map<String, String> searchParamList, int page, int pageSize) throws Exception {
         Locale currentLocale = LocaleContextHolder.getLocale();// works only when as local statement
         logger.debug(messageSource.getMessage("DEVICEMODEL_GET_SEARCH_DEBUG", null, currentLocale));
 

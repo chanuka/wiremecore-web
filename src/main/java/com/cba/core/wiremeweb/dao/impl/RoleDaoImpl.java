@@ -71,16 +71,21 @@ public class RoleDaoImpl implements GenericDao<RoleResponseDto, RoleRequestDto> 
     }
 
     @Override
-    public Page<RoleResponseDto> findBySearchParamLike(List<Map<String, String>> searchParamList, int page, int pageSize) throws Exception {
+    public Page<RoleResponseDto> findBySearchParamLike(Map<String, String> searchParamList, int page, int pageSize) throws Exception {
 
         Pageable pageable = PageRequest.of(page, pageSize);
-        Specification<Role> spec = RoleSpecification.roleNameLike(searchParamList.get(0).get("roleName"));
+        Specification<Role> spec = RoleSpecification.roleNameLike(searchParamList.get("roleName"));
         Page<Role> entitiesPage = repository.findAll(spec, pageable);
 
         if (entitiesPage.isEmpty()) {
             throw new NotFoundException("No Roles found");
         }
         return entitiesPage.map(RoleMapper::toDto);
+    }
+
+    @Override
+    public Page<RoleResponseDto> findBySearchParamLikeByKeyWord(Map<String, String> searchParameter, int page, int pageSize) throws Exception {
+        return null;
     }
 
     @Override

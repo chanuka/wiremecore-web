@@ -66,7 +66,12 @@ public class UserRoleDaoImpl implements GenericDao<UserRoleResponseDto, UserRole
     }
 
     @Override
-    public Page<UserRoleResponseDto> findBySearchParamLike(List<Map<String, String>> searchParamList, int page, int pageSize) throws Exception {
+    public Page<UserRoleResponseDto> findBySearchParamLike(Map<String, String> searchParamList, int page, int pageSize) throws Exception {
+        return null;
+    }
+
+    @Override
+    public Page<UserRoleResponseDto> findBySearchParamLikeByKeyWord(Map<String, String> searchParameter, int page, int pageSize) throws Exception {
         return null;
     }
 

@@ -9,7 +9,7 @@ import org.springframework.data.jpa.domain.Specification;
 
 public interface MerchantSpecification {
 
-    static Specification<Merchant> nameLikeAndStatusLike(String merchantName, String statusCode,String merchantId,String partnerName) throws Exception {
+    static Specification<Merchant> nameLikeAndStatusLike(String merchantName, String statusCode, String merchantId, String partnerName) throws Exception {
         return (root, query, criteriaBuilder) -> {
             Join<Merchant, Status> joinStatus = root.join("status", JoinType.INNER);
             Join<Merchant, MerchantCustomer> joinPartner = root.join("merchantCustomer", JoinType.INNER);
@@ -18,6 +18,23 @@ public interface MerchantSpecification {
                     criteriaBuilder.like(criteriaBuilder.lower(root.get("name")), "%" + merchantName.toLowerCase() + "%"),
                     criteriaBuilder.like(criteriaBuilder.lower(root.get("merchantId")), "%" + merchantId.toLowerCase() + "%"),
                     criteriaBuilder.like(criteriaBuilder.lower(joinPartner.get("name")), "%" + partnerName.toLowerCase() + "%")
+            );
+        };
+    }
+
+    static Specification<Merchant> allLike(String keyWord) throws Exception {
+        return (root, query, criteriaBuilder) -> {
+            Join<Merchant, Status> joinStatus = root.join("status", JoinType.INNER);
+            Join<Merchant, MerchantCustomer> joinPartner = root.join("merchantCustomer", JoinType.INNER);
+            return criteriaBuilder.or(
+                    criteriaBuilder.like(criteriaBuilder.lower(joinStatus.get("statusCode")), "%" + keyWord.toLowerCase() + "%"),
+                    criteriaBuilder.like(criteriaBuilder.lower(root.get("name")), "%" + keyWord.toLowerCase() + "%"),
+                    criteriaBuilder.like(criteriaBuilder.lower(root.get("email")), "%" + keyWord.toLowerCase() + "%"),
+                    criteriaBuilder.like(criteriaBuilder.lower(root.get("province")), "%" + keyWord.toLowerCase() + "%"),
+                    criteriaBuilder.like(criteriaBuilder.lower(root.get("district")), "%" + keyWord.toLowerCase() + "%"),
+                    criteriaBuilder.like(criteriaBuilder.lower(root.get("contactNo")), "%" + keyWord.toLowerCase() + "%"),
+                    criteriaBuilder.like(criteriaBuilder.lower(root.get("merchantId")), "%" + keyWord.toLowerCase() + "%"),
+                    criteriaBuilder.like(criteriaBuilder.lower(joinPartner.get("name")), "%" + keyWord.toLowerCase() + "%")
             );
         };
     }

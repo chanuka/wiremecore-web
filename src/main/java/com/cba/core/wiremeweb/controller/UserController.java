@@ -45,7 +45,7 @@ public class UserController implements UserResource<UserResponseDto, UserRequest
         logger.debug(messageSource.getMessage("USER_GET_ALL_DEBUG", null, currentLocale));
         try {
             Page<UserResponseDto> responseDtolist = service.findAll(page, pageSize);
-            return ResponseEntity.ok().body(new PaginationResponse<UserResponseDto>(responseDtolist.getContent(), responseDtolist.getTotalElements()));
+            return ResponseEntity.ok().body(new PaginationResponse<>(responseDtolist.getContent(), responseDtolist.getTotalElements()));
         } catch (Exception e) {
             logger.error(e.getMessage());
             throw e;
@@ -68,14 +68,14 @@ public class UserController implements UserResource<UserResponseDto, UserRequest
     }
 
     @Override
-    public ResponseEntity<PaginationResponse<UserResponseDto>> searchAllByPageWise(List<Map<String, String>> searchParamList, int page, int pageSize) throws Exception {
+    public ResponseEntity<PaginationResponse<UserResponseDto>> searchAllByPageWise(Map<String, String> searchParamList, int page, int pageSize) throws Exception {
 
         Locale currentLocale = LocaleContextHolder.getLocale();// works only when as local statement
         logger.debug(messageSource.getMessage("USER_GET_SEARCH_DEBUG", null, currentLocale));
 
         try {
             Page<UserResponseDto> responseDtoList = service.findBySearchParamLike(searchParamList, page, pageSize);
-            return ResponseEntity.ok().body(new PaginationResponse<UserResponseDto>(responseDtoList.getContent(), responseDtoList.getTotalElements()));
+            return ResponseEntity.ok().body(new PaginationResponse<>(responseDtoList.getContent(), responseDtoList.getTotalElements()));
         } catch (Exception e) {
             logger.error(e.getMessage());
             throw e;
