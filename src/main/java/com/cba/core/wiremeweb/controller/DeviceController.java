@@ -1,8 +1,12 @@
 package com.cba.core.wiremeweb.controller;
 
+import com.cba.core.wiremeweb.controller.resource.DeviceResource;
 import com.cba.core.wiremeweb.controller.resource.GenericResource;
 import com.cba.core.wiremeweb.dto.DeviceRequestDto;
 import com.cba.core.wiremeweb.dto.DeviceResponseDto;
+import com.cba.core.wiremeweb.dto.DistributionResponseDto;
+import com.cba.core.wiremeweb.dto.MerchantResponseDto;
+import com.cba.core.wiremeweb.service.DeviceService;
 import com.cba.core.wiremeweb.service.GenericService;
 import com.cba.core.wiremeweb.util.PaginationResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -27,11 +31,11 @@ import java.util.Map;
 @RequiredArgsConstructor
 @RequestMapping("/${application.resource.devices}")
 @Tag(name = "Device Management", description = "Provides Device Management API's")
-public class DeviceController implements GenericResource<DeviceResponseDto, DeviceRequestDto> {
+public class DeviceController implements DeviceResource<DeviceResponseDto, DeviceRequestDto> {
 
     private static final Logger logger = LoggerFactory.getLogger(DeviceController.class);
 
-    private final GenericService<DeviceResponseDto, DeviceRequestDto> service;
+    private final DeviceService<DeviceResponseDto, DeviceRequestDto> service;
     private final MessageSource messageSource;
 
 
@@ -202,4 +206,16 @@ public class DeviceController implements GenericResource<DeviceResponseDto, Devi
 
     }
 
+    @Override
+    public ResponseEntity<List<DistributionResponseDto>> getDeviceDistribution(Map<String, String> grouping) throws Exception {
+        Locale currentLocale = LocaleContextHolder.getLocale();
+        logger.debug(messageSource.getMessage("MERCHANT_GET_ALL_DEBUG", null, currentLocale));
+        try {
+            List<DistributionResponseDto> responseDtolist = service.getDeviceDistribution(grouping);
+            return ResponseEntity.ok().body(responseDtolist);
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+            throw e;
+        }
+    }
 }

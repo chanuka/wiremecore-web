@@ -55,9 +55,9 @@ public class HighlightDaoImpl implements HighlightDao {
             throw new NotFoundException("No User Config found");
         }
 
-        for(UserConfig u : entityList){
-            System.out.println("uu:"+u.getConfig());
-        }
+//        for(UserConfig u : entityList){
+//            System.out.println("uu:"+u.getConfig());
+//        }
 
         return entityList
                 .stream()

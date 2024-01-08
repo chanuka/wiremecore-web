@@ -1,8 +1,11 @@
 package com.cba.core.wiremeweb.service.impl;
 
+import com.cba.core.wiremeweb.dao.DeviceDao;
 import com.cba.core.wiremeweb.dao.GenericDao;
 import com.cba.core.wiremeweb.dto.DeviceRequestDto;
 import com.cba.core.wiremeweb.dto.DeviceResponseDto;
+import com.cba.core.wiremeweb.dto.DistributionResponseDto;
+import com.cba.core.wiremeweb.service.DeviceService;
 import com.cba.core.wiremeweb.service.GenericService;
 import com.cba.core.wiremeweb.util.UserBeanUtil;
 import lombok.RequiredArgsConstructor;
@@ -25,9 +28,9 @@ import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
-public class DeviceServiceImpl implements GenericService<DeviceResponseDto, DeviceRequestDto> {
+public class DeviceServiceImpl implements DeviceService<DeviceResponseDto, DeviceRequestDto> {
 
-    private final GenericDao<DeviceResponseDto, DeviceRequestDto> dao;
+    private final DeviceDao<DeviceResponseDto, DeviceRequestDto> dao;
     private final UserBeanUtil userBeanUtil;
 
 
@@ -144,5 +147,10 @@ public class DeviceServiceImpl implements GenericService<DeviceResponseDto, Devi
             excelBytes = outputStream.toByteArray();
         }
         return excelBytes;
+    }
+
+    @Override
+    public List<DistributionResponseDto> getDeviceDistribution(Map<String, String> grouping) throws Exception {
+        return dao.getDeviceDistribution(grouping);
     }
 }
