@@ -12,6 +12,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
@@ -40,12 +41,22 @@ public class UserNamePasswordVerifyFilter extends UsernamePasswordAuthentication
             UsernameAndPasswordAuthenticationRequestDto authenticationRequest = new ObjectMapper()
                     .readValue(request.getInputStream(), UsernameAndPasswordAuthenticationRequestDto.class);
 
-            Authentication authentication = new UsernamePasswordAuthenticationToken(
+//            Authentication authentication = new UsernamePasswordAuthenticationToken(authenticationRequest.getUsername(),authenticationRequest.getPassword());
+//            Authentication authenticate = authenticationManager.authenticate(authentication);
+
+            UsernamePasswordAuthenticationToken authRequest = new UsernamePasswordAuthenticationToken(
                     authenticationRequest.getUsername(),
                     authenticationRequest.getPassword()
             );
-            Authentication authenticate = authenticationManager.authenticate(authentication);
+            authRequest.setDetails(authenticationRequest); // set user object for future usage - optional
+            Authentication authenticate = authenticationManager.authenticate(authRequest);
             return authenticate;
+
+        } catch (BadCredentialsException e) {
+            request.setAttribute("errorObject", e);
+            request.setAttribute("errorCode", "BadCredentialsException");
+            logger.error(e.getMessage());
+            throw e;
         } catch (Exception e) {
             logger.error(e.getMessage());
             throw new RuntimeException(e);

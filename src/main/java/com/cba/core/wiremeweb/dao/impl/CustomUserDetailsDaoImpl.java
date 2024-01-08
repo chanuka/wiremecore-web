@@ -32,8 +32,6 @@ public class CustomUserDetailsDaoImpl implements CustomUserDetailsDao {
 
             User user = userRepository.findByUserNameAndUserType(userName, userType).orElseThrow(() -> new NotFoundException("User not found"));
 
-//            User user = userRepository.findByUserNameAndUserType(userName, userType);
-
             Set<SimpleGrantedAuthority> permissions = user.getUserRolesForUserId()
                     .stream()
                     .map(this::convertToSimpleGrant)

@@ -30,14 +30,23 @@ public class UserMapper {
         entity.setStatus(new Status(requestDto.getStatus()));
         entity.setUserType(new UserType(requestDto.getUserType()));
 
-        Device device = new Device(requestDto.getDeviceId() != null ? requestDto.getDeviceId() : null);
-        entity.setDevice(device);
+        if (requestDto.getDeviceId() != null) {
+            entity.setDevice(new Device(requestDto.getDeviceId()));
+        } else {
+            entity.setDevice(null);
+        }
 
-        Merchant merchant = new Merchant(requestDto.getMerchantId() != null ? requestDto.getMerchantId() : null);
-        entity.setMerchant(merchant);
+        if (requestDto.getMerchantId() != null) {
+            entity.setMerchant(new Merchant(requestDto.getMerchantId()));
+        } else {
+            entity.setMerchant(null);
+        }
 
-        MerchantCustomer merchantCustomer = new MerchantCustomer(requestDto.getPartnerId() != null ? requestDto.getPartnerId() : null);
-        entity.setMerchantCustomer(merchantCustomer);
+        if (requestDto.getPartnerId() != null) {
+            entity.setMerchantCustomer(new MerchantCustomer(requestDto.getPartnerId()));
+        } else {
+            entity.setMerchantCustomer(null);
+        }
 
         return entity;
     }

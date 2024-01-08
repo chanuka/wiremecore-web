@@ -5,5 +5,5 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
 public interface CustomUserDetailsDao {
 
-    public ApplicationUserDto loadUserByUsername(String username) throws UsernameNotFoundException;
+    ApplicationUserDto loadUserByUsername(String username) throws UsernameNotFoundException;
 }

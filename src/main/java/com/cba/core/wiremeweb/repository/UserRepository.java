@@ -13,8 +13,6 @@ public interface UserRepository extends JpaRepository<User, Integer>, JpaSpecifi
 
     Optional<User> findByUserName(String userName);
 
-//    User findByUserNameAndUserType(String userName, UserType userType);
-
     Optional<User> findByUserNameAndUserType(String userName, UserType userType);
 
 }
