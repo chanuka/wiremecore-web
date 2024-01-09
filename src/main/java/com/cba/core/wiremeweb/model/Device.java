@@ -46,6 +46,15 @@ public class Device implements java.io.Serializable {
     @Column(name = "unique_id")
     private String uniqueId;
     @Temporal(TemporalType.TIMESTAMP)
+    @Column(name = "last_active", length = 19)
+    private Date lastActive;
+    @Column(name = "lat")
+    private Float lat;
+    @Column(name = "lon")
+    private Float lon;
+    @Column(name = "is_away", nullable = false)
+    private Boolean isAway = false;
+    @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "created_at", nullable = false, length = 19)
     @CreatedDate
     private Date createdAt;

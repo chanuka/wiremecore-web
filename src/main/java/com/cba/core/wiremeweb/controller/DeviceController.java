@@ -209,9 +209,22 @@ public class DeviceController implements DeviceResource<DeviceResponseDto, Devic
     @Override
     public ResponseEntity<List<DistributionResponseDto>> getDeviceDistribution(Map<String, String> grouping) throws Exception {
         Locale currentLocale = LocaleContextHolder.getLocale();
-        logger.debug(messageSource.getMessage("MERCHANT_GET_ALL_DEBUG", null, currentLocale));
+        logger.debug(messageSource.getMessage("DEVICE_GET_ALL_DISTRIBUTION", null, currentLocale));
         try {
             List<DistributionResponseDto> responseDtolist = service.getDeviceDistribution(grouping);
+            return ResponseEntity.ok().body(responseDtolist);
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+            throw e;
+        }
+    }
+
+    @Override
+    public ResponseEntity<PaginationResponse<DeviceResponseDto>> getGeoFenceDevice(Map<String, Object> filter) throws Exception {
+        Locale currentLocale = LocaleContextHolder.getLocale();
+        logger.debug(messageSource.getMessage("DEVICE_GET_ALL_GEOFENCE", null, currentLocale));
+        try {
+            PaginationResponse<DeviceResponseDto> responseDtolist = service.getGeoFenceDevice(filter);
             return ResponseEntity.ok().body(responseDtolist);
         } catch (Exception e) {
             logger.error(e.getMessage());

@@ -12,6 +12,7 @@ import com.cba.core.wiremeweb.model.*;
 import com.cba.core.wiremeweb.repository.DeviceRepository;
 import com.cba.core.wiremeweb.repository.GlobalAuditEntryRepository;
 import com.cba.core.wiremeweb.repository.specification.DeviceSpecification;
+import com.cba.core.wiremeweb.util.PaginationResponse;
 import com.cba.core.wiremeweb.util.UserBeanUtil;
 import com.cba.core.wiremeweb.util.UserOperationEnum;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -267,18 +268,38 @@ public class DeviceDaoImpl implements DeviceDao<DeviceResponseDto, DeviceRequest
 
         String groupingValue = grouping.get("grouping");
 
-        String selectClause = setSelectCondition(groupingValue);
-        String groupByClause = setGroupByCondition(groupingValue);
+        if (groupingValue != null && ("Vendor".equals(groupingValue) || "DeviceModel".equals(groupingValue))) {
 
-        String jpql = "SELECT " + selectClause + " from Device d inner join DeviceModel dm ON d.deviceModel.id = dm.id inner join DeviceVendor dv on dm.deviceVendor.id = dv.id " +
-                " GROUP BY " + groupByClause;
+            String selectClause = setSelectCondition(groupingValue);
+            String groupByClause = setGroupByCondition(groupingValue);
 
-        Query query = entityManager.createQuery(jpql);
+            String jpql = "SELECT " + selectClause + " from Device d inner join DeviceModel dm ON d.deviceModel.id = dm.id inner join DeviceVendor dv on dm.deviceVendor.id = dv.id " +
+                    " GROUP BY " + groupByClause;
 
-        List<Object[]> list = query.getResultList();
-        extracted(responseData, list);
+            Query query = entityManager.createQuery(jpql);
 
+            List<Object[]> list = query.getResultList();
+            extracted(responseData, list);
+        }
         return responseData;
+    }
+
+    @Override
+    public PaginationResponse<DeviceResponseDto> getGeoFenceDevice(Map<String, Object> filter) throws Exception {
+
+        Map<String, Boolean> filterValue = (Map<String, Boolean>) filter.get("filter");
+        Boolean isAway = filterValue.get("isAway");
+
+        List<Device> entityList = repository.findByIsAway(isAway);
+        if (entityList.isEmpty()) {
+            throw new NotFoundException("No Devices found");
+        }
+
+        return new PaginationResponse<>(entityList
+                .stream()
+                .map(DeviceMapper::toDto)
+                .collect(Collectors.toList()), entityList.size());
+
     }
 
     private String setSelectCondition(String groupingValue) throws Exception {

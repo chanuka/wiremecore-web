@@ -7,6 +7,7 @@ import com.cba.core.wiremeweb.dto.DeviceResponseDto;
 import com.cba.core.wiremeweb.dto.DistributionResponseDto;
 import com.cba.core.wiremeweb.service.DeviceService;
 import com.cba.core.wiremeweb.service.GenericService;
+import com.cba.core.wiremeweb.util.PaginationResponse;
 import com.cba.core.wiremeweb.util.UserBeanUtil;
 import lombok.RequiredArgsConstructor;
 import net.sf.jasperreports.engine.*;
@@ -152,5 +153,10 @@ public class DeviceServiceImpl implements DeviceService<DeviceResponseDto, Devic
     @Override
     public List<DistributionResponseDto> getDeviceDistribution(Map<String, String> grouping) throws Exception {
         return dao.getDeviceDistribution(grouping);
+    }
+
+    @Override
+    public PaginationResponse<DeviceResponseDto> getGeoFenceDevice(Map<String, Object> filter) throws Exception {
+        return dao.getGeoFenceDevice(filter);
     }
 }
