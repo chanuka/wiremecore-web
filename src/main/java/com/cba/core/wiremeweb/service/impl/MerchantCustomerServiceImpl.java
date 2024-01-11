@@ -1,17 +1,14 @@
 package com.cba.core.wiremeweb.service.impl;
 
 import com.cba.core.wiremeweb.dao.GenericDao;
-import com.cba.core.wiremeweb.dao.MerchantCustomerDao;
 import com.cba.core.wiremeweb.dto.MerchantCustomerRequestDto;
 import com.cba.core.wiremeweb.dto.MerchantCustomerResponseDto;
 import com.cba.core.wiremeweb.exception.NotFoundException;
-import com.cba.core.wiremeweb.mapper.DeviceMapper;
 import com.cba.core.wiremeweb.mapper.MerchantCustomerMapper;
 import com.cba.core.wiremeweb.model.GlobalAuditEntry;
 import com.cba.core.wiremeweb.model.MerchantCustomer;
 import com.cba.core.wiremeweb.model.Status;
 import com.cba.core.wiremeweb.repository.GlobalAuditEntryRepository;
-import com.cba.core.wiremeweb.repository.specification.MerchantCustomerSpecification;
 import com.cba.core.wiremeweb.service.GenericService;
 import com.cba.core.wiremeweb.util.UserBeanUtil;
 import com.cba.core.wiremeweb.util.UserOperationEnum;
@@ -28,9 +25,6 @@ import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ResourceUtils;
 
@@ -46,7 +40,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class MerchantCustomerServiceImpl implements GenericService<MerchantCustomerResponseDto, MerchantCustomerRequestDto> {
 
-    private final MerchantCustomerDao<MerchantCustomer, MerchantCustomer> dao;
+    private final GenericDao<MerchantCustomer, MerchantCustomer> dao;
     private final GlobalAuditEntryRepository globalAuditEntryRepository;
     private final ObjectMapper objectMapper;
     private final UserBeanUtil userBeanUtil;
@@ -83,7 +77,7 @@ public class MerchantCustomerServiceImpl implements GenericService<MerchantCusto
 
     @Override
     public Page<MerchantCustomerResponseDto> findBySearchParamLike(Map<String, String> searchParamList, int page, int pageSize) throws Exception {
-        Page<MerchantCustomer> entitiesPage = dao.findAll(searchParamList, page, pageSize);
+        Page<MerchantCustomer> entitiesPage = dao.findBySearchParamLike(searchParamList, page, pageSize);
 
         if (entitiesPage.isEmpty()) {
             throw new NotFoundException("No Merchant Customers found");
