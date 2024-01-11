@@ -1,13 +1,10 @@
 package com.cba.core.wiremeweb.controller;
 
 import com.cba.core.wiremeweb.controller.resource.DeviceResource;
-import com.cba.core.wiremeweb.controller.resource.GenericResource;
 import com.cba.core.wiremeweb.dto.DeviceRequestDto;
 import com.cba.core.wiremeweb.dto.DeviceResponseDto;
 import com.cba.core.wiremeweb.dto.DistributionResponseDto;
-import com.cba.core.wiremeweb.dto.MerchantResponseDto;
 import com.cba.core.wiremeweb.service.DeviceService;
-import com.cba.core.wiremeweb.service.GenericService;
 import com.cba.core.wiremeweb.util.PaginationResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;

@@ -5,6 +5,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.stereotype.Repository;
 
-@Repository
 public interface MerchantCustomerRepository extends JpaRepository<MerchantCustomer, Integer>, JpaSpecificationExecutor<MerchantCustomer> {
 }

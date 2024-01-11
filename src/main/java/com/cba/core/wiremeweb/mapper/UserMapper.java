@@ -3,7 +3,6 @@ package com.cba.core.wiremeweb.mapper;
 import com.cba.core.wiremeweb.dto.UserRequestDto;
 import com.cba.core.wiremeweb.dto.UserResponseDto;
 import com.cba.core.wiremeweb.model.*;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 public class UserMapper {
 

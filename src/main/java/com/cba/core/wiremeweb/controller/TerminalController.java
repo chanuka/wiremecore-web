@@ -1,6 +1,5 @@
 package com.cba.core.wiremeweb.controller;
 
-import com.cba.core.wiremeweb.controller.resource.GenericResource;
 import com.cba.core.wiremeweb.controller.resource.TerminalResource;
 import com.cba.core.wiremeweb.dto.TerminalRequestDto;
 import com.cba.core.wiremeweb.dto.TerminalResponseDto;

@@ -2,9 +2,7 @@ package com.cba.core.wiremeweb.service;
 
 import com.cba.core.wiremeweb.dto.DeviceResponseDto;
 import com.cba.core.wiremeweb.dto.DistributionResponseDto;
-import com.cba.core.wiremeweb.dto.TerminalResponseDto;
 import com.cba.core.wiremeweb.util.PaginationResponse;
-import org.springframework.data.domain.Page;
 
 import java.util.List;
 import java.util.Map;

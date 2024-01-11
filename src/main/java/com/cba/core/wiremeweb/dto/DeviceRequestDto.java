@@ -24,7 +24,7 @@ public class DeviceRequestDto implements java.io.Serializable {
     @NotBlank(message = "Status is required")
     private String status;
     private Integer modelId;
-    private int deviceId;
+    private Integer deviceId;
 
     private static final long serialVersionUID = 1L;
 

@@ -1,6 +1,7 @@
 package com.cba.core.wiremeweb.dao.impl;
 
 import com.cba.core.wiremeweb.dao.GenericDao;
+import com.cba.core.wiremeweb.dao.MerchantCustomerDao;
 import com.cba.core.wiremeweb.dto.MerchantCustomerRequestDto;
 import com.cba.core.wiremeweb.dto.MerchantCustomerResponseDto;
 import com.cba.core.wiremeweb.exception.NotFoundException;
@@ -25,220 +26,85 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Repository;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-@Component
-@Transactional
+@Repository
 @RequiredArgsConstructor
-public class MerchantCustomerDaoImpl implements GenericDao<MerchantCustomerResponseDto, MerchantCustomerRequestDto> {
+public class MerchantCustomerDaoImpl implements MerchantCustomerDao<MerchantCustomer, MerchantCustomer> {
 
     private final MerchantCustomerRepository repository;
-    private final GlobalAuditEntryRepository globalAuditEntryRepository;
-    private final ObjectMapper objectMapper;
-    private final UserBeanUtil userBeanUtil;
-
-    @Value("${application.resource.partners}")
-    private String resource;
 
     @Override
     @Cacheable("partners")
-    public Page<MerchantCustomerResponseDto> findAll(int page, int pageSize) throws Exception {
+    public Page<MerchantCustomer> findAll(int page, int pageSize) throws Exception {
         Pageable pageable = PageRequest.of(page, pageSize);
-
-        Page<MerchantCustomer> entitiesPage = repository.findAll(pageable);
-        if (entitiesPage.isEmpty()) {
-            throw new NotFoundException("No Merchant Customers found");
-        }
-        return entitiesPage.map(MerchantCustomerMapper::toDto);
+        return repository.findAll(pageable);
     }
 
     @Override
     @Cacheable("partners")
-    public List<MerchantCustomerResponseDto> findAll() throws Exception {
-        List<MerchantCustomer> entityList = repository.findAll();
-        if (entityList.isEmpty()) {
-            throw new NotFoundException("No Merchant Customers found");
-        }
-        return entityList
-                .stream()
-                .map(MerchantCustomerMapper::toDto)
-                .collect(Collectors.toList());
+    public List<MerchantCustomer> findAll() throws Exception {
+        return repository.findAll();
     }
 
     @Override
-    public Page<MerchantCustomerResponseDto> findBySearchParamLike(Map<String, String> searchParamList, int page, int pageSize) throws Exception {
-        Pageable pageable = PageRequest.of(page, pageSize);
-        Specification<MerchantCustomer> spec = MerchantCustomerSpecification.
-                nameLikeAndStatusLike(searchParamList.get("merchantCustomerName"),
-                        searchParamList.get("status"),searchParamList.get("address"));
-
-        Page<MerchantCustomer> entitiesPage = repository.findAll(spec, pageable);
-
-        if (entitiesPage.isEmpty()) {
-            throw new NotFoundException("No Merchant Customers found");
-        }
-        return entitiesPage.map(MerchantCustomerMapper::toDto);
-    }
-
-    @Override
-    public Page<MerchantCustomerResponseDto> findBySearchParamLikeByKeyWord(Map<String, String> searchParameter, int page, int pageSize) throws Exception {
+    public Page<MerchantCustomer> findBySearchParamLike(Map<String, String> searchParamList, int page, int pageSize) throws Exception {
         return null;
     }
 
     @Override
-    public MerchantCustomerResponseDto findById(int id) throws Exception {
-        MerchantCustomer entity = repository.findById(id).orElseThrow(() -> new NotFoundException("Merchant Customer not found"));
-        return MerchantCustomerMapper.toDto(entity);
+    public Page<MerchantCustomer> findBySearchParamLikeByKeyWord(Map<String, String> searchParameter, int page, int pageSize) throws Exception {
+        return null;
+    }
+
+    @Override
+    public MerchantCustomer findById(int id) throws Exception {
+        return repository.findById(id).orElseThrow(() -> new NotFoundException("Merchant Customer not found"));
     }
 
     @Override
     @CacheEvict(value = "partners", allEntries = true)
-    public MerchantCustomerResponseDto deleteById(int id) throws Exception {
-        try {
-            MerchantCustomer entity = repository.findById(id).orElseThrow(() -> new NotFoundException("Merchant Customer not found"));
-            MerchantCustomerResponseDto responseDto = MerchantCustomerMapper.toDto(entity);
+    public MerchantCustomer deleteById(int id) throws Exception {
+        repository.deleteById(id);
 
-            repository.deleteById(id);
-            globalAuditEntryRepository.save(new GlobalAuditEntry(resource, UserOperationEnum.DELETE.getValue(),
-                    id, objectMapper.writeValueAsString(responseDto), null,
-                    userBeanUtil.getRemoteAdr()));
-
-            return responseDto;
-
-        } catch (Exception rr) {
-            throw rr;
-        }
+        return new MerchantCustomer();
     }
 
     @Override
     @CacheEvict(value = "partners", allEntries = true)
     public void deleteByIdList(List<Integer> idList) throws Exception {
-        try {
-
-            idList.stream()
-                    .map((id) -> repository.findById(id).orElseThrow(() -> new NotFoundException("Merchant Customer not found")))
-                    .collect(Collectors.toList());
-
-            repository.deleteAllByIdInBatch(idList);
-
-            idList.stream()
-                    .forEach(item -> {
-                        ObjectNode objectNode = objectMapper.createObjectNode();
-                        objectNode.put("id", item);
-                        try {
-                            globalAuditEntryRepository.save(new GlobalAuditEntry(resource, UserOperationEnum.DELETE.getValue(),
-                                    item, objectMapper.writeValueAsString(objectNode), null,
-                                    userBeanUtil.getRemoteAdr()));
-                        } catch (Exception e) {
-                            throw new RuntimeException("Exception occurred for Auditing: ");// only unchecked exception can be passed
-                        }
-                    });
-        } catch (Exception ee) {
-            ee.printStackTrace();
-            throw ee;
-        }
+        repository.deleteAllByIdInBatch(idList);
     }
 
     @Override
     @CacheEvict(value = "partners", allEntries = true)
-    public MerchantCustomerResponseDto updateById(int id, MerchantCustomerRequestDto requestDto) throws Exception {
-
-        MerchantCustomer toBeUpdated = repository.findById(id).orElseThrow(() -> new NotFoundException("Merchant Customer not found"));
-
-        boolean updateRequired = false;
-        Map<String, Object> oldDataMap = new HashMap<>();
-        Map<String, Object> newDataMap = new HashMap<>();
-
-        if (!toBeUpdated.getName().equals(requestDto.getName())) {
-            updateRequired = true;
-            oldDataMap.put("name", toBeUpdated.getName());
-            newDataMap.put("name", requestDto.getName());
-
-            toBeUpdated.setName(requestDto.getName());
-        }
-        if (!toBeUpdated.getAddress().equals(requestDto.getAddress())) {
-            updateRequired = true;
-            oldDataMap.put("address", toBeUpdated.getAddress());
-            newDataMap.put("address", requestDto.getAddress());
-
-            toBeUpdated.setAddress(requestDto.getAddress());
-        }
-        if (!toBeUpdated.getContactNo().equals(requestDto.getContactNo())) {
-            updateRequired = true;
-            oldDataMap.put("contactNo", toBeUpdated.getContactNo());
-            newDataMap.put("contactNo", requestDto.getContactNo());
-
-            toBeUpdated.setContactNo(requestDto.getContactNo());
-        }
-        if (!toBeUpdated.getEmail().equals(requestDto.getEmail())) {
-            updateRequired = true;
-            oldDataMap.put("email", toBeUpdated.getEmail());
-            newDataMap.put("email", requestDto.getEmail());
-
-            toBeUpdated.setEmail(requestDto.getEmail());
-        }
-        if (!toBeUpdated.getStatus().getStatusCode().equals(requestDto.getStatus())) {
-            updateRequired = true;
-            oldDataMap.put("status", toBeUpdated.getStatus().getStatusCode());
-            newDataMap.put("status", requestDto.getStatus());
-
-            toBeUpdated.setStatus(new Status(requestDto.getStatus()));
-        }
-        if (updateRequired) {
-
-            repository.saveAndFlush(toBeUpdated);
-            globalAuditEntryRepository.save(new GlobalAuditEntry(resource, UserOperationEnum.UPDATE.getValue(),
-                    id, objectMapper.writeValueAsString(oldDataMap), objectMapper.writeValueAsString(newDataMap),
-                    userBeanUtil.getRemoteAdr()));
-
-            return MerchantCustomerMapper.toDto(toBeUpdated);
-
-        } else {
-            throw new NotFoundException("No Changes found");
-        }
+    public MerchantCustomer updateById(int id, MerchantCustomer requestDto) throws Exception {
+        return repository.saveAndFlush(requestDto);
     }
 
     @Override
     @CacheEvict(value = "partners", allEntries = true)
-    public MerchantCustomerResponseDto create(MerchantCustomerRequestDto requestDto) throws Exception {
-
-        MerchantCustomer toInsert = MerchantCustomerMapper.toModel(requestDto);
-
-        MerchantCustomer savedEntity = repository.save(toInsert);
-        MerchantCustomerResponseDto responseDto = MerchantCustomerMapper.toDto(savedEntity);
-        globalAuditEntryRepository.save(new GlobalAuditEntry(resource, UserOperationEnum.CREATE.getValue(),
-                savedEntity.getId(), null, objectMapper.writeValueAsString(responseDto),
-                userBeanUtil.getRemoteAdr()));
-
-        return responseDto;
+    public MerchantCustomer create(MerchantCustomer requestDto) throws Exception {
+        return repository.save(requestDto);
     }
 
     @Override
     @CacheEvict(value = "partners", allEntries = true)
-    public List<MerchantCustomerResponseDto> createBulk(List<MerchantCustomerRequestDto> requestDtoList) throws Exception {
+    public List<MerchantCustomer> createBulk(List<MerchantCustomer> entityList) throws Exception {
+        return repository.saveAll(entityList);
+    }
 
-        List<MerchantCustomer> entityList = requestDtoList
-                .stream()
-                .map(MerchantCustomerMapper::toModel)
-                .collect(Collectors.toList());
-
-        return repository.saveAll(entityList)
-                .stream()
-                .map(item -> {
-                    MerchantCustomerResponseDto responseDto = MerchantCustomerMapper.toDto(item);
-                    try {
-                        globalAuditEntryRepository.save(new GlobalAuditEntry(resource, UserOperationEnum.CREATE.getValue(),
-                                item.getId(), null, objectMapper.writeValueAsString(responseDto),
-                                userBeanUtil.getRemoteAdr()));
-                    } catch (Exception e) {
-                        throw new RuntimeException("Exception occurred in Auditing: ");// only unchecked exception can be passed
-                    }
-                    return responseDto;
-                })
-                .collect(Collectors.toList());
+    @Override
+    public Page<MerchantCustomer> findAll(Map<String, String> searchParamList, int page, int pageSize) throws Exception {
+        Pageable pageable = PageRequest.of(page, pageSize);
+        Specification<MerchantCustomer> spec = MerchantCustomerSpecification.
+                nameLikeAndStatusLike(searchParamList.get("merchantCustomerName"),
+                        searchParamList.get("status"), searchParamList.get("address"));
+        return repository.findAll(spec, pageable);
     }
 }

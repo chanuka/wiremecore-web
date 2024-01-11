@@ -17,7 +17,6 @@ public class DeviceModelRequestDto implements java.io.Serializable {
     private String name;
     @NotBlank(message = "Status is required")
     private String img;
-    @NotBlank(message = "Device Type is required")
     private Integer deviceVendor;
     @NotBlank(message = "Status is required")
     private String status;

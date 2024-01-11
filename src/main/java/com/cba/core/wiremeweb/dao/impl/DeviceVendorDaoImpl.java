@@ -24,191 +24,71 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Repository;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-@Component
-@Transactional
+@Repository
 @RequiredArgsConstructor
-public class DeviceVendorDaoImpl implements GenericDao<DeviceVendorResponseDto, DeviceVendorRequestDto> {
+public class DeviceVendorDaoImpl implements GenericDao<DeviceVendor, DeviceVendor> {
 
     private final DeviceVendorRepository repository;
     private final DeviceModelRepository deviceModelRepository;
-    private final GlobalAuditEntryRepository globalAuditEntryRepository;
-    private final ObjectMapper objectMapper;
-    private final UserBeanUtil userBeanUtil;
 
-    @Value("${application.resource.device_vendor}")
-    private String resource;
 
     @Override
-    public Page<DeviceVendorResponseDto> findAll(int page, int pageSize) throws Exception {
+    public Page<DeviceVendor> findAll(int page, int pageSize) throws Exception {
         Pageable pageable = PageRequest.of(page, pageSize);
-
-        Page<DeviceVendor> entitiesPage = repository.findAll(pageable);
-        if (entitiesPage.isEmpty()) {
-            throw new NotFoundException("No Devices found");
-        }
-        return entitiesPage.map(DeviceVendorMapper::toDto);
+        return repository.findAll(pageable);
     }
 
     @Override
-    public List<DeviceVendorResponseDto> findAll() throws Exception {
-        List<DeviceVendor> entityList = repository.findAll();
-        if (entityList.isEmpty()) {
-            throw new NotFoundException("No Devices found");
-        }
-        return entityList
-                .stream()
-                .map(DeviceVendorMapper::toDto)
-                .collect(Collectors.toList());
+    public List<DeviceVendor> findAll() throws Exception {
+        return repository.findAll();
     }
 
     @Override
-    public Page<DeviceVendorResponseDto> findBySearchParamLike(Map<String, String> searchParamList, int page, int pageSize) throws Exception {
+    public Page<DeviceVendor> findBySearchParamLike(Map<String, String> searchParamList, int page, int pageSize) throws Exception {
         return null;
     }
 
     @Override
-    public Page<DeviceVendorResponseDto> findBySearchParamLikeByKeyWord(Map<String, String> searchParameter, int page, int pageSize) throws Exception {
+    public Page<DeviceVendor> findBySearchParamLikeByKeyWord(Map<String, String> searchParameter, int page, int pageSize) throws Exception {
         return null;
     }
 
     @Override
-    public DeviceVendorResponseDto findById(int id) throws Exception {
-        DeviceVendor entity = repository.findById(id).orElseThrow(() -> new NotFoundException("Device Vendor not found"));
-        List<DeviceModel> deviceModels = deviceModelRepository.findAllByDeviceVendor_Id(entity.getId());
-
-        DeviceVendorResponseDto deviceVendorResponseDto = DeviceVendorMapper.toDto(entity);
-        deviceVendorResponseDto.setDeviceModels(deviceModels.stream().map(DeviceModelMapper::toDto).collect(Collectors.toList()));
-        return deviceVendorResponseDto;
+    public DeviceVendor findById(int id) throws Exception {
+        return repository.findById(id).orElseThrow(() -> new NotFoundException("Device Vendor not found"));
     }
 
     @Override
-    public DeviceVendorResponseDto deleteById(int id) throws Exception {
-        try {
-            DeviceVendor entity = repository.findById(id).orElseThrow(() -> new NotFoundException("Device Vendor not found"));
-            DeviceVendorResponseDto responseDto = DeviceVendorMapper.toDto(entity);
+    public DeviceVendor deleteById(int id) throws Exception {
+        repository.deleteById(id);
 
-            repository.deleteById(id);
-            globalAuditEntryRepository.save(new GlobalAuditEntry(resource, UserOperationEnum.DELETE.getValue(),
-                    id, objectMapper.writeValueAsString(responseDto), null,
-                    userBeanUtil.getRemoteAdr()));
-
-            return responseDto;
-
-        } catch (Exception rr) {
-            throw rr;
-        }
+        return new DeviceVendor();
     }
 
     @Override
     public void deleteByIdList(List<Integer> idList) throws Exception {
-        try {
-            ObjectMapper objectMapper = new ObjectMapper();
-            idList.stream()
-                    .map((id) -> repository.findById(id).orElseThrow(() -> new NotFoundException("Device Vendor not found")))
-                    .collect(Collectors.toList());
-
-            repository.deleteAllByIdInBatch(idList);
-
-            idList.stream()
-                    .forEach(item -> {
-                        ObjectNode objectNode = objectMapper.createObjectNode();
-                        objectNode.put("id", item);
-                        try {
-                            globalAuditEntryRepository.save(new GlobalAuditEntry(resource, UserOperationEnum.DELETE.getValue(),
-                                    item, objectMapper.writeValueAsString(objectNode), null,
-                                    userBeanUtil.getRemoteAdr()));
-                        } catch (Exception e) {
-                            throw new RuntimeException("Exception occurred for Auditing: ");// only unchecked exception can be passed
-                        }
-                    });
-        } catch (Exception ee) {
-            ee.printStackTrace();
-            throw ee;
-        }
+        repository.deleteAllByIdInBatch(idList);
     }
 
     @Override
-    public DeviceVendorResponseDto updateById(int id, DeviceVendorRequestDto requestDto) throws Exception {
-        DeviceVendor toBeUpdated = repository.findById(id).orElseThrow(() -> new NotFoundException("Device Vendor not found"));
-
-        boolean updateRequired = false;
-        Map<String, Object> oldDataMap = new HashMap<>();
-        Map<String, Object> newDataMap = new HashMap<>();
-
-        if (!toBeUpdated.getName().equals(requestDto.getName())) {
-            updateRequired = true;
-            oldDataMap.put("name", toBeUpdated.getName());
-            newDataMap.put("name", requestDto.getName());
-
-            toBeUpdated.setName(requestDto.getName());
-        }
-        if (!toBeUpdated.getImg().equals(requestDto.getImg())) {
-            updateRequired = true;
-            oldDataMap.put("img", toBeUpdated.getImg());
-            newDataMap.put("img", requestDto.getImg());
-
-            toBeUpdated.setImg(requestDto.getImg());
-        }
-        if (!toBeUpdated.getStatus().getStatusCode().equals(requestDto.getStatus())) {
-            updateRequired = true;
-            oldDataMap.put("status", toBeUpdated.getStatus().getStatusCode());
-            newDataMap.put("status", requestDto.getStatus());
-
-            toBeUpdated.setStatus(new Status(requestDto.getStatus()));
-        }
-        if (updateRequired) {
-
-            repository.saveAndFlush(toBeUpdated);
-            globalAuditEntryRepository.save(new GlobalAuditEntry(resource, UserOperationEnum.UPDATE.getValue(),
-                    id, objectMapper.writeValueAsString(oldDataMap), objectMapper.writeValueAsString(newDataMap),
-                    userBeanUtil.getRemoteAdr()));
-
-            return DeviceVendorMapper.toDto(toBeUpdated);
-
-        } else {
-            throw new NotFoundException("No Changes found");
-        }
+    public DeviceVendor updateById(int id, DeviceVendor requestDto) throws Exception {
+        return repository.saveAndFlush(requestDto);
     }
 
     @Override
-    public DeviceVendorResponseDto create(DeviceVendorRequestDto requestDto) throws Exception {
-        DeviceVendor toInsert = DeviceVendorMapper.toModel(requestDto);
-        toInsert.setStatus(new Status(requestDto.getStatus()));
-        DeviceVendor savedEntity = repository.save(toInsert);
-        DeviceVendorResponseDto responseDto = DeviceVendorMapper.toDto(savedEntity);
-        globalAuditEntryRepository.save(new GlobalAuditEntry(resource, UserOperationEnum.CREATE.getValue(),
-                savedEntity.getId(), null, objectMapper.writeValueAsString(responseDto),
-                userBeanUtil.getRemoteAdr()));
-
-        return responseDto;
+    public DeviceVendor create(DeviceVendor requestDto) throws Exception {
+        return repository.save(requestDto);
     }
 
     @Override
-    public List<DeviceVendorResponseDto> createBulk(List<DeviceVendorRequestDto> requestDtoList) throws Exception {
-        List<DeviceVendor> entityList = requestDtoList
-                .stream()
-                .map(DeviceVendorMapper::toModel)
-                .collect(Collectors.toList());
-
-        return repository.saveAll(entityList)
-                .stream()
-                .map(item -> {
-                    DeviceVendorResponseDto responseDto = DeviceVendorMapper.toDto(item);
-                    try {
-                        globalAuditEntryRepository.save(new GlobalAuditEntry(resource, UserOperationEnum.CREATE.getValue(),
-                                item.getId(), null, objectMapper.writeValueAsString(responseDto),
-                                userBeanUtil.getRemoteAdr()));
-                    } catch (Exception e) {
-                        throw new RuntimeException("Exception occurred in Auditing: ");// only unchecked exception can be passed
-                    }
-                    return responseDto;
-                })
-                .collect(Collectors.toList());
+    public List<DeviceVendor> createBulk(List<DeviceVendor> requestDtoList) throws Exception {
+        return repository.saveAll(requestDtoList);
     }
 }

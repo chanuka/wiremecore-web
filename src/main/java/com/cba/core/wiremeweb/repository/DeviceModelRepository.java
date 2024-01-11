@@ -7,7 +7,7 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
-@Repository
+
 public interface DeviceModelRepository extends JpaRepository<DeviceModel, Integer>, JpaSpecificationExecutor<DeviceModel> {
 
     List<DeviceModel> findAllByDeviceVendor_Id(int VendorId);
