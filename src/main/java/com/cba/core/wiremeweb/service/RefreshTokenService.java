@@ -2,7 +2,6 @@ package com.cba.core.wiremeweb.service;
 
 import com.cba.core.wiremeweb.model.TokenRefresh;
 
-import java.io.IOException;
 import java.util.Optional;
 
 public interface RefreshTokenService {

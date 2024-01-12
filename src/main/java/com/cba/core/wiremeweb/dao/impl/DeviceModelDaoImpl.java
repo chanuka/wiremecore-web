@@ -1,31 +1,17 @@
 package com.cba.core.wiremeweb.dao.impl;
 
 import com.cba.core.wiremeweb.dao.DeviceModelDao;
-import com.cba.core.wiremeweb.dao.GenericDao;
-import com.cba.core.wiremeweb.dto.DeviceModelRequestDto;
-import com.cba.core.wiremeweb.dto.DeviceModelResponseDto;
 import com.cba.core.wiremeweb.exception.NotFoundException;
-import com.cba.core.wiremeweb.mapper.DeviceModelMapper;
-import com.cba.core.wiremeweb.model.*;
+import com.cba.core.wiremeweb.model.DeviceModel;
 import com.cba.core.wiremeweb.repository.DeviceModelRepository;
-import com.cba.core.wiremeweb.repository.GlobalAuditEntryRepository;
-import com.cba.core.wiremeweb.util.UserBeanUtil;
-import com.cba.core.wiremeweb.util.UserOperationEnum;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.node.ObjectNode;
-import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Repository;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 @Repository
 @RequiredArgsConstructor

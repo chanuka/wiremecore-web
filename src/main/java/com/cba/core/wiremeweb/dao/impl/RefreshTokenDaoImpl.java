@@ -1,22 +1,13 @@
 package com.cba.core.wiremeweb.dao.impl;
 
-import com.cba.core.wiremeweb.config.RefreshTokenConfig;
 import com.cba.core.wiremeweb.dao.RefreshTokenDao;
-import com.cba.core.wiremeweb.exception.NotFoundException;
-import com.cba.core.wiremeweb.exception.TokenRefreshException;
 import com.cba.core.wiremeweb.model.TokenRefresh;
-import com.cba.core.wiremeweb.model.User;
 import com.cba.core.wiremeweb.repository.RefreshTokenRepository;
-import com.cba.core.wiremeweb.repository.UserRepository;
-import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Repository;
 
 import java.io.IOException;
-import java.time.Instant;
 import java.util.Optional;
-import java.util.UUID;
 
 @Repository
 @RequiredArgsConstructor

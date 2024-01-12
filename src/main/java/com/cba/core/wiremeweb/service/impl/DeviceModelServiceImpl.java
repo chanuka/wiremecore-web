@@ -4,7 +4,6 @@ import com.cba.core.wiremeweb.dao.GenericDao;
 import com.cba.core.wiremeweb.dto.DeviceModelRequestDto;
 import com.cba.core.wiremeweb.dto.DeviceModelResponseDto;
 import com.cba.core.wiremeweb.exception.NotFoundException;
-import com.cba.core.wiremeweb.mapper.DeviceMapper;
 import com.cba.core.wiremeweb.mapper.DeviceModelMapper;
 import com.cba.core.wiremeweb.model.DeviceModel;
 import com.cba.core.wiremeweb.model.DeviceVendor;
@@ -20,8 +19,6 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;

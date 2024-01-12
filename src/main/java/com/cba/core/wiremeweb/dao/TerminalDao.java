@@ -1,6 +1,5 @@
 package com.cba.core.wiremeweb.dao;
 
-import com.cba.core.wiremeweb.dto.TerminalResponseDto;
 import com.cba.core.wiremeweb.model.Terminal;
 import org.springframework.data.domain.Page;
 

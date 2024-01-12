@@ -1,25 +1,15 @@
 package com.cba.core.wiremeweb.dao;
 
-import com.cba.core.wiremeweb.dto.MerchantCustomerResponseDto;
-import com.cba.core.wiremeweb.dto.MerchantResponseDto;
-import com.cba.core.wiremeweb.dto.TerminalResponseDto;
-import com.cba.core.wiremeweb.dto.TransactionCoreResponseDto;
+import com.cba.core.wiremeweb.model.TransactionCore;
 import org.springframework.data.domain.Page;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 public interface TransactionDao {
 
-    List<TerminalResponseDto> findAllTerminals() throws Exception;
+    Page<TransactionCore> getAllTransactions(String dateFrom, String dateTo, int page, int pageSize) throws Exception;
 
-    List<MerchantResponseDto> getAllMerchants() throws Exception;
-
-    List<MerchantCustomerResponseDto> getAllMerchantCustomers() throws Exception;
-
-    Page<TransactionCoreResponseDto> getAllTransactions(String dateFrom, String dateTo, int page, int pageSize) throws Exception;
-
-    Map<String, ArrayList<Map<String, Object>>> getAllTransactionSummary(String dateFrom, String dateTo, String queryBy) throws Exception;
+    List<Object[]> getAllTransactionSummary(String selectClause,String whereClause ,String groupByClause,
+                                            String dateFrom, String dateTo) throws Exception;
 
 }
