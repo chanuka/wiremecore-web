@@ -31,6 +31,7 @@ import org.springframework.stereotype.Repository;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Repository
@@ -113,5 +114,10 @@ public class MerchantDaoImpl implements MerchantDao<Merchant, Merchant> {
     public Page<Merchant> findMerchantsByPartner(int id, int page, int pageSize) throws Exception {
         Pageable pageable = PageRequest.of(page, pageSize);
         return repository.findAllByMerchantCustomer_Id(id, pageable);
+    }
+
+    @Override
+    public Merchant findByMerchantId(String merchantId) {
+        return repository.findByMerchantId(merchantId).orElseThrow(() -> new NotFoundException("Merchant Not Found"));
     }
 }
