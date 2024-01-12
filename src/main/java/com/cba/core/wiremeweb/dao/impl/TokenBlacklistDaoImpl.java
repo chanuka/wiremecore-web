@@ -1,6 +1,7 @@
 package com.cba.core.wiremeweb.dao.impl;
 
 import com.cba.core.wiremeweb.dao.TokenBlacklistDao;
+import com.cba.core.wiremeweb.exception.NotFoundException;
 import com.cba.core.wiremeweb.model.TokenBlacklist;
 import com.cba.core.wiremeweb.repository.TokenBlacklistRepository;
 import com.cba.core.wiremeweb.util.JwtUtil;
@@ -9,45 +10,27 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.security.oauth2.jwt.JwtDecoder;
 import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Repository;
 
 import java.sql.SQLException;
 import java.time.Instant;
 import java.util.Optional;
 
-@Component
-@Transactional
+@Repository
 @RequiredArgsConstructor
 public class TokenBlacklistDaoImpl implements TokenBlacklistDao {
 
-    private final TokenBlacklistRepository tokenBlacklistRepository;
-    private final JwtUtil jwtUtil;
-    private final JwtDecoder decoder;
+    private final TokenBlacklistRepository repository;
 
     @Override
-    public TokenBlacklist createBlacklistToken(String token) throws Exception {
-        TokenBlacklist tokenBlacklist = null;
-        if (isTokenBlacklisted(token)) {
-            return tokenBlacklist;
-        }
-        tokenBlacklist = new TokenBlacklist();
-        tokenBlacklist.setToken(token);
-        tokenBlacklist.setExpiration(extractTokenExpiration(token));
-
-        tokenBlacklist = tokenBlacklistRepository.save(tokenBlacklist);
-        return tokenBlacklist;
+    public TokenBlacklist create(TokenBlacklist token) throws Exception {
+        return repository.save(token);
     }
 
     @Override
-    public boolean isTokenBlacklisted(String token) throws SQLException {
-        Optional<TokenBlacklist> tokenBlacklist = tokenBlacklistRepository.findByToken(token);
-        return tokenBlacklist != null
-                && !tokenBlacklist.isEmpty()
-                && tokenBlacklist.get().getExpiration().isAfter(Instant.now());
+    public TokenBlacklist findByToken(String token) throws Exception {
+        return repository.findByToken(token).orElse(null);
     }
 
 
-    private Instant extractTokenExpiration(String token) throws Exception {
-        Jwt claimsJws = jwtUtil.validateJwtToken(token, decoder);
-        return claimsJws.getExpiresAt();
-    }
 }

@@ -6,8 +6,8 @@ import java.sql.SQLException;
 
 public interface TokenBlacklistDao {
 
-    public TokenBlacklist createBlacklistToken(String token) throws Exception;
+     TokenBlacklist create(TokenBlacklist token) throws Exception;
 
-    public boolean isTokenBlacklisted(String token) throws SQLException;
+     TokenBlacklist findByToken(String token) throws Exception;
 
 }

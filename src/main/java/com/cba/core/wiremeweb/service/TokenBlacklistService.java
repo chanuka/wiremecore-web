@@ -8,5 +8,5 @@ public interface TokenBlacklistService {
 
     public TokenBlacklist createBlacklistToken(String token) throws Exception;
 
-    public boolean isTokenBlacklisted(String token) throws SQLException;
+    public boolean isTokenBlacklisted(String token) throws Exception;
 }
