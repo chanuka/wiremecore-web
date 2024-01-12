@@ -11,20 +11,18 @@ import com.cba.core.wiremeweb.repository.UserRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Repository;
 
 import java.io.IOException;
 import java.time.Instant;
 import java.util.Optional;
 import java.util.UUID;
 
-@Component
-@Transactional
+@Repository
 @RequiredArgsConstructor
 public class RefreshTokenDaoImpl implements RefreshTokenDao {
 
     private final RefreshTokenRepository refreshTokenRepository;
-    private final RefreshTokenConfig refreshTokenConfig;
-    private final UserRepository userRepository;
 
     @Override
     public Optional<TokenRefresh> findByToken(String token) throws Exception {
@@ -32,29 +30,18 @@ public class RefreshTokenDaoImpl implements RefreshTokenDao {
     }
 
     @Override
-    public TokenRefresh createRefreshToken(String userName) throws IOException {
-        TokenRefresh refreshToken = new TokenRefresh();
-        User user = userRepository.findByUserName(userName).orElseThrow(() -> new NotFoundException("User Not Found"));
-        refreshToken.setUser(user);
-        refreshToken.setExpiryDate(Instant.now().plusMillis(refreshTokenConfig.getTokenExpirationAfterMillis()));
-        refreshToken.setToken(UUID.randomUUID().toString());
-
-        refreshToken = refreshTokenRepository.save(refreshToken);
-        return refreshToken;
+    public TokenRefresh createRefreshToken(TokenRefresh refreshToken) throws IOException {
+        return refreshTokenRepository.save(refreshToken);
     }
 
     @Override
     public int deleteByUserId(Integer userId) throws Exception {
-        return refreshTokenRepository.deleteByUser(userRepository.findById(userId).get());
+        return refreshTokenRepository.deleteByUserId(userId);
     }
 
     @Override
-    public TokenRefresh verifyExpiration(TokenRefresh token) {
-        if (token.getExpiryDate().compareTo(Instant.now()) < 0) {
-            refreshTokenRepository.delete(token);
-            throw new TokenRefreshException(token.getToken(),
-                    "Refresh token was expired. Please make a new sign-in request");
-        }
-        return token;
+    public void deleteByToken(TokenRefresh token) {
+        refreshTokenRepository.delete(token);
     }
+
 }

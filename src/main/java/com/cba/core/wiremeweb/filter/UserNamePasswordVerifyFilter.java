@@ -70,7 +70,12 @@ public class UserNamePasswordVerifyFilter extends UsernamePasswordAuthentication
                                             Authentication authResult) throws IOException, ServletException {
 
         String token = jwtUtil.generateTokenFromAuthResult(authResult, encoder);
-        TokenRefresh refreshToken = refreshTokenService.createRefreshToken(authResult.getName());
+        TokenRefresh refreshToken = null;
+        try {
+            refreshToken = refreshTokenService.createRefreshToken(authResult.getName());
+        } catch (Exception exception) {
+            throw new IOException(exception.getMessage());
+        }
 
         response.addHeader(jwtConfig.getAuthorizationHeader(), jwtConfig.getTokenPrefix() + token);
         response.addHeader("Refresh_Token", "" + refreshToken.getToken());

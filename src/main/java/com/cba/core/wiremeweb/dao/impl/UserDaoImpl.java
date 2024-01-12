@@ -334,4 +334,9 @@ public class UserDaoImpl implements UserDao<UserResponseDto, UserRequestDto> {
                 userBeanUtil.getRemoteAdr()));
         return null;
     }
+
+    @Override
+    public User findByUserName(String userName) throws Exception {
+        return repository.findByUserName(userName).orElseThrow(() -> new NotFoundException("User Not Found"));
+    }
 }
