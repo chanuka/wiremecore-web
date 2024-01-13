@@ -23,7 +23,7 @@ import java.util.UUID;
 public class RefreshTokenServiceImpl implements RefreshTokenService {
 
     private final RefreshTokenDao refreshTokenDao;
-    private final UserDao<UserResponseDto, UserRequestDto> userDao;
+    private final UserDao<User, User> userDao;
     private final RefreshTokenConfig refreshTokenConfig;
 
 
