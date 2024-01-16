@@ -15,7 +15,7 @@ import java.util.Map;
 
 @Repository
 @RequiredArgsConstructor
-public class DeviceModelDaoImpl implements DeviceModelDao<DeviceModel, DeviceModel> {
+public class DeviceModelDaoImpl implements DeviceModelDao<DeviceModel> {
 
     private final DeviceModelRepository repository;
 

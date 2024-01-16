@@ -42,7 +42,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class MerchantServiceImpl implements MerchantService<MerchantResponseDto, MerchantRequestDto> {
 
-    private final MerchantDao<Merchant, Merchant> dao;
+    private final MerchantDao<Merchant> dao;
     private final GlobalAuditDao globalAuditDao;
     private final UserBeanUtil userBeanUtil;
     private final ObjectMapper objectMapper;

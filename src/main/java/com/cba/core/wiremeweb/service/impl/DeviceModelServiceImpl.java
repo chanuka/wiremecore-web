@@ -32,7 +32,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class DeviceModelServiceImpl implements GenericService<DeviceModelResponseDto, DeviceModelRequestDto> {
 
-    private final GenericDao<DeviceModel, DeviceModel> dao;
+    private final GenericDao<DeviceModel> dao;
     private final GlobalAuditDao globalAuditDao;
     private final UserBeanUtil userBeanUtil;
     private final ObjectMapper objectMapper;

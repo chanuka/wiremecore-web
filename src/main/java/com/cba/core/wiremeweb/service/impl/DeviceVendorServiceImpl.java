@@ -34,8 +34,8 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class DeviceVendorServiceImpl implements GenericService<DeviceVendorResponseDto, DeviceVendorRequestDto> {
 
-    private final GenericDao<DeviceVendor, DeviceVendor> dao;
-    private final DeviceModelDao<DeviceModel, DeviceModel> modelDao;
+    private final GenericDao<DeviceVendor> dao;
+    private final DeviceModelDao<DeviceModel> modelDao;
     private final GlobalAuditDao globalAuditDao;
     private final UserBeanUtil userBeanUtil;
     private final ObjectMapper objectMapper;

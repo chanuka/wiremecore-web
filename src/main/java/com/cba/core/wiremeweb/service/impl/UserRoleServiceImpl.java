@@ -29,7 +29,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class UserRoleServiceImpl implements GenericService<UserRoleResponseDto, UserRoleRequestDto> {
 
-    private final GenericDao<UserRole, UserRole> dao;
+    private final GenericDao<UserRole> dao;
     private final GlobalAuditDao globalAuditDao;
     private final UserBeanUtil userBeanUtil;
     private final ObjectMapper objectMapper;

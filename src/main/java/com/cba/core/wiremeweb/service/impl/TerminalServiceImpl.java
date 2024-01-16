@@ -40,11 +40,11 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class TerminalServiceImpl implements TerminalService<TerminalResponseDto, TerminalRequestDto> {
 
-    private final TerminalDao<Terminal, Terminal> dao;
+    private final TerminalDao<Terminal> dao;
     private final GlobalAuditDao globalAuditDao;
+    private final MerchantDao<Merchant> merchantDao;
     private final UserBeanUtil userBeanUtil;
     private final ObjectMapper objectMapper;
-    private final MerchantDao<Merchant, Merchant> merchantDao;
 
 
     @Value("${application.resource.terminals}")

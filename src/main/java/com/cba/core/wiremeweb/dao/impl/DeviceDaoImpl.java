@@ -22,7 +22,7 @@ import java.util.Map;
 
 @Repository
 @RequiredArgsConstructor
-public class DeviceDaoImpl implements DeviceDao<Device, Device> {
+public class DeviceDaoImpl implements DeviceDao<Device> {
 
     private final DeviceRepository repository;
     @PersistenceContext

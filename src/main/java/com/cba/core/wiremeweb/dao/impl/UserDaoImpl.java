@@ -19,7 +19,7 @@ import java.util.Map;
 
 @Repository
 @RequiredArgsConstructor
-public class UserDaoImpl implements UserDao<User, User> {
+public class UserDaoImpl implements UserDao<User> {
 
     private final UserRepository repository;
 

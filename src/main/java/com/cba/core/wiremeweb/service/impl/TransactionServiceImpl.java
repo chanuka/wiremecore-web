@@ -36,9 +36,9 @@ import java.util.stream.Collectors;
 public class TransactionServiceImpl implements TransactionService {
 
     private final TransactionDao transactionDao;
-    private final TerminalDao<Terminal, Terminal> terminalDao;
-    private final MerchantDao<Merchant, Merchant> merchantDao;
-    private final GenericDao<MerchantCustomer, MerchantCustomer> merchantCustomerDao;
+    private final TerminalDao<Terminal> terminalDao;
+    private final MerchantDao<Merchant> merchantDao;
+    private final GenericDao<MerchantCustomer> merchantCustomerDao;
 
 
     @Value("${application.resource.transactions}")

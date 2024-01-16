@@ -34,7 +34,7 @@ import java.util.stream.IntStream;
 public class HighlightServiceImpl implements HighlightService {
 
     private final HighlightDao dao;
-    private final UserDao<User, User> userDao;
+    private final UserDao<User> userDao;
     private final GlobalAuditDao globalAuditDao;
     private final UserBeanUtil userBeanUtil;
     private final ObjectMapper objectMapper;

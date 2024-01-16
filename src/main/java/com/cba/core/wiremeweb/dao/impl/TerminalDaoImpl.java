@@ -19,7 +19,7 @@ import java.util.Map;
 
 @Repository
 @RequiredArgsConstructor
-public class TerminalDaoImpl implements TerminalDao<Terminal, Terminal> {
+public class TerminalDaoImpl implements TerminalDao<Terminal> {
 
     private final TerminalRepository repository;
 

@@ -16,7 +16,7 @@ import java.util.Map;
 
 @Repository
 @RequiredArgsConstructor
-public class DeviceVendorDaoImpl implements GenericDao<DeviceVendor, DeviceVendor> {
+public class DeviceVendorDaoImpl implements GenericDao<DeviceVendor> {
 
     private final DeviceVendorRepository repository;
     private final DeviceModelRepository deviceModelRepository;

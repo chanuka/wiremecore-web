@@ -18,7 +18,7 @@ import java.util.Map;
 
 @Repository
 @RequiredArgsConstructor
-public class PermissionDaoImpl implements PermissionDao<Permission, Permission> {
+public class PermissionDaoImpl implements PermissionDao<Permission> {
 
     private final PermissionRepository repository;
 

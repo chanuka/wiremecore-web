@@ -19,7 +19,7 @@ import java.util.Map;
 
 @Repository
 @RequiredArgsConstructor
-public class MerchantDaoImpl implements MerchantDao<Merchant, Merchant> {
+public class MerchantDaoImpl implements MerchantDao<Merchant> {
 
     private final MerchantRepository repository;
 

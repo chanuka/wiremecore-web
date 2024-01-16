@@ -4,7 +4,7 @@ import com.cba.core.wiremeweb.model.Permission;
 
 import java.sql.SQLException;
 
-public interface PermissionDao<T, K> extends GenericDao<T, K> {
+public interface PermissionDao<T> extends GenericDao<T> {
 
     Iterable<Permission> findAllPermissionsByUser(String username) throws SQLException;
 

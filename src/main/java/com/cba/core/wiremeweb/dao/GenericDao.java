@@ -5,7 +5,7 @@ import org.springframework.data.domain.Page;
 import java.util.List;
 import java.util.Map;
 
-public interface GenericDao<T, K> {
+public interface GenericDao<T> {
 
     Page<T> findAll(int page, int pageSize) throws Exception;
 
@@ -21,9 +21,9 @@ public interface GenericDao<T, K> {
 
     void deleteByIdList(List<Integer> idList) throws Exception;
 
-    T updateById(int id, K requestDto) throws Exception;
+    T updateById(int id, T requestDto) throws Exception;
 
-    T create(K requestDto) throws Exception;
+    T create(T requestDto) throws Exception;
 
-    List<T> createBulk(List<K> requestDtoList) throws Exception;
+    List<T> createBulk(List<T> requestDtoList) throws Exception;
 }

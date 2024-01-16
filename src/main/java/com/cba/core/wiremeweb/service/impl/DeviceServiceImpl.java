@@ -46,7 +46,7 @@ import java.util.stream.IntStream;
 @RequiredArgsConstructor
 public class DeviceServiceImpl implements DeviceService<DeviceResponseDto, DeviceRequestDto> {
 
-    private final DeviceDao<Device, Device> dao;
+    private final DeviceDao<Device> dao;
     private final GlobalAuditDao globalAuditDao;
     private final UserBeanUtil userBeanUtil;
     private final ObjectMapper objectMapper;

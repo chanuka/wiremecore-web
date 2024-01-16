@@ -41,7 +41,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class MerchantCustomerServiceImpl implements GenericService<MerchantCustomerResponseDto, MerchantCustomerRequestDto> {
 
-    private final GenericDao<MerchantCustomer, MerchantCustomer> dao;
+    private final GenericDao<MerchantCustomer> dao;
     private final GlobalAuditDao globalAuditDao;
     private final ObjectMapper objectMapper;
     private final UserBeanUtil userBeanUtil;

@@ -36,7 +36,7 @@ public class GraphServiceImpl implements GraphService {
 
     private final GraphDao dao;
     private final GlobalAuditDao globalAuditDao;
-    private final UserDao<User, User> userDao;
+    private final UserDao<User> userDao;
     private final UserBeanUtil userBeanUtil;
     private final ObjectMapper objectMapper;
 

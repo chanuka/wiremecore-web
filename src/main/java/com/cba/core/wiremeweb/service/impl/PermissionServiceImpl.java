@@ -34,7 +34,7 @@ import java.util.stream.StreamSupport;
 @RequiredArgsConstructor
 public class PermissionServiceImpl implements PermissionService<PermissionResponseDto, PermissionRequestDto> {
 
-    private final PermissionDao<Permission, Permission> dao;
+    private final PermissionDao<Permission> dao;
     private final GlobalAuditDao globalAuditDao;
     private final UserBeanUtil userBeanUtil;
     private final ObjectMapper objectMapper;

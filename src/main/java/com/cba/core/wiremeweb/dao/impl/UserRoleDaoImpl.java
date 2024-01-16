@@ -17,7 +17,7 @@ import java.util.Map;
 
 @Repository
 @RequiredArgsConstructor
-public class UserRoleDaoImpl implements GenericDao<UserRole, UserRole> {
+public class UserRoleDaoImpl implements GenericDao<UserRole> {
 
     private final UserRoleRepository repository;
 
