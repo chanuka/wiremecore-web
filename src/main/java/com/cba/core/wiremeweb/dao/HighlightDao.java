@@ -1,13 +1,10 @@
 package com.cba.core.wiremeweb.dao;
 
 import com.cba.core.wiremeweb.dto.HighlightRequestDto;
-import com.cba.core.wiremeweb.dto.HighlightResponseDto;
-import com.cba.core.wiremeweb.dto.TransactionCoreResponseDto;
 import com.cba.core.wiremeweb.model.TransactionCore;
 import com.cba.core.wiremeweb.model.UserConfig;
 
 import java.util.List;
-import java.util.Map;
 
 public interface HighlightDao {
 

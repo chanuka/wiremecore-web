@@ -1,40 +1,21 @@
 package com.cba.core.wiremeweb.dao.impl;
 
 import com.cba.core.wiremeweb.dao.UserDao;
-import com.cba.core.wiremeweb.dto.ChangePasswordRequestDto;
-import com.cba.core.wiremeweb.dto.UserRequestDto;
-import com.cba.core.wiremeweb.dto.UserResponseDto;
 import com.cba.core.wiremeweb.exception.NotFoundException;
-import com.cba.core.wiremeweb.mapper.UserMapper;
-import com.cba.core.wiremeweb.model.*;
-import com.cba.core.wiremeweb.repository.GlobalAuditEntryRepository;
+import com.cba.core.wiremeweb.model.User;
 import com.cba.core.wiremeweb.repository.UserRepository;
 import com.cba.core.wiremeweb.repository.specification.UserSpecification;
-import com.cba.core.wiremeweb.service.EmailService;
-import com.cba.core.wiremeweb.util.DeviceTypeEnum;
-import com.cba.core.wiremeweb.util.UserBeanUtil;
-import com.cba.core.wiremeweb.util.UserOperationEnum;
-import com.cba.core.wiremeweb.util.UserPasswordUtil;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.node.ObjectNode;
-import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Repository;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 @Repository
 @RequiredArgsConstructor

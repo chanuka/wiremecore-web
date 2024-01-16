@@ -16,8 +16,8 @@ import java.text.SimpleDateFormat;
 import java.util.List;
 
 
-@RequiredArgsConstructor
 @Repository
+@RequiredArgsConstructor
 public class TransactionDaoImpl implements TransactionDao {
 
     private final TransactionRepository transactionRepository;

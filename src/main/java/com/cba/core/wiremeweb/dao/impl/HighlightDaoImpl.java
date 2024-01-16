@@ -2,34 +2,20 @@ package com.cba.core.wiremeweb.dao.impl;
 
 import com.cba.core.wiremeweb.dao.HighlightDao;
 import com.cba.core.wiremeweb.dto.HighlightRequestDto;
-import com.cba.core.wiremeweb.dto.HighlightResponseDto;
-import com.cba.core.wiremeweb.dto.TransactionCoreResponseDto;
 import com.cba.core.wiremeweb.exception.NotFoundException;
-import com.cba.core.wiremeweb.mapper.HighlightMapper;
-import com.cba.core.wiremeweb.mapper.TransactionCoreMapper;
-import com.cba.core.wiremeweb.model.*;
+import com.cba.core.wiremeweb.model.TransactionCore;
+import com.cba.core.wiremeweb.model.UserConfig;
 import com.cba.core.wiremeweb.repository.DashBoardRepository;
-import com.cba.core.wiremeweb.repository.GlobalAuditEntryRepository;
-import com.cba.core.wiremeweb.repository.UserRepository;
-import com.cba.core.wiremeweb.util.UserBeanUtil;
-import com.cba.core.wiremeweb.util.UserOperationEnum;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.Query;
-import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Repository;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
-import java.util.stream.IntStream;
 
 @Repository
 @RequiredArgsConstructor

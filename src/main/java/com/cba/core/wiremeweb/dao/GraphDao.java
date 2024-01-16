@@ -1,12 +1,9 @@
 package com.cba.core.wiremeweb.dao;
 
 import com.cba.core.wiremeweb.dto.GraphRequestDto;
-import com.cba.core.wiremeweb.dto.GraphResponseDto;
 import com.cba.core.wiremeweb.model.UserConfig;
 
 import java.util.List;
-import java.util.Map;
-import java.util.Optional;
 
 public interface GraphDao {
 

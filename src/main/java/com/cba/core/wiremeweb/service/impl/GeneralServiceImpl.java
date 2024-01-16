@@ -6,10 +6,8 @@ import com.cba.core.wiremeweb.exception.NotFoundException;
 import com.cba.core.wiremeweb.mapper.DistrictMapper;
 import com.cba.core.wiremeweb.model.District;
 import com.cba.core.wiremeweb.service.GeneralService;
-import com.cba.core.wiremeweb.util.UserBeanUtil;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
