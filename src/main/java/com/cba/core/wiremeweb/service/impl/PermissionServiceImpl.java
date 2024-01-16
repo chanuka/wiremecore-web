@@ -1,5 +1,6 @@
 package com.cba.core.wiremeweb.service.impl;
 
+import com.cba.core.wiremeweb.dao.GlobalAuditDao;
 import com.cba.core.wiremeweb.dao.PermissionDao;
 import com.cba.core.wiremeweb.dto.PermissionRequestDto;
 import com.cba.core.wiremeweb.dto.PermissionResponseDto;
@@ -34,8 +35,8 @@ import java.util.stream.StreamSupport;
 public class PermissionServiceImpl implements PermissionService<PermissionResponseDto, PermissionRequestDto> {
 
     private final PermissionDao<Permission, Permission> dao;
+    private final GlobalAuditDao globalAuditDao;
     private final UserBeanUtil userBeanUtil;
-    private final GlobalAuditEntryRepository globalAuditEntryRepository;
     private final ObjectMapper objectMapper;
 
     @Value("${application.resource.permissions}")
@@ -85,7 +86,7 @@ public class PermissionServiceImpl implements PermissionService<PermissionRespon
         PermissionResponseDto responseDto = PermissionMapper.toDto(entity);
 
         dao.deleteById(id);
-        globalAuditEntryRepository.save(new GlobalAuditEntry(resource, UserOperationEnum.DELETE.getValue(),
+        globalAuditDao.create(new GlobalAuditEntry(resource, UserOperationEnum.DELETE.getValue(),
                 id, objectMapper.writeValueAsString(responseDto), null,
                 userBeanUtil.getRemoteAdr()));
 
@@ -112,7 +113,7 @@ public class PermissionServiceImpl implements PermissionService<PermissionRespon
                     ObjectNode objectNode = objectMapper.createObjectNode();
                     objectNode.put("id", item);
                     try {
-                        globalAuditEntryRepository.save(new GlobalAuditEntry(resource, UserOperationEnum.DELETE.getValue(),
+                        globalAuditDao.create(new GlobalAuditEntry(resource, UserOperationEnum.DELETE.getValue(),
                                 item, objectMapper.writeValueAsString(objectNode), null,
                                 userBeanUtil.getRemoteAdr()));
                     } catch (Exception e) {
@@ -175,7 +176,7 @@ public class PermissionServiceImpl implements PermissionService<PermissionRespon
         if (updateRequired) {
 
             dao.updateById(id, toBeUpdated);
-            globalAuditEntryRepository.save(new GlobalAuditEntry(resource, UserOperationEnum.UPDATE.getValue(),
+            globalAuditDao.create(new GlobalAuditEntry(resource, UserOperationEnum.UPDATE.getValue(),
                     id, objectMapper.writeValueAsString(oldDataMap), objectMapper.writeValueAsString(newDataMap),
                     userBeanUtil.getRemoteAdr()));
 
@@ -192,7 +193,7 @@ public class PermissionServiceImpl implements PermissionService<PermissionRespon
 
         Permission savedEntity = dao.create(toInsert);
         PermissionResponseDto responseDto = PermissionMapper.toDto(savedEntity);
-        globalAuditEntryRepository.save(new GlobalAuditEntry(resource, UserOperationEnum.CREATE.getValue(),
+        globalAuditDao.create(new GlobalAuditEntry(resource, UserOperationEnum.CREATE.getValue(),
                 savedEntity.getId(), null, objectMapper.writeValueAsString(responseDto),
                 userBeanUtil.getRemoteAdr()));
 
@@ -211,7 +212,7 @@ public class PermissionServiceImpl implements PermissionService<PermissionRespon
                 .map(item -> {
                     PermissionResponseDto responseDto = PermissionMapper.toDto(item);
                     try {
-                        globalAuditEntryRepository.save(new GlobalAuditEntry(resource, UserOperationEnum.CREATE.getValue(),
+                        globalAuditDao.create(new GlobalAuditEntry(resource, UserOperationEnum.CREATE.getValue(),
                                 item.getId(), null, objectMapper.writeValueAsString(responseDto),
                                 userBeanUtil.getRemoteAdr()));
                     } catch (Exception e) {

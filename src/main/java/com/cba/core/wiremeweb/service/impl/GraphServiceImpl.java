@@ -1,6 +1,8 @@
 package com.cba.core.wiremeweb.service.impl;
 
+import com.cba.core.wiremeweb.dao.GlobalAuditDao;
 import com.cba.core.wiremeweb.dao.GraphDao;
+import com.cba.core.wiremeweb.dao.UserDao;
 import com.cba.core.wiremeweb.dto.GraphRequestDto;
 import com.cba.core.wiremeweb.dto.GraphResponseDto;
 import com.cba.core.wiremeweb.exception.NotFoundException;
@@ -33,8 +35,8 @@ import java.util.stream.Collectors;
 public class GraphServiceImpl implements GraphService {
 
     private final GraphDao dao;
-    private final UserRepository userRepository;
-    private final GlobalAuditEntryRepository globalAuditEntryRepository;
+    private final GlobalAuditDao globalAuditDao;
+    private final UserDao<User, User> userDao;
     private final UserBeanUtil userBeanUtil;
     private final ObjectMapper objectMapper;
 
@@ -69,7 +71,7 @@ public class GraphServiceImpl implements GraphService {
         GraphResponseDto responseDto = objectMapper.readValue(entity.getConfig(), GraphResponseDto.class);
         dao.deleteByUser_NameAndConfigType(userBeanUtil.getUsername(), configName);
 
-        globalAuditEntryRepository.save(new GlobalAuditEntry(resource, UserOperationEnum.DELETE.getValue(),
+        globalAuditDao.create(new GlobalAuditEntry(resource, UserOperationEnum.DELETE.getValue(),
                 entity.getUser().getId(), entity.getConfig(), null,
                 userBeanUtil.getRemoteAdr()));
 
@@ -79,14 +81,14 @@ public class GraphServiceImpl implements GraphService {
     @Override
     public GraphResponseDto create(GraphRequestDto requestDto) throws Exception {
         String config = objectMapper.writeValueAsString(requestDto);
-        User user = userRepository.findByUserName(userBeanUtil.getUsername()).orElseThrow(() -> new NotFoundException("User Not Found"));
+        User user = userDao.findByUserName(userBeanUtil.getUsername());
         UserConfig toInsert = GraphMapper.toModel(requestDto, config, user);
 
         UserConfig savedEntity = dao.create(toInsert);
 
         GraphResponseDto responseDto = objectMapper.readValue(savedEntity.getConfig(), GraphResponseDto.class);
 
-        globalAuditEntryRepository.save(new GlobalAuditEntry(resource, UserOperationEnum.CREATE.getValue(),
+        globalAuditDao.create(new GlobalAuditEntry(resource, UserOperationEnum.CREATE.getValue(),
                 savedEntity.getId(), null, objectMapper.writeValueAsString(responseDto),
                 userBeanUtil.getRemoteAdr()));
 
@@ -220,7 +222,7 @@ public class GraphServiceImpl implements GraphService {
 
             toBeUpdatedEntity.setConfig(objectMapper.writeValueAsString(toBeUpdatedDto));
             dao.update(configName, toBeUpdatedEntity);
-            globalAuditEntryRepository.save(new GlobalAuditEntry(resource, UserOperationEnum.UPDATE.getValue(),
+            globalAuditDao.create(new GlobalAuditEntry(resource, UserOperationEnum.UPDATE.getValue(),
                     toBeUpdatedEntity.getId(), objectMapper.writeValueAsString(oldDataMap), objectMapper.writeValueAsString(newDataMap),
                     userBeanUtil.getRemoteAdr()));
 

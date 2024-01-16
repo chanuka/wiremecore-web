@@ -1,5 +1,6 @@
 package com.cba.core.wiremeweb.service.impl;
 
+import com.cba.core.wiremeweb.dao.GlobalAuditDao;
 import com.cba.core.wiremeweb.dao.MerchantDao;
 import com.cba.core.wiremeweb.dto.MerchantRequestDto;
 import com.cba.core.wiremeweb.dto.MerchantResponseDto;
@@ -42,8 +43,8 @@ import java.util.stream.Collectors;
 public class MerchantServiceImpl implements MerchantService<MerchantResponseDto, MerchantRequestDto> {
 
     private final MerchantDao<Merchant, Merchant> dao;
+    private final GlobalAuditDao globalAuditDao;
     private final UserBeanUtil userBeanUtil;
-    private final GlobalAuditEntryRepository globalAuditEntryRepository;
     private final ObjectMapper objectMapper;
 
     @Value("${application.resource.merchants}")
@@ -103,7 +104,7 @@ public class MerchantServiceImpl implements MerchantService<MerchantResponseDto,
         MerchantResponseDto responseDto = MerchantMapper.toDto(entity);
 
         dao.deleteById(id);
-        globalAuditEntryRepository.save(new GlobalAuditEntry(resource, UserOperationEnum.DELETE.getValue(),
+        globalAuditDao.create(new GlobalAuditEntry(resource, UserOperationEnum.DELETE.getValue(),
                 id, objectMapper.writeValueAsString(responseDto), null,
                 userBeanUtil.getRemoteAdr()));
 
@@ -130,7 +131,7 @@ public class MerchantServiceImpl implements MerchantService<MerchantResponseDto,
                     ObjectNode objectNode = objectMapper.createObjectNode();
                     objectNode.put("id", item);
                     try {
-                        globalAuditEntryRepository.save(new GlobalAuditEntry(resource, UserOperationEnum.DELETE.getValue(),
+                        globalAuditDao.create(new GlobalAuditEntry(resource, UserOperationEnum.DELETE.getValue(),
                                 item, objectMapper.writeValueAsString(objectNode), null,
                                 userBeanUtil.getRemoteAdr()));
                     } catch (Exception e) {
@@ -220,7 +221,7 @@ public class MerchantServiceImpl implements MerchantService<MerchantResponseDto,
         if (updateRequired) {
 
             dao.updateById(id, toBeUpdated);
-            globalAuditEntryRepository.save(new GlobalAuditEntry(resource, UserOperationEnum.UPDATE.getValue(),
+            globalAuditDao.create(new GlobalAuditEntry(resource, UserOperationEnum.UPDATE.getValue(),
                     id, objectMapper.writeValueAsString(oldDataMap), objectMapper.writeValueAsString(newDataMap),
                     userBeanUtil.getRemoteAdr()));
 
@@ -238,7 +239,7 @@ public class MerchantServiceImpl implements MerchantService<MerchantResponseDto,
 
         Merchant savedEntity = dao.create(toInsert);
         MerchantResponseDto responseDto = MerchantMapper.toDto(savedEntity);
-        globalAuditEntryRepository.save(new GlobalAuditEntry(resource, UserOperationEnum.CREATE.getValue(),
+        globalAuditDao.create(new GlobalAuditEntry(resource, UserOperationEnum.CREATE.getValue(),
                 savedEntity.getId(), null, objectMapper.writeValueAsString(responseDto),
                 userBeanUtil.getRemoteAdr()));
 
@@ -257,7 +258,7 @@ public class MerchantServiceImpl implements MerchantService<MerchantResponseDto,
                 .map(item -> {
                     MerchantResponseDto responseDto = MerchantMapper.toDto(item);
                     try {
-                        globalAuditEntryRepository.save(new GlobalAuditEntry(resource, UserOperationEnum.CREATE.getValue(),
+                        globalAuditDao.create(new GlobalAuditEntry(resource, UserOperationEnum.CREATE.getValue(),
                                 item.getId(), null, objectMapper.writeValueAsString(responseDto),
                                 userBeanUtil.getRemoteAdr()));
                     } catch (Exception e) {

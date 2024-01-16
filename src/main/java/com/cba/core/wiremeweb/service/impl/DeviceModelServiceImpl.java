@@ -1,6 +1,7 @@
 package com.cba.core.wiremeweb.service.impl;
 
 import com.cba.core.wiremeweb.dao.GenericDao;
+import com.cba.core.wiremeweb.dao.GlobalAuditDao;
 import com.cba.core.wiremeweb.dto.DeviceModelRequestDto;
 import com.cba.core.wiremeweb.dto.DeviceModelResponseDto;
 import com.cba.core.wiremeweb.exception.NotFoundException;
@@ -32,8 +33,8 @@ import java.util.stream.Collectors;
 public class DeviceModelServiceImpl implements GenericService<DeviceModelResponseDto, DeviceModelRequestDto> {
 
     private final GenericDao<DeviceModel, DeviceModel> dao;
+    private final GlobalAuditDao globalAuditDao;
     private final UserBeanUtil userBeanUtil;
-    private final GlobalAuditEntryRepository globalAuditEntryRepository;
     private final ObjectMapper objectMapper;
     @Value("${application.resource.device_model}")
     private String resource;
@@ -81,7 +82,7 @@ public class DeviceModelServiceImpl implements GenericService<DeviceModelRespons
         DeviceModelResponseDto responseDto = DeviceModelMapper.toDto(entity);
 
         dao.deleteById(id);
-        globalAuditEntryRepository.save(new GlobalAuditEntry(resource, UserOperationEnum.DELETE.getValue(),
+        globalAuditDao.create(new GlobalAuditEntry(resource, UserOperationEnum.DELETE.getValue(),
                 id, objectMapper.writeValueAsString(responseDto), null,
                 userBeanUtil.getRemoteAdr()));
 
@@ -109,7 +110,7 @@ public class DeviceModelServiceImpl implements GenericService<DeviceModelRespons
                     ObjectNode objectNode = objectMapper.createObjectNode();
                     objectNode.put("id", item);
                     try {
-                        globalAuditEntryRepository.save(new GlobalAuditEntry(resource, UserOperationEnum.DELETE.getValue(),
+                        globalAuditDao.create(new GlobalAuditEntry(resource, UserOperationEnum.DELETE.getValue(),
                                 item, objectMapper.writeValueAsString(objectNode), null,
                                 userBeanUtil.getRemoteAdr()));
                     } catch (Exception e) {
@@ -161,7 +162,7 @@ public class DeviceModelServiceImpl implements GenericService<DeviceModelRespons
         if (updateRequired) {
 
             dao.updateById(id, toBeUpdated);
-            globalAuditEntryRepository.save(new GlobalAuditEntry(resource, UserOperationEnum.UPDATE.getValue(),
+            globalAuditDao.create(new GlobalAuditEntry(resource, UserOperationEnum.UPDATE.getValue(),
                     id, objectMapper.writeValueAsString(oldDataMap), objectMapper.writeValueAsString(newDataMap),
                     userBeanUtil.getRemoteAdr()));
 
@@ -179,7 +180,7 @@ public class DeviceModelServiceImpl implements GenericService<DeviceModelRespons
 
         DeviceModel savedEntity = dao.create(toInsert);
         DeviceModelResponseDto responseDto = DeviceModelMapper.toDto(savedEntity);
-        globalAuditEntryRepository.save(new GlobalAuditEntry(resource, UserOperationEnum.CREATE.getValue(),
+        globalAuditDao.create(new GlobalAuditEntry(resource, UserOperationEnum.CREATE.getValue(),
                 savedEntity.getId(), null, objectMapper.writeValueAsString(responseDto),
                 userBeanUtil.getRemoteAdr()));
 
@@ -199,7 +200,7 @@ public class DeviceModelServiceImpl implements GenericService<DeviceModelRespons
                 .map(item -> {
                     DeviceModelResponseDto responseDto = DeviceModelMapper.toDto(item);
                     try {
-                        globalAuditEntryRepository.save(new GlobalAuditEntry(resource, UserOperationEnum.CREATE.getValue(),
+                        globalAuditDao.create(new GlobalAuditEntry(resource, UserOperationEnum.CREATE.getValue(),
                                 item.getId(), null, objectMapper.writeValueAsString(responseDto),
                                 userBeanUtil.getRemoteAdr()));
                     } catch (Exception e) {

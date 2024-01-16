@@ -1,5 +1,6 @@
 package com.cba.core.wiremeweb.service.impl;
 
+import com.cba.core.wiremeweb.dao.GlobalAuditDao;
 import com.cba.core.wiremeweb.dao.UserDao;
 import com.cba.core.wiremeweb.dto.ChangePasswordRequestDto;
 import com.cba.core.wiremeweb.dto.UserRequestDto;
@@ -45,8 +46,8 @@ import java.util.stream.Collectors;
 public class UserServiceImpl implements UserService<UserResponseDto, UserRequestDto> {
 
     private final UserDao<User, User> dao;
+    private final GlobalAuditDao globalAuditDao;
     private final UserBeanUtil userBeanUtil;
-    private final GlobalAuditEntryRepository globalAuditEntryRepository;
     private final ObjectMapper objectMapper;
     private final PasswordEncoder passwordEncoder;
     private final EmailService emailService;
@@ -102,7 +103,7 @@ public class UserServiceImpl implements UserService<UserResponseDto, UserRequest
         UserResponseDto responseDto = UserMapper.toDto(entity);
 
         dao.deleteById(id);
-        globalAuditEntryRepository.save(new GlobalAuditEntry(resource, UserOperationEnum.DELETE.getValue(),
+        globalAuditDao.create(new GlobalAuditEntry(resource, UserOperationEnum.DELETE.getValue(),
                 id, objectMapper.writeValueAsString(responseDto), null,
                 userBeanUtil.getRemoteAdr()));
 
@@ -129,7 +130,7 @@ public class UserServiceImpl implements UserService<UserResponseDto, UserRequest
                     ObjectNode objectNode = objectMapper.createObjectNode();
                     objectNode.put("id", item);
                     try {
-                        globalAuditEntryRepository.save(new GlobalAuditEntry(resource, UserOperationEnum.DELETE.getValue(),
+                        globalAuditDao.create(new GlobalAuditEntry(resource, UserOperationEnum.DELETE.getValue(),
                                 item, objectMapper.writeValueAsString(objectNode), null,
                                 userBeanUtil.getRemoteAdr()));
                     } catch (Exception e) {
@@ -216,7 +217,7 @@ public class UserServiceImpl implements UserService<UserResponseDto, UserRequest
         if (updateRequired) {
 
             dao.updateById(id, toBeUpdated);
-            globalAuditEntryRepository.save(new GlobalAuditEntry(resource, UserOperationEnum.UPDATE.getValue(),
+            globalAuditDao.create(new GlobalAuditEntry(resource, UserOperationEnum.UPDATE.getValue(),
                     id, objectMapper.writeValueAsString(oldDataMap), objectMapper.writeValueAsString(newDataMap),
                     userBeanUtil.getRemoteAdr()));
 
@@ -235,7 +236,7 @@ public class UserServiceImpl implements UserService<UserResponseDto, UserRequest
 
         User savedEntity = dao.create(toInsert);
         UserResponseDto responseDto = UserMapper.toDto(savedEntity);
-        globalAuditEntryRepository.save(new GlobalAuditEntry(resource, UserOperationEnum.CREATE.getValue(),
+        globalAuditDao.create(new GlobalAuditEntry(resource, UserOperationEnum.CREATE.getValue(),
                 savedEntity.getId(), null, objectMapper.writeValueAsString(responseDto),
                 userBeanUtil.getRemoteAdr()));
 
@@ -257,7 +258,7 @@ public class UserServiceImpl implements UserService<UserResponseDto, UserRequest
                 .map(item -> {
                     UserResponseDto responseDto = UserMapper.toDto(item);
                     try {
-                        globalAuditEntryRepository.save(new GlobalAuditEntry(resource, UserOperationEnum.CREATE.getValue(),
+                        globalAuditDao.create(new GlobalAuditEntry(resource, UserOperationEnum.CREATE.getValue(),
                                 item.getId(), null, objectMapper.writeValueAsString(responseDto),
                                 userBeanUtil.getRemoteAdr()));
                     } catch (Exception e) {
@@ -357,7 +358,7 @@ public class UserServiceImpl implements UserService<UserResponseDto, UserRequest
             map.put("password", "xxxxxxxx");
             String maskValue = objectMapper.writeValueAsString(map);
 
-            globalAuditEntryRepository.save(new GlobalAuditEntry(resource, UserOperationEnum.UPDATE.getValue(),
+            globalAuditDao.create(new GlobalAuditEntry(resource, UserOperationEnum.UPDATE.getValue(),
                     entity.getId(), maskValue, maskValue,
                     userBeanUtil.getRemoteAdr()));
         } else {
@@ -386,7 +387,7 @@ public class UserServiceImpl implements UserService<UserResponseDto, UserRequest
         /*
         Old and new values are not set to JSON
          */
-        globalAuditEntryRepository.save(new GlobalAuditEntry(resource, UserOperationEnum.UPDATE.getValue(),
+        globalAuditDao.create(new GlobalAuditEntry(resource, UserOperationEnum.UPDATE.getValue(),
                 toBeUpdated.getId(), objectMapper.writeValueAsString(oldValueMap), objectMapper.writeValueAsString(newValueMap),
                 userBeanUtil.getRemoteAdr()));
         return "success";

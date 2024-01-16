@@ -1,6 +1,8 @@
 package com.cba.core.wiremeweb.service.impl;
 
+import com.cba.core.wiremeweb.dao.GlobalAuditDao;
 import com.cba.core.wiremeweb.dao.HighlightDao;
+import com.cba.core.wiremeweb.dao.UserDao;
 import com.cba.core.wiremeweb.dto.HighlightRequestDto;
 import com.cba.core.wiremeweb.dto.HighlightResponseDto;
 import com.cba.core.wiremeweb.dto.TransactionCoreResponseDto;
@@ -32,8 +34,8 @@ import java.util.stream.IntStream;
 public class HighlightServiceImpl implements HighlightService {
 
     private final HighlightDao dao;
-    private final UserRepository userRepository;
-    private final GlobalAuditEntryRepository globalAuditEntryRepository;
+    private final UserDao<User, User> userDao;
+    private final GlobalAuditDao globalAuditDao;
     private final UserBeanUtil userBeanUtil;
     private final ObjectMapper objectMapper;
 
@@ -69,7 +71,7 @@ public class HighlightServiceImpl implements HighlightService {
 
         dao.deleteByUser_NameAndConfigName(userBeanUtil.getUsername(), configName);
 
-        globalAuditEntryRepository.save(new GlobalAuditEntry(resource, UserOperationEnum.DELETE.getValue(),
+        globalAuditDao.create(new GlobalAuditEntry(resource, UserOperationEnum.DELETE.getValue(),
                 entity.getUser().getId(), entity.getConfig(), null,
                 userBeanUtil.getRemoteAdr()));
 
@@ -79,14 +81,14 @@ public class HighlightServiceImpl implements HighlightService {
     @Override
     public HighlightResponseDto create(HighlightRequestDto requestDto) throws Exception {
         String config = objectMapper.writeValueAsString(requestDto);
-        User user = userRepository.findByUserName(userBeanUtil.getUsername()).orElseThrow(() -> new NotFoundException("User Not Found"));
+        User user = userDao.findByUserName(userBeanUtil.getUsername());
         UserConfig toInsert = HighlightMapper.toModel(requestDto, config, user);
 
         UserConfig savedEntity = dao.create(toInsert);
 
         HighlightResponseDto responseDto = objectMapper.readValue(savedEntity.getConfig(), HighlightResponseDto.class);
 
-        globalAuditEntryRepository.save(new GlobalAuditEntry(resource, UserOperationEnum.CREATE.getValue(),
+        globalAuditDao.create(new GlobalAuditEntry(resource, UserOperationEnum.CREATE.getValue(),
                 savedEntity.getId(), null, objectMapper.writeValueAsString(responseDto),
                 userBeanUtil.getRemoteAdr()));
 
@@ -197,7 +199,7 @@ public class HighlightServiceImpl implements HighlightService {
 
             toBeUpdatedEntity.setConfig(objectMapper.writeValueAsString(toBeUpdatedDto));
             dao.update(configName, toBeUpdatedEntity);
-            globalAuditEntryRepository.save(new GlobalAuditEntry(resource, UserOperationEnum.UPDATE.getValue(),
+            globalAuditDao.create(new GlobalAuditEntry(resource, UserOperationEnum.UPDATE.getValue(),
                     toBeUpdatedEntity.getId(), objectMapper.writeValueAsString(oldDataMap), objectMapper.writeValueAsString(newDataMap),
                     userBeanUtil.getRemoteAdr()));
 

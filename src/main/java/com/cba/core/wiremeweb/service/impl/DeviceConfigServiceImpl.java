@@ -1,6 +1,7 @@
 package com.cba.core.wiremeweb.service.impl;
 
 import com.cba.core.wiremeweb.dao.DeviceConfigDao;
+import com.cba.core.wiremeweb.dao.GlobalAuditDao;
 import com.cba.core.wiremeweb.dto.DeviceConfigRequestDto;
 import com.cba.core.wiremeweb.dto.DeviceConfigResponseDto;
 import com.cba.core.wiremeweb.exception.NotFoundException;
@@ -28,8 +29,8 @@ import java.util.Map;
 public class DeviceConfigServiceImpl implements DeviceConfigService {
 
     private final DeviceConfigDao dao;
+    private final GlobalAuditDao globalAuditDao;
     private final UserBeanUtil userBeanUtil;
-    private final GlobalAuditEntryRepository globalAuditEntryRepository;
     private final ObjectMapper objectMapper;
 
     @Value("${application.resource.deviceconfig}")
@@ -52,7 +53,7 @@ public class DeviceConfigServiceImpl implements DeviceConfigService {
         DeviceConfigResponseDto responseDto = objectMapper.readValue(savedEntity.getConfig(), DeviceConfigResponseDto.class);
         responseDto.setId(savedEntity.getId());
 
-        globalAuditEntryRepository.save(new GlobalAuditEntry(resource, UserOperationEnum.CREATE.getValue(),
+        globalAuditDao.create(new GlobalAuditEntry(resource, UserOperationEnum.CREATE.getValue(),
                 savedEntity.getId(), null, objectMapper.writeValueAsString(responseDto),
                 userBeanUtil.getRemoteAdr()));
 
@@ -101,7 +102,7 @@ public class DeviceConfigServiceImpl implements DeviceConfigService {
 
             toBeUpdatedEntity.setConfig(objectMapper.writeValueAsString(toBeUpdatedDto));
             dao.update(id, toBeUpdatedEntity);
-            globalAuditEntryRepository.save(new GlobalAuditEntry(resource, UserOperationEnum.UPDATE.getValue(),
+            globalAuditDao.create(new GlobalAuditEntry(resource, UserOperationEnum.UPDATE.getValue(),
                     toBeUpdatedEntity.getId(), objectMapper.writeValueAsString(oldDataMap), objectMapper.writeValueAsString(newDataMap),
                     userBeanUtil.getRemoteAdr()));
 
@@ -118,7 +119,7 @@ public class DeviceConfigServiceImpl implements DeviceConfigService {
         DeviceConfigResponseDto responseDto = DeviceConfigMapper.toDto(new DeviceConfigResponseDto(), entity);
 
         dao.deleteById(id);
-        globalAuditEntryRepository.save(new GlobalAuditEntry(resource, UserOperationEnum.DELETE.getValue(),
+        globalAuditDao.create(new GlobalAuditEntry(resource, UserOperationEnum.DELETE.getValue(),
                 id, objectMapper.writeValueAsString(responseDto), null,
                 userBeanUtil.getRemoteAdr()));
 
