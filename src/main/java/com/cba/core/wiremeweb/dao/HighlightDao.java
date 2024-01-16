@@ -3,23 +3,28 @@ package com.cba.core.wiremeweb.dao;
 import com.cba.core.wiremeweb.dto.HighlightRequestDto;
 import com.cba.core.wiremeweb.dto.HighlightResponseDto;
 import com.cba.core.wiremeweb.dto.TransactionCoreResponseDto;
+import com.cba.core.wiremeweb.model.TransactionCore;
+import com.cba.core.wiremeweb.model.UserConfig;
 
 import java.util.List;
 import java.util.Map;
 
 public interface HighlightDao {
 
-    List<HighlightResponseDto> findAll(String configType) throws Exception;
+    List<UserConfig> findAll(String userName, String configType) throws Exception;
 
-    HighlightResponseDto deleteByUser_NameAndConfigType(String configName) throws Exception;
+    UserConfig findByUser_NameAndConfigName(String userName, String configName) throws Exception;
 
-    HighlightResponseDto create(HighlightRequestDto requestDto) throws Exception;
+    void deleteByUser_NameAndConfigName(String userName,String configName) throws Exception;
 
-    HighlightResponseDto update(String configName, HighlightRequestDto requestDto) throws Exception;
+    UserConfig create(UserConfig requestDto) throws Exception;
 
-    Map<String, Map<String, Object>> findHighLights(HighlightRequestDto requestDto) throws Exception;
+    UserConfig update(String configName, UserConfig requestDto) throws Exception;
 
-    Map<String, TransactionCoreResponseDto> findHighLightsDetail(HighlightRequestDto requestDto) throws Exception;
+    List<Object[]> findHighLights(String whereClause, String selectClause, String groupByClause,
+                                                    HighlightRequestDto requestDto) throws Exception;
+
+    List<TransactionCore> findHighLightsDetail(String whereClause,HighlightRequestDto requestDto) throws Exception;
 
 
 }
