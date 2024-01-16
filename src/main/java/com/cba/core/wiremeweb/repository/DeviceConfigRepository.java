@@ -7,9 +7,10 @@ import org.springframework.stereotype.Repository;
 
 import java.util.Optional;
 
-@Repository
 public interface DeviceConfigRepository extends JpaRepository<DeviceConfig, Integer>, JpaSpecificationExecutor<DeviceConfig> {
 
     Optional<DeviceConfig> findByDevice_Id(int deviceId);
+
+    void deleteByDevice_Id(int deviceId);
 
 }

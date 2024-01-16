@@ -18,123 +18,35 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Repository;
 
 import java.util.HashMap;
 import java.util.Map;
 
-@Component
-@Transactional
+@Repository
 @RequiredArgsConstructor
 public class DeviceConfigDaoImpl implements DeviceConfigDao {
 
     private final DeviceConfigRepository repository;
-    private final GlobalAuditEntryRepository globalAuditEntryRepository;
-    private final ObjectMapper objectMapper;
-    private final UserBeanUtil userBeanUtil;
-
-    @Value("${application.resource.deviceconfig}")
-    private String resource;
 
     @Override
-    public DeviceConfigResponseDto findById(int id) throws Exception {
-
-        DeviceConfig entity = repository.findByDevice_Id(id).orElseThrow(() -> new NotFoundException("Device Config not found"));
-
-        DeviceConfigResponseDto responseDto = objectMapper.readValue(entity.getConfig(), DeviceConfigResponseDto.class);
-
-        return DeviceConfigMapper.toDto(responseDto, entity);
-
+    public DeviceConfig findById(int id) throws Exception {
+        return repository.findByDevice_Id(id).orElseThrow(() -> new NotFoundException("Device Config not found"));
     }
 
     @Override
 //    @CacheEvict(value = "devices", allEntries = true)
-    public DeviceConfigResponseDto create(DeviceConfigRequestDto requestDto) throws Exception {
-
-        DeviceConfig toInsert = DeviceConfigMapper.toModel(requestDto);
-        toInsert.setConfig(objectMapper.writeValueAsString(requestDto));
-
-        DeviceConfig savedEntity = repository.save(toInsert);
-
-        DeviceConfigResponseDto responseDto = objectMapper.readValue(savedEntity.getConfig(), DeviceConfigResponseDto.class);
-        responseDto.setId(savedEntity.getId());
-
-        globalAuditEntryRepository.save(new GlobalAuditEntry(resource, UserOperationEnum.CREATE.getValue(),
-                savedEntity.getId(), null, objectMapper.writeValueAsString(responseDto),
-                userBeanUtil.getRemoteAdr()));
-
-        return responseDto;
-
+    public DeviceConfig create(DeviceConfig toInsert) throws Exception {
+        return repository.save(toInsert);
     }
 
     @Override
-    public DeviceConfigResponseDto update(int id, DeviceConfigRequestDto requestDto) throws Exception {
-        DeviceConfig toBeUpdatedEntity = repository.findByDevice_Id(id).orElseThrow(() -> new NotFoundException("Device Config not found"));
-        DeviceConfigResponseDto toBeUpdatedDto = objectMapper.readValue(toBeUpdatedEntity.getConfig(), DeviceConfigResponseDto.class);
-
-        boolean updateRequired = false;
-        Map<String, Object> oldDataMap = new HashMap<>();
-        Map<String, Object> newDataMap = new HashMap<>();
-
-        if (!toBeUpdatedEntity.getConfig().equals(objectMapper.writeValueAsString(requestDto))) {
-
-            if (!toBeUpdatedEntity.getStatus().getStatusCode().equals(requestDto.getStatus())) {
-                updateRequired = true;
-                oldDataMap.put("status", toBeUpdatedEntity.getStatus().getStatusCode());
-                newDataMap.put("status", requestDto.getStatus());
-
-                toBeUpdatedEntity.setStatus(new Status(requestDto.getStatus()));
-                toBeUpdatedDto.setStatus(requestDto.getStatus());
-            }
-            if (!toBeUpdatedEntity.getConfigType().equals(requestDto.getConfigType())) {
-                updateRequired = true;
-                oldDataMap.put("configType", toBeUpdatedEntity.getConfigType());
-                newDataMap.put("configType", requestDto.getConfigType());
-
-                toBeUpdatedEntity.setConfigType(requestDto.getConfigType());
-                toBeUpdatedDto.setConfigType(requestDto.getConfigType());
-            }
-            if (toBeUpdatedEntity.getDevice().getId() != (requestDto.getDeviceId())) {
-                updateRequired = true;
-                oldDataMap.put("deviceId", toBeUpdatedEntity.getDevice().getId());
-                newDataMap.put("deviceId", requestDto.getDeviceId());
-
-                toBeUpdatedEntity.setDevice(new Device(requestDto.getDeviceId()));
-                toBeUpdatedDto.setDeviceId(requestDto.getDeviceId());
-            }
-        }
-
-
-        if (updateRequired) {
-
-            toBeUpdatedEntity.setConfig(objectMapper.writeValueAsString(toBeUpdatedDto));
-            repository.saveAndFlush(toBeUpdatedEntity);
-            globalAuditEntryRepository.save(new GlobalAuditEntry(resource, UserOperationEnum.UPDATE.getValue(),
-                    toBeUpdatedEntity.getId(), objectMapper.writeValueAsString(oldDataMap), objectMapper.writeValueAsString(newDataMap),
-                    userBeanUtil.getRemoteAdr()));
-
-            return DeviceConfigMapper.toDto(toBeUpdatedDto, toBeUpdatedEntity);
-
-        } else {
-            throw new NotFoundException("No Changes found");
-        }
-
+    public DeviceConfig update(int id, DeviceConfig toBeUpdatedEntity) throws Exception {
+        return repository.saveAndFlush(toBeUpdatedEntity);
     }
 
     @Override
-    public DeviceConfigResponseDto deleteById(int id) throws Exception {
-        try {
-            DeviceConfig entity = repository.findById(id).orElseThrow(() -> new NotFoundException("Device Config not found"));
-            DeviceConfigResponseDto responseDto = DeviceConfigMapper.toDto(new DeviceConfigResponseDto(), entity);
-
-            repository.deleteById(id);
-            globalAuditEntryRepository.save(new GlobalAuditEntry(resource, UserOperationEnum.DELETE.getValue(),
-                    id, objectMapper.writeValueAsString(responseDto), null,
-                    userBeanUtil.getRemoteAdr()));
-
-            return responseDto;
-
-        } catch (Exception rr) {
-            throw rr;
-        }
+    public void deleteById(int id) throws Exception {
+        repository.deleteByDevice_Id(id);
     }
 }
