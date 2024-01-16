@@ -70,10 +70,8 @@ public class DeviceDaoImpl implements DeviceDao<Device, Device> {
 
     @Override
     @CacheEvict(value = "devices", allEntries = true)
-    public Device deleteById(int id) throws Exception {
+    public void deleteById(int id) throws Exception {
         repository.deleteById(id);
-        return new Device();
-
     }
 
     @Override

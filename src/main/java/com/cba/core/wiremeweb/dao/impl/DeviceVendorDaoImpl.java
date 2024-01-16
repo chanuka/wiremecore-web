@@ -49,10 +49,8 @@ public class DeviceVendorDaoImpl implements GenericDao<DeviceVendor, DeviceVendo
     }
 
     @Override
-    public DeviceVendor deleteById(int id) throws Exception {
+    public void deleteById(int id) throws Exception {
         repository.deleteById(id);
-
-        return new DeviceVendor();
     }
 
     @Override

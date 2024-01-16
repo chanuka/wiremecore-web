@@ -75,10 +75,8 @@ public class UserDaoImpl implements UserDao<User, User> {
 
     @Override
     @CacheEvict(value = "users", allEntries = true)
-    public User deleteById(int id) throws Exception {
+    public void deleteById(int id) throws Exception {
         repository.deleteById(id);
-
-        return new User();
     }
 
     @Override

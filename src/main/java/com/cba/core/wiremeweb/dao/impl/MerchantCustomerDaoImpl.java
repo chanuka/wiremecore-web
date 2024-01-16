@@ -57,10 +57,8 @@ public class MerchantCustomerDaoImpl implements GenericDao<MerchantCustomer, Mer
 
     @Override
     @CacheEvict(value = "partners", allEntries = true)
-    public MerchantCustomer deleteById(int id) throws Exception {
+    public void deleteById(int id) throws Exception {
         repository.deleteById(id);
-
-        return new MerchantCustomer();
     }
 
     @Override

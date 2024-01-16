@@ -52,10 +52,8 @@ public class PermissionDaoImpl implements PermissionDao<Permission, Permission> 
 
     @Override
     @CacheEvict(value = "permissions", allEntries = true)
-    public Permission deleteById(int id) throws Exception {
+    public void deleteById(int id) throws Exception {
         repository.deleteById(id);
-        return new Permission();
-
     }
 
     @Override

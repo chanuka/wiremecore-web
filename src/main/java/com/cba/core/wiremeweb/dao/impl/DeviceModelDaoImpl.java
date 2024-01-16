@@ -46,9 +46,8 @@ public class DeviceModelDaoImpl implements DeviceModelDao<DeviceModel, DeviceMod
     }
 
     @Override
-    public DeviceModel deleteById(int id) throws Exception {
+    public void deleteById(int id) throws Exception {
         repository.deleteById(id);
-        return new DeviceModel();
     }
 
     @Override

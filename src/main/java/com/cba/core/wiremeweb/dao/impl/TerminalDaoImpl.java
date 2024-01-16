@@ -65,10 +65,8 @@ public class TerminalDaoImpl implements TerminalDao<Terminal, Terminal> {
 
     @Override
     @CacheEvict(value = "terminals", allEntries = true)
-    public Terminal deleteById(int id) throws Exception {
+    public void deleteById(int id) throws Exception {
         repository.deleteById(id);
-
-        return new Terminal();
     }
 
     @Override

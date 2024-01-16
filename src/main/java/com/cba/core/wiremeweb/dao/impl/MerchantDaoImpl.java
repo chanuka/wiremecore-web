@@ -63,10 +63,8 @@ public class MerchantDaoImpl implements MerchantDao<Merchant, Merchant> {
 
     @Override
     @CacheEvict(value = "merchants", allEntries = true)
-    public Merchant deleteById(int id) throws Exception {
+    public void deleteById(int id) throws Exception {
         repository.deleteById(id);
-        return new Merchant();
-
     }
 
     @Override

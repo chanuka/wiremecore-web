@@ -57,10 +57,8 @@ public class RoleDaoImpl implements GenericDao<Role, Role> {
 
     @Override
     @CacheEvict(value = "roles", allEntries = true)
-    public Role deleteById(int id) throws Exception {
+    public void deleteById(int id) throws Exception {
         repository.deleteById(id);
-
-        return new Role();
     }
 
     @Override
