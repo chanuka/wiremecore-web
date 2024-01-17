@@ -89,16 +89,14 @@ public class UserRoleServiceImpl implements GenericService<UserRoleResponseDto, 
 
     @Override
     public void deleteByIdList(List<Integer> idList) throws Exception {
-        idList.stream()
-                .map((id) -> {
-                    try {
-                        return dao.findById(id);
-                    } catch (Exception exception) {
-                        exception.printStackTrace();
-                    }
-                    return null;
-                })
-                .collect(Collectors.toList());
+
+        idList.stream().forEach((id) -> {
+            try {
+                dao.findById(id);
+            } catch (Exception exception) {
+                throw new NotFoundException(exception.getMessage());
+            }
+        });
 
         dao.deleteByIdList(idList);
 
