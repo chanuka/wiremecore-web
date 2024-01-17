@@ -16,7 +16,6 @@ public interface TerminalSpecification {
             Join<Terminal, Device> deviceJoin = root.join("device", JoinType.INNER);
             Join<Terminal, Status> statusJoin = root.join("status", JoinType.INNER);
             return criteriaBuilder.and(
-//                    criteriaBuilder.like(criteriaBuilder.concat("", merchantJoin.get("id")), "%" + merchantId + "%"),
                     criteriaBuilder.like(criteriaBuilder.lower(merchantJoin.get("merchantId")), "%" + merchantId.toLowerCase() + "%"),
                     criteriaBuilder.like(criteriaBuilder.lower(merchantJoin.get("name")), "%" + merchantName.toLowerCase() + "%"),
                     criteriaBuilder.like(criteriaBuilder.lower(deviceJoin.get("serialNo")), "%" + serialNo.toLowerCase() + "%"),

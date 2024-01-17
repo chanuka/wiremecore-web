@@ -85,11 +85,6 @@ public class UserDaoImpl implements UserDao<User> {
     }
 
     @Override
-    public User changePassword(User entity) throws Exception {
-        return repository.saveAndFlush(entity);
-    }
-
-    @Override
     public User findByUserName(String userName) throws Exception {
         return repository.findByUserName(userName).orElseThrow(() -> new NotFoundException("User Not Found"));
     }

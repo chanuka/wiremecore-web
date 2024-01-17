@@ -33,6 +33,7 @@ import java.util.stream.Collectors;
 public class DeviceModelServiceImpl implements GenericService<DeviceModelResponseDto, DeviceModelRequestDto> {
 
     private final GenericDao<DeviceModel> dao;
+    private final GenericDao<DeviceVendor> deviceVendorDao;
     private final GlobalAuditDao globalAuditDao;
     private final UserBeanUtil userBeanUtil;
     private final ObjectMapper objectMapper;
@@ -129,28 +130,26 @@ public class DeviceModelServiceImpl implements GenericService<DeviceModelRespons
         Map<String, Object> oldDataMap = new HashMap<>();
         Map<String, Object> newDataMap = new HashMap<>();
 
-        if (!toBeUpdated.getName().equals(requestDto.getName())) {
+        if (!requestDto.getName().equals(toBeUpdated.getName())) {
             updateRequired = true;
             oldDataMap.put("name", toBeUpdated.getName());
             newDataMap.put("name", requestDto.getName());
 
             toBeUpdated.setName(requestDto.getName());
         }
-        if ((toBeUpdated.getImg() != null) || (requestDto.getImg() != null)) {
-            if (!(toBeUpdated.getImg()).equals(requestDto.getImg())) {
-                updateRequired = true;
-                oldDataMap.put("img", toBeUpdated.getImg());
-                newDataMap.put("img", requestDto.getImg());
+        if (!requestDto.getImg().equals(toBeUpdated.getImg())) {
+            updateRequired = true;
+            oldDataMap.put("img", toBeUpdated.getImg());
+            newDataMap.put("img", requestDto.getImg());
 
-                toBeUpdated.setImg(requestDto.getImg());
-            }
+            toBeUpdated.setImg(requestDto.getImg());
         }
         if (toBeUpdated.getDeviceVendor().getId() != requestDto.getDeviceVendor()) {
             updateRequired = true;
             oldDataMap.put("deviceVendor", toBeUpdated.getDeviceVendor().getId());
             newDataMap.put("deviceVendor", requestDto.getDeviceVendor());
 
-            toBeUpdated.setDeviceVendor(new DeviceVendor(requestDto.getDeviceVendor()));
+            toBeUpdated.setDeviceVendor(deviceVendorDao.findById(requestDto.getDeviceVendor()));
         }
         if (!toBeUpdated.getStatus().getStatusCode().equals(requestDto.getStatus())) {
             updateRequired = true;
@@ -176,7 +175,7 @@ public class DeviceModelServiceImpl implements GenericService<DeviceModelRespons
     @Override
     public DeviceModelResponseDto create(DeviceModelRequestDto requestDto) throws Exception {
         DeviceModel toInsert = DeviceModelMapper.toModel(requestDto);
-        toInsert.setStatus(new Status(requestDto.getStatus()));
+        toInsert.setDeviceVendor(deviceVendorDao.findById(requestDto.getDeviceVendor()));
 
         DeviceModel savedEntity = dao.create(toInsert);
         DeviceModelResponseDto responseDto = DeviceModelMapper.toDto(savedEntity);

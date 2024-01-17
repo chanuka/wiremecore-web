@@ -354,7 +354,7 @@ public class UserServiceImpl implements UserService<UserResponseDto, UserRequest
 
         if (passwordEncoder.matches(requestDto.getCurrentPassword(), entity.getPassword())) {
             entity.setPassword(passwordEncoder.encode(requestDto.getNewPassword()));
-            dao.changePassword(entity);
+            dao.updateById(entity.getId(), entity);
             map.put("password", "xxxxxxxx");
             String maskValue = objectMapper.writeValueAsString(map);
 
@@ -382,7 +382,7 @@ public class UserServiceImpl implements UserService<UserResponseDto, UserRequest
         newValueMap.put("loginAttempt", toBeUpdated.getLoginAttempt());
         newValueMap.put("status", toBeUpdated.getStatus().getStatusCode());
 
-        dao.changePassword(toBeUpdated);
+        dao.updateById(toBeUpdated.getId(), toBeUpdated);
 
         /*
         Old and new values are not set to JSON

@@ -23,8 +23,8 @@ public class DeviceModelMapper {
         entity.setName(deviceModelRequestDto.getName());
         entity.setImg(deviceModelRequestDto.getImg());
         Status status = new Status(deviceModelRequestDto.getStatus());
-        DeviceVendor deviceVendor = new DeviceVendor(deviceModelRequestDto.getDeviceVendor());
-        entity.setDeviceVendor(deviceVendor);
+//        DeviceVendor deviceVendor = new DeviceVendor(deviceModelRequestDto.getDeviceVendor());
+//        entity.setDeviceVendor(deviceVendor);
         entity.setStatus(status);
         return entity;
     }

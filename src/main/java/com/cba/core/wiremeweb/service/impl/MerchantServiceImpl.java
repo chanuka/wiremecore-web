@@ -197,21 +197,21 @@ public class MerchantServiceImpl implements MerchantService<MerchantResponseDto,
 
             toBeUpdated.setStatus(new Status(requestDto.getStatus()));
         }
-        if (toBeUpdated.getLat() != requestDto.getLat()) {
+        if (!toBeUpdated.getLat().equals(requestDto.getLat())) {
             updateRequired = true;
             oldDataMap.put("lat", toBeUpdated.getLat());
             newDataMap.put("lat", requestDto.getLat());
 
             toBeUpdated.setLat(requestDto.getLat());
         }
-        if (toBeUpdated.getLon() != requestDto.getLon()) {
+        if (!toBeUpdated.getLon().equals(requestDto.getLon())) {
             updateRequired = true;
             oldDataMap.put("lon", toBeUpdated.getLon());
             newDataMap.put("lon", requestDto.getLon());
 
             toBeUpdated.setLon(requestDto.getLon());
         }
-        if (toBeUpdated.getRadius() != requestDto.getRadius()) {
+        if (!toBeUpdated.getRadius().equals(requestDto.getRadius())) {
             updateRequired = true;
             oldDataMap.put("lat", toBeUpdated.getRadius());
             newDataMap.put("lat", requestDto.getRadius());

@@ -96,42 +96,35 @@ public class DeviceVendorServiceImpl implements GenericService<DeviceVendorRespo
 
         return responseDto;
 
-
     }
 
     @Override
     public void deleteByIdList(List<Integer> idList) throws Exception {
-        try {
-            ObjectMapper objectMapper = new ObjectMapper();
-            idList.stream()
-                    .map((id) -> {
-                        try {
-                            return dao.findById(id);
-                        } catch (Exception exception) {
-                            exception.printStackTrace();
-                        }
-                        return null;
-                    })
-                    .collect(Collectors.toList());
+        idList.stream()
+                .map((id) -> {
+                    try {
+                        return dao.findById(id);
+                    } catch (Exception exception) {
+                        exception.printStackTrace();
+                    }
+                    return null;
+                })
+                .collect(Collectors.toList());
 
-            dao.deleteByIdList(idList);
+        dao.deleteByIdList(idList);
 
-            idList.stream()
-                    .forEach(item -> {
-                        ObjectNode objectNode = objectMapper.createObjectNode();
-                        objectNode.put("id", item);
-                        try {
-                            globalAuditDao.create(new GlobalAuditEntry(resource, UserOperationEnum.DELETE.getValue(),
-                                    item, objectMapper.writeValueAsString(objectNode), null,
-                                    userBeanUtil.getRemoteAdr()));
-                        } catch (Exception e) {
-                            throw new RuntimeException("Exception occurred for Auditing: ");// only unchecked exception can be passed
-                        }
-                    });
-        } catch (Exception ee) {
-            ee.printStackTrace();
-            throw ee;
-        }
+        idList.stream()
+                .forEach(item -> {
+                    ObjectNode objectNode = objectMapper.createObjectNode();
+                    objectNode.put("id", item);
+                    try {
+                        globalAuditDao.create(new GlobalAuditEntry(resource, UserOperationEnum.DELETE.getValue(),
+                                item, objectMapper.writeValueAsString(objectNode), null,
+                                userBeanUtil.getRemoteAdr()));
+                    } catch (Exception e) {
+                        throw new RuntimeException("Exception occurred for Auditing: ");// only unchecked exception can be passed
+                    }
+                });
     }
 
     @Override
@@ -142,20 +135,21 @@ public class DeviceVendorServiceImpl implements GenericService<DeviceVendorRespo
         Map<String, Object> oldDataMap = new HashMap<>();
         Map<String, Object> newDataMap = new HashMap<>();
 
-        if (!toBeUpdated.getName().equals(requestDto.getName())) {
+        if (!requestDto.getName().equals(toBeUpdated.getName())) {
             updateRequired = true;
             oldDataMap.put("name", toBeUpdated.getName());
             newDataMap.put("name", requestDto.getName());
 
             toBeUpdated.setName(requestDto.getName());
         }
-        if (!toBeUpdated.getImg().equals(requestDto.getImg())) {
+        if (!requestDto.getImg().equals(toBeUpdated.getImg())) {
             updateRequired = true;
             oldDataMap.put("img", toBeUpdated.getImg());
             newDataMap.put("img", requestDto.getImg());
 
             toBeUpdated.setImg(requestDto.getImg());
         }
+
         if (!toBeUpdated.getStatus().getStatusCode().equals(requestDto.getStatus())) {
             updateRequired = true;
             oldDataMap.put("status", toBeUpdated.getStatus().getStatusCode());
