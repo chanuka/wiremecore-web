@@ -24,7 +24,7 @@ public class UserResponseDto implements java.io.Serializable {
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private String email;
     @JsonInclude(JsonInclude.Include.NON_NULL)
-    private String deviceId;
+    private Integer deviceId;
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private String merchantName;
     @JsonInclude(JsonInclude.Include.NON_NULL)
@@ -32,5 +32,7 @@ public class UserResponseDto implements java.io.Serializable {
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private Integer partnerId;
     @JsonInclude(JsonInclude.Include.NON_NULL)
-    private String merchantId;
+    private Integer merchantId;
+    @JsonInclude(JsonInclude.Include.NON_NULL)
+    private String status;
 }

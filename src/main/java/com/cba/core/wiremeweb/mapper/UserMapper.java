@@ -13,7 +13,9 @@ public class UserMapper {
         responseDto.setId(entity.getId());
         responseDto.setContactNo(entity.getContactNo());
         responseDto.setEmail(entity.getEmail());
-        responseDto.setMerchantId(entity.getMerchant() != null ? entity.getMerchant().getMerchantId() : null);
+        responseDto.setStatus(entity.getStatus().getStatusCode());
+        responseDto.setDeviceId(entity.getDevice() != null ? entity.getDevice().getId() : null);
+        responseDto.setMerchantId(entity.getMerchant() != null ? entity.getMerchant().getId() : null);
         responseDto.setMerchantName(entity.getMerchant() != null ? entity.getMerchant().getName() : null);
         responseDto.setPartnerId(entity.getMerchantCustomer() != null ? entity.getMerchantCustomer().getId() : null);
         responseDto.setPartnerName(entity.getMerchantCustomer() != null ? entity.getMerchantCustomer().getName() : null);

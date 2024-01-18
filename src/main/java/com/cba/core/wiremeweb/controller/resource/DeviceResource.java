@@ -2,8 +2,10 @@ package com.cba.core.wiremeweb.controller.resource;
 
 import com.cba.core.wiremeweb.dto.DeviceResponseDto;
 import com.cba.core.wiremeweb.dto.DistributionResponseDto;
+import com.cba.core.wiremeweb.dto.MerchantResponseDto;
 import com.cba.core.wiremeweb.util.PaginationResponse;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
@@ -18,4 +20,6 @@ public interface DeviceResource<T, K> extends GenericResource<T, K> {
     @PostMapping("/geo-fence")
     ResponseEntity<PaginationResponse<DeviceResponseDto>> getGeoFenceDevice(@RequestBody Map<String, Object> filter) throws Exception;
 
+    @GetMapping("/all")
+    ResponseEntity<List<DeviceResponseDto>> getAllDevices() throws Exception;
 }

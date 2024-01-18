@@ -4,6 +4,7 @@ import com.cba.core.wiremeweb.controller.resource.DeviceResource;
 import com.cba.core.wiremeweb.dto.DeviceRequestDto;
 import com.cba.core.wiremeweb.dto.DeviceResponseDto;
 import com.cba.core.wiremeweb.dto.DistributionResponseDto;
+import com.cba.core.wiremeweb.dto.MerchantResponseDto;
 import com.cba.core.wiremeweb.service.DeviceService;
 import com.cba.core.wiremeweb.util.PaginationResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -222,6 +223,19 @@ public class DeviceController implements DeviceResource<DeviceResponseDto, Devic
         logger.debug(messageSource.getMessage("DEVICE_GET_ALL_GEOFENCE", null, currentLocale));
         try {
             PaginationResponse<DeviceResponseDto> responseDtolist = service.getGeoFenceDevice(filter);
+            return ResponseEntity.ok().body(responseDtolist);
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+            throw e;
+        }
+    }
+
+    @Override
+    public ResponseEntity<List<DeviceResponseDto>> getAllDevices() throws Exception {
+        Locale currentLocale = LocaleContextHolder.getLocale();
+        logger.debug(messageSource.getMessage("DEVICE_GET_ALL_DEBUG", null, currentLocale));
+        try {
+            List<DeviceResponseDto> responseDtolist = service.findAll();
             return ResponseEntity.ok().body(responseDtolist);
         } catch (Exception e) {
             logger.error(e.getMessage());
