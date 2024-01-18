@@ -17,16 +17,16 @@ public class MerchantCustomerRequestDto implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    @NotBlank(message = "Name is required")
+    @NotBlank(message = "{validation.partner.name.empty}")
     private String name;
-    @NotBlank(message = "Address is required")
+    @NotBlank(message = "{validation.partner.address.empty}")
     private String address;
-    @NotBlank(message = "contact Number is required")
+    @NotBlank(message = "{validation.partner.contact.empty}")
     private String contactNo;
-    @NotBlank(message = "Email is required")
-    @Email(message = "Email is Invalid")
+    @NotBlank(message = "{validation.partner.email.empty}")
+    @Email(message = "{validation.partner.email.invalid}")
     private String email;
-    @NotBlank(message = "Status is required")
+    @NotBlank(message = "{validation.partner.status.empty}")
     private String status;
 
 }

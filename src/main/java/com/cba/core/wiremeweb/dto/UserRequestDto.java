@@ -19,24 +19,26 @@ public class UserRequestDto implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    @NotBlank(message = "Name is required")
+    @NotBlank(message = "{validation.user.name.empty}")
     private String name;
-    @NotBlank(message = "User Name is required")
+    @NotBlank(message = "{validation.user.username.empty}")
     private String userName;
-    @NotBlank(message = "Contact Number is required")
+    @NotBlank(message = "{validation.user.contact.empty}")
     private String contactNo;
-    @NotBlank(message = "Email is required")
-    @Email(message = "Email is Invalid")
+    @NotBlank(message = "{validation.user.email.empty}")
+    @Email(message = "{validation.user.email.invalid}")
     private String email;
     @JsonInclude(JsonInclude.Include.NON_NULL)
-    @Positive(message = "Device Id must be greater than 0")
+    @Positive(message = "{validation.user.device.positive}")
     private Integer deviceId;
+    @NotBlank(message = "{validation.user.status.empty}")
     private String status;
+    @Positive(message = "{validation.user.usertype.positive}")
     private Integer userType;
     @JsonInclude(JsonInclude.Include.NON_NULL)
-    @Positive(message = "Merchant Id must be greater than 0")
+    @Positive(message = "{validation.user.merchant.positive}")
     private Integer merchantId;
     @JsonInclude(JsonInclude.Include.NON_NULL)
-    @Positive(message = "Partner Id must be greater than 0")
+    @Positive(message = "{validation.user.merchant.partner}")
     private Integer partnerId;
 }

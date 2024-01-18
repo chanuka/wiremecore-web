@@ -1,6 +1,7 @@
 package com.cba.core.wiremeweb.dto;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -15,32 +16,31 @@ import java.util.HashMap;
 @ToString
 public class HighlightRequestDto implements Serializable {
 
-    @JsonInclude(JsonInclude.Include.NON_NULL)
+    @NotBlank(message = "{validation.highlights.config_name.empty}")
     private String configName;
-    @JsonInclude(JsonInclude.Include.NON_NULL)
+    @NotBlank(message = "{validation.highlights.config_type.empty}")
     private String configType;
-    @JsonInclude(JsonInclude.Include.NON_NULL)
+    @NotBlank(message = "{validation.highlights.config_title.empty}")
     private String configTitle;
-    @JsonInclude(JsonInclude.Include.NON_NULL)
+    @NotBlank(message = "{validation.highlights.clustering.empty}")
     private String dateClustering;
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private String tag;
-    @JsonInclude(JsonInclude.Include.NON_NULL)
     private SelectionScopeDto selectionScope;
-    @JsonInclude(JsonInclude.Include.NON_NULL)
+    @NotBlank(message = "{validation.highlights.grouping.empty}")
     private String grouping;
-    @JsonInclude(JsonInclude.Include.NON_NULL)
+    @NotBlank(message = "{validation.highlights.aggregator.empty}")
     private String aggregator;
-    @JsonInclude(JsonInclude.Include.NON_NULL)
+    @NotBlank(message = "{validation.highlights.status.empty}")
     private String status;
-    @JsonInclude(JsonInclude.Include.NON_NULL)
+    @NotBlank(message = "{validation.highlights.from_date.empty}")
     private String fromDate;
-    @JsonInclude(JsonInclude.Include.NON_NULL)
+    @NotBlank(message = "{validation.highlights.to_date.empty}")
     private String toDate;
-    @JsonInclude(JsonInclude.Include.NON_NULL)
+    @NotBlank(message = "{validation.highlights.priority.empty}")
     private Integer priorityOrder;
     @JsonInclude(JsonInclude.Include.NON_NULL)
-    private HashMap<String,String> filter;
+    private HashMap<String, String> filter;
 
     private static final long serialVersionUID = 1L;
 

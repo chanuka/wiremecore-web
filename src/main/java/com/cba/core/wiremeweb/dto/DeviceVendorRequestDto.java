@@ -13,11 +13,11 @@ import lombok.ToString;
 @ToString
 public class DeviceVendorRequestDto implements java.io.Serializable {
 
-    @ValidVariable(message = "Name is required")
+    @ValidVariable(message = "{validation.vendor.name.empty}")
     private String name;
-    @NotBlank(message = "img is required")
+    @NotBlank(message = "{validation.vendor.img.empty}")
     private String img;
-    @NotBlank(message = "Status is required")
+    @NotBlank(message = "{validation.vendor.status.empty}")
     private String status;
 
     private static final long serialVersionUID = 1L;

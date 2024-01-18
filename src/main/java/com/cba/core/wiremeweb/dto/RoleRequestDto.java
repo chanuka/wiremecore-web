@@ -16,8 +16,8 @@ public class RoleRequestDto implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    @NotBlank(message = "Role Name is required")
+    @NotBlank(message = "{validation.role.name.empty}")
     private String roleName;
-    @NotBlank(message = "Status is required")
+    @NotBlank(message = "{validation.role.name.status}")
     private String status;
 }

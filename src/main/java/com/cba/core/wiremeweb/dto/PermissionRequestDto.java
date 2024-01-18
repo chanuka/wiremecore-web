@@ -1,5 +1,6 @@
 package com.cba.core.wiremeweb.dto;
 
+import jakarta.validation.constraints.Positive;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -13,7 +14,9 @@ import java.io.Serializable;
 @ToString
 public class PermissionRequestDto implements Serializable {
 
+    @Positive(message = "{validation.permission.role.positive}")
     private Integer roleId;
+    @Positive(message = "{validation.permission.resource.positive}")
     private Integer resourceId;
     private Integer readd;
     private Integer created;

@@ -2,6 +2,7 @@ package com.cba.core.wiremeweb.dto;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Positive;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -18,22 +19,26 @@ public class MerchantRequestDto implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    @NotBlank(message = "Name is required")
+    @NotBlank(message = "{validation.merchant.merchant_id.empty}")
     private String merchantId;
+    @Positive(message = "{validation.merchant.partner.positive}")
     private Integer partnerId;
-    @NotBlank(message = "Name is required")
+    @NotBlank(message = "{validation.merchant.name.empty}")
     private String name;
-    @NotBlank(message = "Email is required")
-    @Email(message = "Email is Invalid")
+    @NotBlank(message = "{validation.merchant.email.empty}")
+    @Email(message = "{validation.merchant.email.invalid}")
     private String email;
-    @NotBlank(message = "Province is required")
+    @NotBlank(message = "{validation.merchant.province.empty}")
     private String province;
-    @NotBlank(message = "District is required")
+    @NotBlank(message = "{validation.merchant.district.empty}")
     private String district;
-    @NotBlank(message = "Status is required")
+    @NotBlank(message = "{validation.merchant.status.empty}")
     private String status;
+    @Positive(message = "{validation.merchant.lat.positive}")
     private Float lat;
+    @Positive(message = "{validation.merchant.lon.positive}")
     private Float lon;
+    @Positive(message = "{validation.merchant.radius.positive}")
     private Integer radius;
 
 }

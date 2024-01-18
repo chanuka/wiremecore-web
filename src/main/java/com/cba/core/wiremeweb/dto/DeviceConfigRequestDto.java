@@ -2,6 +2,7 @@ package com.cba.core.wiremeweb.dto;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Positive;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -16,18 +17,19 @@ import java.util.List;
 @ToString
 public class DeviceConfigRequestDto implements Serializable {
 
-    @JsonInclude(JsonInclude.Include.NON_NULL)
-    private int deviceId;
-    @NotBlank(message = "Config Type is required")
+
+    @Positive(message = "{validation.device_config.device.positive}")
+    private Integer deviceId;
+    @NotBlank(message = "{validation.device_config.type.empty}")
     private String configType;
-    @NotBlank(message = "Base URL is required")
+    @NotBlank(message = "{validation.device_config.baseUrl.empty}")
     private String baseUrl;
-    @NotBlank(message = "Idle Timeout is required")
+    @NotBlank(message = "{validation.device_config.idle_timeout.empty}")
     private String idleTimeout;
+    @NotBlank(message = "{validation.device_config.status.empty}")
+    private String status;
     private List<DeviceHostDto> hosts;
     private List<DeviceConfigMerchantDto> merchants;
-    @NotBlank(message = "Status is required")
-    private String status;
 
     private static final long serialVersionUID = 1L;
 }
