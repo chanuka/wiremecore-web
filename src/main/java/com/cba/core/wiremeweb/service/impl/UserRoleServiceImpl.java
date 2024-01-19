@@ -64,7 +64,7 @@ public class UserRoleServiceImpl implements GenericService<UserRoleResponseDto, 
     }
 
     @Override
-    public Page<UserRoleResponseDto> findBySearchParamLikeByKeyWord(Map<String, String> searchParameter, int page, int pageSize) throws Exception {
+    public List<UserRoleResponseDto> findBySearchParamLikeByKeyWord(Map<String, String> searchParameter) throws Exception {
         return null;
     }
 

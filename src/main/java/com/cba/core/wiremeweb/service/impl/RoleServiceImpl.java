@@ -80,7 +80,7 @@ public class RoleServiceImpl implements GenericService<RoleResponseDto, RoleRequ
     }
 
     @Override
-    public Page<RoleResponseDto> findBySearchParamLikeByKeyWord(Map<String, String> searchParameter, int page, int pageSize) throws Exception {
+    public List<RoleResponseDto> findBySearchParamLikeByKeyWord(Map<String, String> searchParameter) throws Exception {
         return null;
     }
 

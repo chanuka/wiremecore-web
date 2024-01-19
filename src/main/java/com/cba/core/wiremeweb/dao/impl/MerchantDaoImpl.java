@@ -49,11 +49,9 @@ public class MerchantDaoImpl implements MerchantDao<Merchant> {
     }
 
     @Override
-    public Page<Merchant> findBySearchParamLikeByKeyWord(Map<String, String> searchParameter, int page, int pageSize) throws Exception {
-        Pageable pageable = PageRequest.of(page, pageSize);
+    public List<Merchant> findBySearchParamLikeByKeyWord(Map<String, String> searchParameter) throws Exception {
         Specification<Merchant> spec = MerchantSpecification.allLike(searchParameter.get("keyWord"));
-        return repository.findAll(spec, pageable);
-
+        return repository.findAll(spec);
     }
 
     @Override

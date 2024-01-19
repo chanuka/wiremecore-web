@@ -70,8 +70,8 @@ public class DeviceVendorServiceImpl implements GenericService<DeviceVendorRespo
     }
 
     @Override
-    public Page<DeviceVendorResponseDto> findBySearchParamLikeByKeyWord(Map<String, String> searchParameter, int page, int pageSize) throws Exception {
-        return dao.findBySearchParamLikeByKeyWord(searchParameter, page, pageSize).map(DeviceVendorMapper::toDto);
+    public List<DeviceVendorResponseDto> findBySearchParamLikeByKeyWord(Map<String, String> searchParameter) throws Exception {
+        return null;
     }
 
     @Override

@@ -46,7 +46,7 @@ public class RoleDaoImpl implements GenericDao<Role> {
     }
 
     @Override
-    public Page<Role> findBySearchParamLikeByKeyWord(Map<String, String> searchParameter, int page, int pageSize) throws Exception {
+    public List<Role> findBySearchParamLikeByKeyWord(Map<String, String> searchParameter) throws Exception {
         return null;
     }
 

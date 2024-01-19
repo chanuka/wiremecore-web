@@ -2,8 +2,10 @@ package com.cba.core.wiremeweb.dao.impl;
 
 import com.cba.core.wiremeweb.dao.GenericDao;
 import com.cba.core.wiremeweb.exception.NotFoundException;
+import com.cba.core.wiremeweb.model.Device;
 import com.cba.core.wiremeweb.model.MerchantCustomer;
 import com.cba.core.wiremeweb.repository.MerchantCustomerRepository;
+import com.cba.core.wiremeweb.repository.specification.DeviceSpecification;
 import com.cba.core.wiremeweb.repository.specification.MerchantCustomerSpecification;
 import lombok.RequiredArgsConstructor;
 import org.springframework.cache.annotation.CacheEvict;
@@ -46,8 +48,9 @@ public class MerchantCustomerDaoImpl implements GenericDao<MerchantCustomer> {
     }
 
     @Override
-    public Page<MerchantCustomer> findBySearchParamLikeByKeyWord(Map<String, String> searchParameter, int page, int pageSize) throws Exception {
-        return null;
+    public List<MerchantCustomer> findBySearchParamLikeByKeyWord(Map<String, String> searchParameter) throws Exception {
+        Specification<MerchantCustomer> spec = MerchantCustomerSpecification.allLike(searchParameter.get("keyWord"));
+        return repository.findAll(spec);
     }
 
     @Override

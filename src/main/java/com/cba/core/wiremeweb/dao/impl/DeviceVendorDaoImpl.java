@@ -39,7 +39,7 @@ public class DeviceVendorDaoImpl implements GenericDao<DeviceVendor> {
     }
 
     @Override
-    public Page<DeviceVendor> findBySearchParamLikeByKeyWord(Map<String, String> searchParameter, int page, int pageSize) throws Exception {
+    public List<DeviceVendor> findBySearchParamLikeByKeyWord(Map<String, String> searchParameter) throws Exception {
         return null;
     }
 

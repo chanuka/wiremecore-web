@@ -7,10 +7,8 @@ import com.cba.core.wiremeweb.dto.DeviceResponseDto;
 import com.cba.core.wiremeweb.dto.DistributionResponseDto;
 import com.cba.core.wiremeweb.exception.NotFoundException;
 import com.cba.core.wiremeweb.mapper.DeviceMapper;
-import com.cba.core.wiremeweb.model.Device;
-import com.cba.core.wiremeweb.model.DeviceModel;
-import com.cba.core.wiremeweb.model.GlobalAuditEntry;
-import com.cba.core.wiremeweb.model.Status;
+import com.cba.core.wiremeweb.mapper.MerchantMapper;
+import com.cba.core.wiremeweb.model.*;
 import com.cba.core.wiremeweb.repository.GlobalAuditEntryRepository;
 import com.cba.core.wiremeweb.service.DeviceService;
 import com.cba.core.wiremeweb.util.PaginationResponse;
@@ -88,8 +86,15 @@ public class DeviceServiceImpl implements DeviceService<DeviceResponseDto, Devic
     }
 
     @Override
-    public Page<DeviceResponseDto> findBySearchParamLikeByKeyWord(Map<String, String> searchParameter, int page, int pageSize) throws Exception {
-        return null;
+    public List<DeviceResponseDto> findBySearchParamLikeByKeyWord(Map<String, String> searchParameter) throws Exception {
+        List<Device> entityList = dao.findBySearchParamLikeByKeyWord(searchParameter);
+        if (entityList.isEmpty()) {
+            throw new NotFoundException("No Devices found");
+        }
+        return entityList
+                .stream()
+                .map(DeviceMapper::toDto)
+                .collect(Collectors.toList());
     }
 
     public DeviceResponseDto findById(int id) throws Exception {

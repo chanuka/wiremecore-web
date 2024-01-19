@@ -22,4 +22,7 @@ public interface DeviceResource<T, K> extends GenericResource<T, K> {
 
     @GetMapping("/all")
     ResponseEntity<List<DeviceResponseDto>> getAllDevices() throws Exception;
+
+    @PostMapping("/search/all")
+    ResponseEntity<List<T>> searchAllByPageWiseByKey(@RequestBody Map<String, String> searchParameter)  throws Exception;
 }

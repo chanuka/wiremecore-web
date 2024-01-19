@@ -54,7 +54,7 @@ public class TerminalDaoImpl implements TerminalDao<Terminal> {
     }
 
     @Override
-    public Page<Terminal> findBySearchParamLikeByKeyWord(Map<String, String> searchParameter, int page, int pageSize) throws Exception {
+    public List<Terminal> findBySearchParamLikeByKeyWord(Map<String, String> searchParameter) throws Exception {
         return null;
     }
 

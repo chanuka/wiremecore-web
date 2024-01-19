@@ -45,7 +45,7 @@ public class UserDaoImpl implements UserDao<User> {
     }
 
     @Override
-    public Page<User> findBySearchParamLikeByKeyWord(Map<String, String> searchParameter, int page, int pageSize) throws Exception {
+    public List<User> findBySearchParamLikeByKeyWord(Map<String, String> searchParameter) throws Exception {
         return null;
     }
 

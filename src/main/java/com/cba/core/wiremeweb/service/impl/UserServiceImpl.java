@@ -87,7 +87,7 @@ public class UserServiceImpl implements UserService<UserResponseDto, UserRequest
     }
 
     @Override
-    public Page<UserResponseDto> findBySearchParamLikeByKeyWord(Map<String, String> searchParameter, int page, int pageSize) throws Exception {
+    public List<UserResponseDto> findBySearchParamLikeByKeyWord(Map<String, String> searchParameter) throws Exception {
         return null;
     }
 

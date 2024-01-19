@@ -36,7 +36,7 @@ public class DeviceModelDaoImpl implements DeviceModelDao<DeviceModel> {
     }
 
     @Override
-    public Page<DeviceModel> findBySearchParamLikeByKeyWord(Map<String, String> searchParameter, int page, int pageSize) throws Exception {
+    public List<DeviceModel> findBySearchParamLikeByKeyWord(Map<String, String> searchParameter) throws Exception {
         return null;
     }
 

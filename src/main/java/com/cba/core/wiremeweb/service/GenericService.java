@@ -13,7 +13,7 @@ public interface GenericService<T, K> {
 
     Page<T> findBySearchParamLike(Map<String, String> searchParamList, int page, int pageSize) throws Exception;
 
-    Page<T> findBySearchParamLikeByKeyWord(Map<String, String> searchParameter, int page, int pageSize) throws Exception;
+    List<T> findBySearchParamLikeByKeyWord(Map<String, String> searchParameter) throws Exception;
 
     T findById(int id) throws Exception;
 

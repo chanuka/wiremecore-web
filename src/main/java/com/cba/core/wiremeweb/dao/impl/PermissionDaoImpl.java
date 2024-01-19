@@ -41,7 +41,7 @@ public class PermissionDaoImpl implements PermissionDao<Permission> {
     }
 
     @Override
-    public Page<Permission> findBySearchParamLikeByKeyWord(Map<String, String> searchParameter, int page, int pageSize) throws Exception {
+    public List<Permission> findBySearchParamLikeByKeyWord(Map<String, String> searchParameter) throws Exception {
         return null;
     }
 

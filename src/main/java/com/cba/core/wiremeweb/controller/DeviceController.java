@@ -242,4 +242,19 @@ public class DeviceController implements DeviceResource<DeviceResponseDto, Devic
             throw e;
         }
     }
+
+    @Override
+    public ResponseEntity<List<DeviceResponseDto>> searchAllByPageWiseByKey(Map<String, String> searchParameter) throws Exception {
+        Locale currentLocale = LocaleContextHolder.getLocale();// works only when as local statement
+        logger.debug(messageSource.getMessage("DEVICE_GET_SEARCH_DEBUG", null, currentLocale));
+
+        try {
+            List<DeviceResponseDto> responseDtolist = service.findBySearchParamLikeByKeyWord(searchParameter);
+            return ResponseEntity.ok().body(responseDtolist);
+        } catch (Exception e) {
+            e.printStackTrace();
+            logger.error(e.getMessage());
+            throw e;
+        }
+    }
 }

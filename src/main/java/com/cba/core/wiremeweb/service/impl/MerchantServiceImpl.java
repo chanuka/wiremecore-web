@@ -83,13 +83,16 @@ public class MerchantServiceImpl implements MerchantService<MerchantResponseDto,
     }
 
     @Override
-    public Page<MerchantResponseDto> findBySearchParamLikeByKeyWord(Map<String, String> searchParameter, int page, int pageSize) throws Exception {
+    public List<MerchantResponseDto> findBySearchParamLikeByKeyWord(Map<String, String> searchParameter) throws Exception {
 
-        Page<Merchant> entitiesPage = dao.findBySearchParamLikeByKeyWord(searchParameter, page, pageSize);
-        if (entitiesPage.isEmpty()) {
+        List<Merchant> entityList = dao.findBySearchParamLikeByKeyWord(searchParameter);
+        if (entityList.isEmpty()) {
             throw new NotFoundException("No Merchants found");
         }
-        return entitiesPage.map(MerchantMapper::toDto);
+        return entityList
+                .stream()
+                .map(MerchantMapper::toDto)
+                .collect(Collectors.toList());
     }
 
     @Override

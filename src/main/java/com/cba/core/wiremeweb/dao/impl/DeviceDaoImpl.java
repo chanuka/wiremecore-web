@@ -3,8 +3,10 @@ package com.cba.core.wiremeweb.dao.impl;
 import com.cba.core.wiremeweb.dao.DeviceDao;
 import com.cba.core.wiremeweb.exception.NotFoundException;
 import com.cba.core.wiremeweb.model.Device;
+import com.cba.core.wiremeweb.model.Merchant;
 import com.cba.core.wiremeweb.repository.DeviceRepository;
 import com.cba.core.wiremeweb.repository.specification.DeviceSpecification;
+import com.cba.core.wiremeweb.repository.specification.MerchantSpecification;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.Query;
@@ -59,8 +61,9 @@ public class DeviceDaoImpl implements DeviceDao<Device> {
     }
 
     @Override
-    public Page<Device> findBySearchParamLikeByKeyWord(Map<String, String> searchParameter, int page, int pageSize) throws Exception {
-        return null;
+    public List<Device> findBySearchParamLikeByKeyWord(Map<String, String> searchParameter) throws Exception {
+        Specification<Device> spec = DeviceSpecification.allLike(searchParameter.get("keyWord"));
+        return repository.findAll(spec);
     }
 
     @Override

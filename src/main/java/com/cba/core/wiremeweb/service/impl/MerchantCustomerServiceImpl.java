@@ -6,7 +6,9 @@ import com.cba.core.wiremeweb.dto.MerchantCustomerRequestDto;
 import com.cba.core.wiremeweb.dto.MerchantCustomerResponseDto;
 import com.cba.core.wiremeweb.exception.NotFoundException;
 import com.cba.core.wiremeweb.mapper.MerchantCustomerMapper;
+import com.cba.core.wiremeweb.mapper.MerchantMapper;
 import com.cba.core.wiremeweb.model.GlobalAuditEntry;
+import com.cba.core.wiremeweb.model.Merchant;
 import com.cba.core.wiremeweb.model.MerchantCustomer;
 import com.cba.core.wiremeweb.model.Status;
 import com.cba.core.wiremeweb.repository.GlobalAuditEntryRepository;
@@ -72,8 +74,15 @@ public class MerchantCustomerServiceImpl implements GenericService<MerchantCusto
     }
 
     @Override
-    public Page<MerchantCustomerResponseDto> findBySearchParamLikeByKeyWord(Map<String, String> searchParameter, int page, int pageSize) throws Exception {
-        return dao.findBySearchParamLikeByKeyWord(searchParameter, page, pageSize).map(MerchantCustomerMapper::toDto);
+    public List<MerchantCustomerResponseDto> findBySearchParamLikeByKeyWord(Map<String, String> searchParameter) throws Exception {
+        List<MerchantCustomer> entityList = dao.findBySearchParamLikeByKeyWord(searchParameter);
+        if (entityList.isEmpty()) {
+            throw new NotFoundException("No Partners found");
+        }
+        return entityList
+                .stream()
+                .map(MerchantCustomerMapper::toDto)
+                .collect(Collectors.toList());
     }
 
     @Override

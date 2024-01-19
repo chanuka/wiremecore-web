@@ -70,7 +70,7 @@ public class PermissionServiceImpl implements PermissionService<PermissionRespon
     }
 
     @Override
-    public Page<PermissionResponseDto> findBySearchParamLikeByKeyWord(Map<String, String> searchParameter, int page, int pageSize) throws Exception {
+    public List<PermissionResponseDto> findBySearchParamLikeByKeyWord(Map<String, String> searchParameter) throws Exception {
         return null;
     }
 

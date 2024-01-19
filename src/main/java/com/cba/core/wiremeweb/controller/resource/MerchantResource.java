@@ -20,8 +20,6 @@ public interface MerchantResource<T, K> extends GenericResource<T, K> {
     ResponseEntity<List<MerchantResponseDto>> getAllMerchants() throws Exception;
 
     @PostMapping("/search/all")
-    ResponseEntity<PaginationResponse<T>> searchAllByPageWiseByKey(@RequestBody Map<String, String> searchParameter,
-                                                              @RequestParam(defaultValue = "0") int page,
-                                                              @RequestParam(defaultValue = "5") int pageSize)  throws Exception;
+    ResponseEntity<List<T>> searchAllByPageWiseByKey(@RequestBody Map<String, String> searchParameter)  throws Exception;
 
 }
