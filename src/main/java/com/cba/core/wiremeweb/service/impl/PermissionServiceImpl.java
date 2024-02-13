@@ -10,7 +10,6 @@ import com.cba.core.wiremeweb.model.GlobalAuditEntry;
 import com.cba.core.wiremeweb.model.Permission;
 import com.cba.core.wiremeweb.model.Resource;
 import com.cba.core.wiremeweb.model.Role;
-import com.cba.core.wiremeweb.repository.GlobalAuditEntryRepository;
 import com.cba.core.wiremeweb.service.PermissionService;
 import com.cba.core.wiremeweb.util.UserBeanUtil;
 import com.cba.core.wiremeweb.util.UserOperationEnum;

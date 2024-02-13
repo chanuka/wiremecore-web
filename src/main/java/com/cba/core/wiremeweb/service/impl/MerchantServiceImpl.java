@@ -10,7 +10,6 @@ import com.cba.core.wiremeweb.model.GlobalAuditEntry;
 import com.cba.core.wiremeweb.model.Merchant;
 import com.cba.core.wiremeweb.model.MerchantCustomer;
 import com.cba.core.wiremeweb.model.Status;
-import com.cba.core.wiremeweb.repository.GlobalAuditEntryRepository;
 import com.cba.core.wiremeweb.service.MerchantService;
 import com.cba.core.wiremeweb.util.UserBeanUtil;
 import com.cba.core.wiremeweb.util.UserOperationEnum;

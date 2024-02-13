@@ -2,10 +2,8 @@ package com.cba.core.wiremeweb.dao.impl;
 
 import com.cba.core.wiremeweb.dao.GenericDao;
 import com.cba.core.wiremeweb.exception.NotFoundException;
-import com.cba.core.wiremeweb.model.Device;
 import com.cba.core.wiremeweb.model.MerchantCustomer;
 import com.cba.core.wiremeweb.repository.MerchantCustomerRepository;
-import com.cba.core.wiremeweb.repository.specification.DeviceSpecification;
 import com.cba.core.wiremeweb.repository.specification.MerchantCustomerSpecification;
 import lombok.RequiredArgsConstructor;
 import org.springframework.cache.annotation.CacheEvict;

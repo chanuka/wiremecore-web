@@ -1,6 +1,9 @@
 package com.cba.core.wiremeweb.repository.specification;
 
-import com.cba.core.wiremeweb.model.*;
+import com.cba.core.wiremeweb.model.Device;
+import com.cba.core.wiremeweb.model.DeviceModel;
+import com.cba.core.wiremeweb.model.DeviceVendor;
+import com.cba.core.wiremeweb.model.Status;
 import jakarta.persistence.criteria.Join;
 import jakarta.persistence.criteria.JoinType;
 import org.springframework.data.jpa.domain.Specification;

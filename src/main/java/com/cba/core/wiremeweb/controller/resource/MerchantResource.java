@@ -2,7 +2,6 @@ package com.cba.core.wiremeweb.controller.resource;
 
 import com.cba.core.wiremeweb.dto.MerchantResponseDto;
 import com.cba.core.wiremeweb.dto.TerminalResponseDto;
-import com.cba.core.wiremeweb.util.PaginationResponse;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 

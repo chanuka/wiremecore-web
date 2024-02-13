@@ -23,21 +23,21 @@ spring:
     hikari:
       maximum-pool-size: 10
       minimum-idle: 5
-  mail:
-    default-encoding: UTF-8
-    host: smtp.gmail.com
-    port: 587
-    username: chanuucsc@gmail.com
-    password: dlmfklwnyonycsta
-    properties:
-      mail:
-        smtp:
-          auth: true
-          starttls:
-            enable: true # this should change to false when there is no SSL
-            required: true
-    protocol: smtp
-    test-connection: false
+#  mail:
+#    default-encoding: UTF-8
+#    host: smtp.gmail.com
+#    port: 587
+#    username: chanuucsc@gmail.com
+#    password: dlmfklwnyonycsta
+#    properties:
+#      mail:
+#        smtp:
+#          auth: true
+#          starttls:
+#            enable: true # this should change to false when there is no SSL
+#            required: true
+#    protocol: smtp
+#    test-connection: false
 
   # Asynchronous Task Executor Configuration
   task:
@@ -68,6 +68,8 @@ application:
     userroles: userroles
     permissions: permissions
     transactions: transactions
+  email:
+    url: http://124.43.71.173:9091/api/email/v1
 
 rsa:
   private-key: classpath:certs/private.pem

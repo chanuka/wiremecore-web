@@ -1,7 +1,6 @@
 package com.cba.core.wiremeweb.filter;
 
 import com.cba.core.wiremeweb.config.JwtConfig;
-import com.cba.core.wiremeweb.controller.DeviceController;
 import com.cba.core.wiremeweb.service.TokenBlacklistService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -22,7 +21,7 @@ import java.util.Locale;
 @RequiredArgsConstructor
 public class CustomLogoutHandler implements LogoutHandler {
 
-    private static final Logger logger = LoggerFactory.getLogger(DeviceController.class);
+    private static final Logger logger = LoggerFactory.getLogger(CustomLogoutHandler.class);
 
     private final JwtConfig jwtConfig;
     private final TokenBlacklistService tokenBlacklistService;

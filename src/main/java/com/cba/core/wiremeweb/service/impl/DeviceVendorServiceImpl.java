@@ -12,7 +12,6 @@ import com.cba.core.wiremeweb.model.DeviceModel;
 import com.cba.core.wiremeweb.model.DeviceVendor;
 import com.cba.core.wiremeweb.model.GlobalAuditEntry;
 import com.cba.core.wiremeweb.model.Status;
-import com.cba.core.wiremeweb.repository.GlobalAuditEntryRepository;
 import com.cba.core.wiremeweb.service.GenericService;
 import com.cba.core.wiremeweb.util.UserBeanUtil;
 import com.cba.core.wiremeweb.util.UserOperationEnum;

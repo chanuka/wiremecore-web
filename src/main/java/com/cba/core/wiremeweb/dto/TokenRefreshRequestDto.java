@@ -3,7 +3,7 @@ package com.cba.core.wiremeweb.dto;
 import jakarta.validation.constraints.NotBlank;
 
 public class TokenRefreshRequestDto {
-  @NotBlank
+  @NotBlank(message = "{validation.refresh_token.token.empty}")
   private String refreshToken;
 
   public String getRefreshToken() {

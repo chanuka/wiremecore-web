@@ -12,8 +12,8 @@ import lombok.ToString;
 @ToString
 public class ChangePasswordRequestDto {
 
-    @NotBlank(message = "Current Password is required")
+    @NotBlank(message = "{validation.change_password.current.empty}")
     private String currentPassword;
-    @NotBlank(message = "New Password is required")
+    @NotBlank(message = "{validation.change_password.new.empty}")
     private String newPassword;
 }

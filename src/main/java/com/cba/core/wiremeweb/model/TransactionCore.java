@@ -31,18 +31,24 @@ public class TransactionCore implements java.io.Serializable {
     private String custMobile;
     @Column(name = "tran_type", length = 10)
     private String tranType;
+    @Column(name = "ori_tran_type", length = 10)
+    private String oriTranType;
     @Column(name = "card_label", length = 20)
     private String cardLabel;
     @Column(name = "terminal_id", length = 9)
     private String terminalId;
     @Column(name = "trace_no")
     private Integer traceNo;
+    @Column(name = "ori_trace_no")
+    private Integer oriTraceNo;
     @Column(name = "invoice_no")
     private Integer invoiceNo;
     @Column(name = "amount", nullable = false)
     private Integer amount;
     @Column(name = "currency", nullable = false, length = 6)
     private String currency;
+    @Column(name = "ori_batch_no")
+    private Integer oriBatchNo;
     @Column(name = "batch_no")
     private Integer batchNo;
     @Column(name = "pan", length = 25)
@@ -50,14 +56,21 @@ public class TransactionCore implements java.io.Serializable {
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "date_time", nullable = false, length = 19)
     private Date dateTime;
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(name = "ori_date_time", nullable = false, length = 19)
+    private Date oriDateTime;
     @Column(name = "exp_date", length = 5)
     private String expDate;
     @Column(name = "nii", length = 5)
     private String nii;
     @Column(name = "rrn", length = 20)
     private String rrn;
+    @Column(name = "ori_rrn", length = 20)
+    private String oriRrn;
     @Column(name = "auth_code", length = 20)
     private String authCode;
+    @Column(name = "ori_auth_code", length = 20)
+    private String oriAuthCode;
     @Column(name = "sign_data", length = 10000)
     private String signData;
     @Column(name = "tip_amount")

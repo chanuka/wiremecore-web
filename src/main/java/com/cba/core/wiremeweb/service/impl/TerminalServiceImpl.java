@@ -8,7 +8,6 @@ import com.cba.core.wiremeweb.dto.TerminalResponseDto;
 import com.cba.core.wiremeweb.exception.NotFoundException;
 import com.cba.core.wiremeweb.mapper.TerminalMapper;
 import com.cba.core.wiremeweb.model.*;
-import com.cba.core.wiremeweb.repository.GlobalAuditEntryRepository;
 import com.cba.core.wiremeweb.service.TerminalService;
 import com.cba.core.wiremeweb.util.UserBeanUtil;
 import com.cba.core.wiremeweb.util.UserOperationEnum;

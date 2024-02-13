@@ -3,7 +3,6 @@ package com.cba.core.wiremeweb.mapper;
 import com.cba.core.wiremeweb.dto.DeviceModelRequestDto;
 import com.cba.core.wiremeweb.dto.DeviceModelResponseDto;
 import com.cba.core.wiremeweb.model.DeviceModel;
-import com.cba.core.wiremeweb.model.DeviceVendor;
 import com.cba.core.wiremeweb.model.Status;
 
 public class DeviceModelMapper {

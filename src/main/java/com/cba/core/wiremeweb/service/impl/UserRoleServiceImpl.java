@@ -7,7 +7,6 @@ import com.cba.core.wiremeweb.dto.UserRoleResponseDto;
 import com.cba.core.wiremeweb.exception.NotFoundException;
 import com.cba.core.wiremeweb.mapper.UserRoleMapper;
 import com.cba.core.wiremeweb.model.*;
-import com.cba.core.wiremeweb.repository.GlobalAuditEntryRepository;
 import com.cba.core.wiremeweb.service.GenericService;
 import com.cba.core.wiremeweb.util.UserBeanUtil;
 import com.cba.core.wiremeweb.util.UserOperationEnum;

@@ -11,8 +11,6 @@ import com.cba.core.wiremeweb.model.GlobalAuditEntry;
 import com.cba.core.wiremeweb.model.Status;
 import com.cba.core.wiremeweb.model.User;
 import com.cba.core.wiremeweb.model.UserConfig;
-import com.cba.core.wiremeweb.repository.GlobalAuditEntryRepository;
-import com.cba.core.wiremeweb.repository.UserRepository;
 import com.cba.core.wiremeweb.service.GraphService;
 import com.cba.core.wiremeweb.util.UserBeanUtil;
 import com.cba.core.wiremeweb.util.UserOperationEnum;

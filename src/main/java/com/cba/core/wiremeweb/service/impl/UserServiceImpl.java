@@ -8,7 +8,6 @@ import com.cba.core.wiremeweb.dto.UserResponseDto;
 import com.cba.core.wiremeweb.exception.NotFoundException;
 import com.cba.core.wiremeweb.mapper.UserMapper;
 import com.cba.core.wiremeweb.model.*;
-import com.cba.core.wiremeweb.repository.GlobalAuditEntryRepository;
 import com.cba.core.wiremeweb.service.EmailService;
 import com.cba.core.wiremeweb.service.UserService;
 import com.cba.core.wiremeweb.util.DeviceTypeEnum;
