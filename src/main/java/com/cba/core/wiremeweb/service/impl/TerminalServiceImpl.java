@@ -1,13 +1,16 @@
 package com.cba.core.wiremeweb.service.impl;
 
+import com.cba.core.wiremeweb.dao.EmailConfigDao;
 import com.cba.core.wiremeweb.dao.GlobalAuditDao;
 import com.cba.core.wiremeweb.dao.MerchantDao;
 import com.cba.core.wiremeweb.dao.TerminalDao;
+import com.cba.core.wiremeweb.dto.TerminalEmailDto;
 import com.cba.core.wiremeweb.dto.TerminalRequestDto;
 import com.cba.core.wiremeweb.dto.TerminalResponseDto;
 import com.cba.core.wiremeweb.exception.NotFoundException;
 import com.cba.core.wiremeweb.mapper.TerminalMapper;
 import com.cba.core.wiremeweb.model.*;
+import com.cba.core.wiremeweb.service.EmailService;
 import com.cba.core.wiremeweb.service.TerminalService;
 import com.cba.core.wiremeweb.util.UserBeanUtil;
 import com.cba.core.wiremeweb.util.UserOperationEnum;
@@ -44,6 +47,8 @@ public class TerminalServiceImpl implements TerminalService<TerminalResponseDto,
     private final MerchantDao<Merchant> merchantDao;
     private final UserBeanUtil userBeanUtil;
     private final ObjectMapper objectMapper;
+    private final EmailService emailService;
+    private final EmailConfigDao emailConfigDao;
 
 
     @Value("${application.resource.terminals}")
@@ -168,6 +173,55 @@ public class TerminalServiceImpl implements TerminalService<TerminalResponseDto,
 
             toBeUpdated.setStatus(new Status(requestDto.getStatus()));
         }
+        if (!toBeUpdated.getCurrency().equals(requestDto.getCurrency())) {
+            updateRequired = true;
+            oldDataMap.put("currency", toBeUpdated.getCurrency());
+            newDataMap.put("currency", requestDto.getCurrency());
+
+            toBeUpdated.setCurrency(requestDto.getCurrency());
+        }
+        if (!toBeUpdated.getRemarks().equals(requestDto.getRemarks())) {
+            updateRequired = true;
+            oldDataMap.put("remarks", toBeUpdated.getRemarks());
+            newDataMap.put("remarks", requestDto.getRemarks());
+
+            toBeUpdated.setRemarks(requestDto.getRemarks());
+        }
+        if (!toBeUpdated.getDailyExpSale().equals(requestDto.getDailyExpSale())) {
+            updateRequired = true;
+            oldDataMap.put("dailyExpSale", toBeUpdated.getDailyExpSale());
+            newDataMap.put("dailyExpSale", requestDto.getDailyExpSale());
+
+            toBeUpdated.setDailyExpSale(requestDto.getDailyExpSale());
+        }
+        if (((toBeUpdated.getIsVoidEnabled() == 1) ? true : false) != requestDto.getIsVoidEnabled()) {
+            updateRequired = true;
+            oldDataMap.put("isVoidEnabled", toBeUpdated.getIsVoidEnabled());
+            newDataMap.put("isVoidEnabled", (byte) (requestDto.getIsVoidEnabled() ? 1 : 0));
+
+            toBeUpdated.setIsVoidEnabled((byte) (requestDto.getIsVoidEnabled() ? 1 : 0));
+        }
+        if (((toBeUpdated.getIsPreauthEnabled() == 1) ? true : false) != requestDto.getIsPreauthEnabled()) {
+            updateRequired = true;
+            oldDataMap.put("isPreauthEnabled", toBeUpdated.getIsPreauthEnabled());
+            newDataMap.put("isPreauthEnabled", (byte) (requestDto.getIsPreauthEnabled() ? 1 : 0));
+
+            toBeUpdated.setIsPreauthEnabled((byte) (requestDto.getIsPreauthEnabled() ? 1 : 0));
+        }
+        if (((toBeUpdated.getIsMkeEnabled() == 1) ? true : false) != requestDto.getIsMkeEnabled()) {
+            updateRequired = true;
+            oldDataMap.put("is_mke_enabled", toBeUpdated.getIsMkeEnabled());
+            newDataMap.put("is_mke_enabled", (byte) (requestDto.getIsMkeEnabled() ? 1 : 0));
+
+            toBeUpdated.setIsMkeEnabled((byte) (requestDto.getIsMkeEnabled() ? 1 : 0));
+        }
+        if (((toBeUpdated.getIsOfflineEnabled() == 1) ? true : false) != requestDto.getIsOfflineEnabled()) {
+            updateRequired = true;
+            oldDataMap.put("isOfflineEnabled", toBeUpdated.getIsOfflineEnabled());
+            newDataMap.put("isOfflineEnabled", (byte) (requestDto.getIsOfflineEnabled() ? 1 : 0));
+
+            toBeUpdated.setIsOfflineEnabled((byte) (requestDto.getIsOfflineEnabled() ? 1 : 0));
+        }
         if (updateRequired) {
 
             dao.updateById(id, toBeUpdated);
@@ -193,6 +247,44 @@ public class TerminalServiceImpl implements TerminalService<TerminalResponseDto,
         globalAuditDao.create(new GlobalAuditEntry(resource, UserOperationEnum.CREATE.getValue(),
                 savedEntity.getId(), null, objectMapper.writeValueAsString(responseDto),
                 userBeanUtil.getRemoteAdr()));
+
+        String to_list = emailConfigDao.findByAction("TERMINAL_CREATION").getTo();
+        TerminalEmailDto terminalEmailDto = new TerminalEmailDto();
+        terminalEmailDto.setTo(to_list);
+        terminalEmailDto.setSubject("This is Terminal creation mail");
+        terminalEmailDto.setMerchantId(merchant.getMerchantId());
+        terminalEmailDto.setMerchantName(merchant.getName());
+        terminalEmailDto.setTerminalId(requestDto.getTerminalId());
+        terminalEmailDto.setEmail(to_list);
+        terminalEmailDto.setContactNo("");
+        terminalEmailDto.setProvince(merchant.getProvince());
+        terminalEmailDto.setDistrict(merchant.getDistrict());
+        terminalEmailDto.setAddress(merchant.getAddress());
+        terminalEmailDto.setMcc(merchant.getMcc());
+        terminalEmailDto.setMccDescription("MCC");
+        terminalEmailDto.setLat(merchant.getLat());
+        terminalEmailDto.setLng(merchant.getLon());
+        terminalEmailDto.setSerialNo(savedEntity.getDevice().getSerialNo());
+        terminalEmailDto.setEmiNo(savedEntity.getDevice().getEmiNo());
+        terminalEmailDto.setDeviceType(savedEntity.getDevice().getDeviceType());
+        terminalEmailDto.setUniqueId(savedEntity.getDevice().getUniqueId());
+//        terminalEmailDto.setDeviceModelId(savedEntity.getDevice().getDeviceModel().getId());
+        terminalEmailDto.setDeviceModelId(44444);
+//        terminalEmailDto.setDeviceModelName(savedEntity.getDevice().getDeviceModel().getName());
+        terminalEmailDto.setDeviceModelName("fgfhfgh");
+//        terminalEmailDto.setVenderId(savedEntity.getDevice().getDeviceModel().getDeviceVendor().getId());
+        terminalEmailDto.setVenderId(3);
+//        terminalEmailDto.setVenderName(savedEntity.getDevice().getDeviceModel().getDeviceVendor().getName());
+        terminalEmailDto.setVenderName("sfdsdf");
+        terminalEmailDto.setIsMkeEnabled(false);
+        terminalEmailDto.setIsOfflineEnabled(false);
+        terminalEmailDto.setIsPreauthEnabled(false);
+        terminalEmailDto.setIsVoidEnabled(false);
+        terminalEmailDto.setContactPerson("ddddd");
+        terminalEmailDto.setMerchantPassword("ffffff");
+
+        emailService.sendEmail(terminalEmailDto);
+
 
         return responseDto;
     }

@@ -4,9 +4,15 @@ import com.cba.core.wiremeweb.model.Permission;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
+import java.util.List;
+import java.util.Optional;
+
 public interface PermissionRepository extends JpaRepository<Permission, Integer> {
 
     @Query("SELECT p FROM Permission p WHERE p.role = (SELECT ur.role from UserRole ur WHERE ur.userByUserId=(SELECT u FROM User u WHERE u.userName=:username))")
     Iterable<Permission> findAllPermissionsByUser(String username);
 
+    void deleteByRole_Id(int id);
+
+    List<Permission> findAllByRole_Id(int id);
 }

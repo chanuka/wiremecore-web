@@ -28,4 +28,12 @@ public class TerminalRequestDto implements Serializable {
     private Integer deviceId;
     @NotBlank(message = "{validation.terminal.status.empty}")
     private String status;
+    private String remarks;
+    private String currency;
+    private Boolean isVoidEnabled;
+    private Boolean isOfflineEnabled;
+    private Boolean isPreauthEnabled;
+    private Boolean isMkeEnabled;
+    private Integer dailyExpSale;
+
 }

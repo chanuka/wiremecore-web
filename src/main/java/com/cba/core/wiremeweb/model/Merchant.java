@@ -70,6 +70,10 @@ public class Merchant implements java.io.Serializable {
     private Boolean isEmailEnabled;
     @Column(name = "is_sms_enabled")
     private Boolean isSmsEnabled;
+    @Column(name = "address", nullable = false, length = 200)
+    private String address;
+    @Column(name = "mcc", length = 6)
+    private String mcc;
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "merchant")
     private Set<Terminal> terminals = new HashSet<Terminal>(0);
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "merchant")

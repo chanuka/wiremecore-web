@@ -68,6 +68,8 @@ application:
     userroles: userroles
     permissions: permissions
     transactions: transactions
+  email:
+    url: http://124.43.71.173:9091/api/email/v1
 
 rsa:
   private-key: classpath:certs/private.pem

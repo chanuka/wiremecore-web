@@ -32,4 +32,11 @@ public class TerminalResponseDto implements Serializable {
     private String merchantName;
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private String partnerName;
+    private String remarks;
+    private String currency;
+    private Boolean isVoidEnabled;
+    private Boolean isOfflineEnabled;
+    private Boolean isPreauthEnabled;
+    private Boolean isMkeEnabled;
+    private Integer dailyExpSale;
 }

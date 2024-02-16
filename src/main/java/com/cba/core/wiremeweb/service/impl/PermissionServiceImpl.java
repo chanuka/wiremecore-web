@@ -2,8 +2,7 @@ package com.cba.core.wiremeweb.service.impl;
 
 import com.cba.core.wiremeweb.dao.GlobalAuditDao;
 import com.cba.core.wiremeweb.dao.PermissionDao;
-import com.cba.core.wiremeweb.dto.PermissionRequestDto;
-import com.cba.core.wiremeweb.dto.PermissionResponseDto;
+import com.cba.core.wiremeweb.dto.*;
 import com.cba.core.wiremeweb.exception.NotFoundException;
 import com.cba.core.wiremeweb.mapper.PermissionMapper;
 import com.cba.core.wiremeweb.model.GlobalAuditEntry;
@@ -238,5 +237,36 @@ public class PermissionServiceImpl implements PermissionService<PermissionRespon
                         .map(PermissionMapper::toDto)
                         .collect(Collectors.toList());
         return result;
+    }
+
+    @Override
+    public List<RoleResourcePermissionDto> findAllByUserRole() throws Exception {
+
+        return dao.findAll()
+                .stream()
+                .collect(Collectors.groupingBy(Permission::getRole))
+                .entrySet()
+                .stream()
+                .map(roleListEntry -> {
+                    Role role = roleListEntry.getKey();
+                    List<ResourcePermissionDto> resourcePermissionList =
+                            roleListEntry.getValue()
+                                    .stream()
+                                    .map(rr -> new ResourcePermissionDto(rr.getResource().getId(), rr.getResource().getName(), rr.getReadd().intValue(), rr.getCreated().intValue(),
+                                            rr.getUpdated().intValue(), rr.getDeleted().intValue()))
+                                    .collect(Collectors.toList());
+                    return new RoleResourcePermissionDto(role.getId(), role.getRoleName(), resourcePermissionList);
+                })
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public void deleteByRole_Id(int roleId) throws Exception {
+
+        List<Permission> permissionList = dao.findAllByRole_Id(roleId);
+        if (permissionList.isEmpty()) {
+            throw new NotFoundException("No permission found for the user role given");
+        }
+        dao.deleteByRole_Id(roleId);
     }
 }

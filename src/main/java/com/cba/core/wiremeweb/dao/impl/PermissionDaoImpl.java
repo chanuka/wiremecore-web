@@ -86,4 +86,14 @@ public class PermissionDaoImpl implements PermissionDao<Permission> {
         return repository.findAllPermissionsByUser(username);
     }
 
+    @Override
+    public void deleteByRole_Id(int roleId) throws SQLException {
+        repository.deleteByRole_Id(roleId);
+    }
+
+    @Override
+    public List<Permission> findAllByRole_Id(int id) throws Exception {
+        return repository.findAllByRole_Id(id);
+    }
+
 }

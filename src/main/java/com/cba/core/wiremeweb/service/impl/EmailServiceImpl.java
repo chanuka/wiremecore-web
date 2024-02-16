@@ -1,6 +1,7 @@
 package com.cba.core.wiremeweb.service.impl;
 
 import com.cba.core.wiremeweb.dto.EmailRequestDto;
+import com.cba.core.wiremeweb.dto.TerminalEmailDto;
 import com.cba.core.wiremeweb.service.EmailService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -36,6 +37,31 @@ public class EmailServiceImpl implements EmailService {
 
             HttpEntity<EmailRequestDto> requestEntity = new HttpEntity<>(emailRequestDto, headers);
             ResponseEntity<String> response = restTemplate.postForEntity(emailUrl+ "/email", requestEntity, String.class);
+
+            if (response.getStatusCode().is2xxSuccessful()) {
+                String responseData = response.getBody();
+                // Process responseData here
+                System.out.println("Response: " + responseData);
+            } else {
+                System.out.println("Error occurred. Status code: " + response.getStatusCodeValue());
+                // Handle other error cases
+            }
+        } catch (Exception ex) {
+            System.out.println("Error occurred: " + ex.getMessage());
+            // Handle exceptions
+        }
+    }
+
+    @Override
+    @Async("asyncExecutor")
+    public void sendEmail(TerminalEmailDto terminalEmailDto) throws Exception {
+        try {
+
+            HttpHeaders headers = new HttpHeaders();
+            headers.setContentType(MediaType.APPLICATION_JSON);
+
+            HttpEntity<TerminalEmailDto> requestEntity = new HttpEntity<>(terminalEmailDto, headers);
+            ResponseEntity<String> response = restTemplate.postForEntity(emailUrl+ "/terminal-email", requestEntity, String.class);
 
             if (response.getStatusCode().is2xxSuccessful()) {
                 String responseData = response.getBody();

@@ -50,6 +50,23 @@ public class Terminal implements java.io.Serializable {
     @Column(name = "updated_at", nullable = false, length = 19)
     @LastModifiedDate
     private Date updatedAt;
+    @Column(name = "is_void_enabled")
+    private Byte isVoidEnabled;
+    @Column(name = "is_offline_enabled")
+    private Byte isOfflineEnabled;
+    @Column(name = "is_preauth_enabled")
+    private Byte isPreauthEnabled;
+    @Column(name = "is_mke_enabled")
+    private Byte isMkeEnabled;
+    @Column(name = "daily_exp_sale")
+    private Integer dailyExpSale = 0;
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(name = "last_settled", length = 19)
+    private Date lastSettled;
+    @Column(name = "currency", length = 6)
+    private String currency;
+    @Column(name = "remarks", length = 65535, columnDefinition = "TEXT")
+    private String remarks;
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "terminal")
     private Set<SettlementInfo> settlementInfos = new HashSet<SettlementInfo>(0);
 

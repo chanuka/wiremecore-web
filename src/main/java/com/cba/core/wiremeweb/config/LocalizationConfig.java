@@ -12,8 +12,8 @@ public class LocalizationConfig {
     @Bean
     public LocaleResolver localeResolver() {
         SessionLocaleResolver resolver = new SessionLocaleResolver();
-//        resolver.setDefaultLocale(Locale.ENGLISH); // Set English as default locale
-        resolver.setDefaultLocale(new Locale("si")); // Set Sinhala as default locale
+        resolver.setDefaultLocale(Locale.ENGLISH); // Set English as default locale
+//        resolver.setDefaultLocale(new Locale("si")); // Set Sinhala as default locale
         return resolver;
     }
 }

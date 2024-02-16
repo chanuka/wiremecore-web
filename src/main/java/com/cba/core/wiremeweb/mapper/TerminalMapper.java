@@ -20,6 +20,13 @@ public class TerminalMapper {
         responseDto.setSerialNo(entity.getDevice().getSerialNo());
         responseDto.setMerchantName(entity.getMerchant().getName());
         responseDto.setId(entity.getId());
+        responseDto.setCurrency(entity.getCurrency());
+        responseDto.setRemarks(entity.getRemarks());
+        responseDto.setDailyExpSale(entity.getDailyExpSale());
+        responseDto.setIsMkeEnabled((entity.getIsMkeEnabled() == 1 )?true:false);
+        responseDto.setIsOfflineEnabled((entity.getIsOfflineEnabled() == 1 )?true:false);
+        responseDto.setIsPreauthEnabled((entity.getIsPreauthEnabled() == 1 )?true:false);
+        responseDto.setIsVoidEnabled((entity.getIsVoidEnabled() == 1 )?true:false);
         return responseDto;
     }
 
@@ -29,6 +36,13 @@ public class TerminalMapper {
         entity.setMerchant(merchant);
         entity.setStatus(new Status(requestDto.getStatus()));
         entity.setDevice(new Device(requestDto.getDeviceId()));
+        entity.setCurrency(requestDto.getCurrency());
+        entity.setRemarks(requestDto.getRemarks());
+        entity.setDailyExpSale(requestDto.getDailyExpSale());
+        entity.setIsMkeEnabled((byte)(requestDto.getIsMkeEnabled()?1:0));
+        entity.setIsOfflineEnabled((byte)(requestDto.getIsOfflineEnabled()?1:0));
+        entity.setIsPreauthEnabled((byte)(requestDto.getIsPreauthEnabled()?1:0));
+        entity.setIsVoidEnabled((byte)(requestDto.getIsVoidEnabled()?1:0));
         return entity;
     }
 }

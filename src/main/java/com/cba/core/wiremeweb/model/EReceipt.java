@@ -34,6 +34,8 @@ public class EReceipt implements java.io.Serializable {
     private Boolean is_sent_mail;
     @Column(name = "is_sent_sms")
     private Boolean isSentSms;
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(name = "created_at", length = 19)
     @CreatedDate
     private Date createdAt;
     @Temporal(TemporalType.TIMESTAMP)

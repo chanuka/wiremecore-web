@@ -3,7 +3,9 @@ package com.cba.core.wiremeweb.controller;
 import com.cba.core.wiremeweb.controller.resource.PermissionResource;
 import com.cba.core.wiremeweb.dto.PermissionRequestDto;
 import com.cba.core.wiremeweb.dto.PermissionResponseDto;
+import com.cba.core.wiremeweb.dto.RoleResourcePermissionDto;
 import com.cba.core.wiremeweb.service.GenericService;
+import com.cba.core.wiremeweb.service.PermissionService;
 import com.cba.core.wiremeweb.util.PaginationResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
@@ -29,7 +31,7 @@ public class PermissionController implements PermissionResource<PermissionRespon
 
     private static final Logger logger = LoggerFactory.getLogger(MerchantController.class);
 
-    private final GenericService<PermissionResponseDto, PermissionRequestDto> service;
+    private final PermissionService<PermissionResponseDto, PermissionRequestDto> service;
     private final MessageSource messageSource;
 
     @Override
@@ -46,12 +48,40 @@ public class PermissionController implements PermissionResource<PermissionRespon
     }
 
     @Override
-    public ResponseEntity<List<PermissionResponseDto>> findAllPermissionsByUser() throws Exception {
+    public ResponseEntity<List<PermissionResponseDto>> findAllPermissions() throws Exception {
         Locale currentLocale = LocaleContextHolder.getLocale();
         logger.debug(messageSource.getMessage("PERMISSION_GET_ALL_DEBUG", null, currentLocale));
         try {
             List<PermissionResponseDto> responseDtoList = service.findAll();
             return ResponseEntity.ok().body(responseDtoList);
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+            throw e;
+        }
+    }
+
+    @Override
+    public ResponseEntity<List<RoleResourcePermissionDto>> findAllPermissionsByUserRole() throws Exception {
+        Locale currentLocale = LocaleContextHolder.getLocale();
+        logger.debug(messageSource.getMessage("PERMISSION_GET_ALL_DEBUG", null, currentLocale));
+        try {
+            List<RoleResourcePermissionDto> responseDtoList = service.findAllByUserRole();
+            return ResponseEntity.ok().body(responseDtoList);
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+            throw e;
+        }
+    }
+
+    @Override
+    public ResponseEntity<String> deleteByRole(int id) throws Exception {
+        Locale currentLocale = LocaleContextHolder.getLocale();// works only when as local statement
+        logger.debug(messageSource.getMessage("PERMISSION_DELETE_ONE_DEBUG", null, currentLocale));
+
+        try {
+//            PermissionResponseDto responseDto = service.deleteByRole_Id(id);
+            service.deleteByRole_Id(id);
+            return ResponseEntity.ok().body(messageSource.getMessage("PERMISSION_DELETE_ONE_SUCCESS", null, currentLocale));
         } catch (Exception e) {
             logger.error(e.getMessage());
             throw e;
