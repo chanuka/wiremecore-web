@@ -61,13 +61,14 @@ public class PermissionController implements PermissionResource<PermissionRespon
     }
 
     @Override
-    public ResponseEntity<List<RoleResourcePermissionDto>> findAllPermissionsByUserRole() throws Exception {
+    public ResponseEntity<PaginationResponse<RoleResourcePermissionDto>> findAllPermissionsByUserRole(int page, int pageSize) throws Exception {
         Locale currentLocale = LocaleContextHolder.getLocale();
         logger.debug(messageSource.getMessage("PERMISSION_GET_ALL_DEBUG", null, currentLocale));
         try {
-            List<RoleResourcePermissionDto> responseDtoList = service.findAllByUserRole();
+            PaginationResponse<RoleResourcePermissionDto> responseDtoList = service.findAllByUserRole(page, pageSize);
             return ResponseEntity.ok().body(responseDtoList);
         } catch (Exception e) {
+            e.printStackTrace();
             logger.error(e.getMessage());
             throw e;
         }

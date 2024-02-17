@@ -10,6 +10,7 @@ import com.cba.core.wiremeweb.model.Permission;
 import com.cba.core.wiremeweb.model.Resource;
 import com.cba.core.wiremeweb.model.Role;
 import com.cba.core.wiremeweb.service.PermissionService;
+import com.cba.core.wiremeweb.util.PaginationResponse;
 import com.cba.core.wiremeweb.util.UserBeanUtil;
 import com.cba.core.wiremeweb.util.UserOperationEnum;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -240,9 +241,11 @@ public class PermissionServiceImpl implements PermissionService<PermissionRespon
     }
 
     @Override
-    public List<RoleResourcePermissionDto> findAllByUserRole() throws Exception {
+    public PaginationResponse<RoleResourcePermissionDto> findAllByUserRole(int page, int pageSize) throws Exception {
 
-        return dao.findAll()
+        Page<Permission> permissionPages = dao.findAll(page, pageSize);
+
+        return new PaginationResponse<>(permissionPages.getContent()
                 .stream()
                 .collect(Collectors.groupingBy(Permission::getRole))
                 .entrySet()
@@ -257,7 +260,10 @@ public class PermissionServiceImpl implements PermissionService<PermissionRespon
                                     .collect(Collectors.toList());
                     return new RoleResourcePermissionDto(role.getId(), role.getRoleName(), resourcePermissionList);
                 })
-                .collect(Collectors.toList());
+                .collect(Collectors.toList()),
+                permissionPages.getTotalElements()
+        );
+
     }
 
     @Override

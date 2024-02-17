@@ -23,14 +23,14 @@ public class PermissionDaoImpl implements PermissionDao<Permission> {
     private final PermissionRepository repository;
 
     @Override
-    @Cacheable("permissions")
+//    @Cacheable("permissions")
     public Page<Permission> findAll(int page, int pageSize) throws Exception {
         Pageable pageable = PageRequest.of(page, pageSize);
         return repository.findAll(pageable);
     }
 
     @Override
-    @Cacheable("permissions")
+//    @Cacheable("permissions")
     public List<Permission> findAll() throws Exception {
         return repository.findAll();
     }
@@ -51,31 +51,31 @@ public class PermissionDaoImpl implements PermissionDao<Permission> {
     }
 
     @Override
-    @CacheEvict(value = "permissions", allEntries = true)
+//    @CacheEvict(value = "permissions", allEntries = true)
     public void deleteById(int id) throws Exception {
         repository.deleteById(id);
     }
 
     @Override
-    @CacheEvict(value = "permissions", allEntries = true)
+//    @CacheEvict(value = "permissions", allEntries = true)
     public void deleteByIdList(List<Integer> idList) throws Exception {
         repository.deleteAllByIdInBatch(idList);
     }
 
     @Override
-    @CacheEvict(value = "permissions", allEntries = true)
+//    @CacheEvict(value = "permissions", allEntries = true)
     public Permission updateById(int id, Permission toBeUpdated) throws Exception {
         return repository.saveAndFlush(toBeUpdated);
     }
 
     @Override
-    @CacheEvict(value = "permissions", allEntries = true)
+//    @CacheEvict(value = "permissions", allEntries = true)
     public Permission create(Permission toInsert) throws Exception {
         return repository.save(toInsert);
     }
 
     @Override
-    @CacheEvict(value = "permissions", allEntries = true)
+//    @CacheEvict(value = "permissions", allEntries = true)
     public List<Permission> createBulk(List<Permission> entityList) throws Exception {
         return repository.saveAll(entityList);
     }
@@ -87,6 +87,7 @@ public class PermissionDaoImpl implements PermissionDao<Permission> {
     }
 
     @Override
+    @CacheEvict(value = "permissions", allEntries = true)
     public void deleteByRole_Id(int roleId) throws SQLException {
         repository.deleteByRole_Id(roleId);
     }
