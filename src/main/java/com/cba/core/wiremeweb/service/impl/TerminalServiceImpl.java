@@ -1,9 +1,6 @@
 package com.cba.core.wiremeweb.service.impl;
 
-import com.cba.core.wiremeweb.dao.EmailConfigDao;
-import com.cba.core.wiremeweb.dao.GlobalAuditDao;
-import com.cba.core.wiremeweb.dao.MerchantDao;
-import com.cba.core.wiremeweb.dao.TerminalDao;
+import com.cba.core.wiremeweb.dao.*;
 import com.cba.core.wiremeweb.dto.TerminalEmailDto;
 import com.cba.core.wiremeweb.dto.TerminalRequestDto;
 import com.cba.core.wiremeweb.dto.TerminalResponseDto;
@@ -45,6 +42,7 @@ public class TerminalServiceImpl implements TerminalService<TerminalResponseDto,
     private final TerminalDao<Terminal> dao;
     private final GlobalAuditDao globalAuditDao;
     private final MerchantDao<Merchant> merchantDao;
+    private final DeviceDao<Device> deviceDao;
     private final UserBeanUtil userBeanUtil;
     private final ObjectMapper objectMapper;
     private final EmailService emailService;
@@ -248,7 +246,9 @@ public class TerminalServiceImpl implements TerminalService<TerminalResponseDto,
                 savedEntity.getId(), null, objectMapper.writeValueAsString(responseDto),
                 userBeanUtil.getRemoteAdr()));
 
+        Device device = deviceDao.findById(savedEntity.getDevice().getId());
         String to_list = emailConfigDao.findByAction("TERMINAL_CREATION").getTo();
+
         TerminalEmailDto terminalEmailDto = new TerminalEmailDto();
         terminalEmailDto.setTo(to_list);
         terminalEmailDto.setSubject("Wire-me Terminal Created at :" + savedEntity.getCreatedAt());
@@ -264,18 +264,14 @@ public class TerminalServiceImpl implements TerminalService<TerminalResponseDto,
         terminalEmailDto.setMccDescription("MCC");
         terminalEmailDto.setLat(merchant.getLat());
         terminalEmailDto.setLng(merchant.getLon());
-        terminalEmailDto.setSerialNo(savedEntity.getDevice().getSerialNo());
-        terminalEmailDto.setEmiNo(savedEntity.getDevice().getEmiNo());
-        terminalEmailDto.setDeviceType(savedEntity.getDevice().getDeviceType());
-        terminalEmailDto.setUniqueId(savedEntity.getDevice().getUniqueId());
-//        terminalEmailDto.setDeviceModelId(savedEntity.getDevice().getDeviceModel().getId());
-        terminalEmailDto.setDeviceModelId(44444);
-//        terminalEmailDto.setDeviceModelName(savedEntity.getDevice().getDeviceModel().getName());
-        terminalEmailDto.setDeviceModelName("fgfhfgh");
-//        terminalEmailDto.setVenderId(savedEntity.getDevice().getDeviceModel().getDeviceVendor().getId());
-        terminalEmailDto.setVenderId(3);
-//        terminalEmailDto.setVenderName(savedEntity.getDevice().getDeviceModel().getDeviceVendor().getName());
-        terminalEmailDto.setVenderName("sfdsdf");
+        terminalEmailDto.setSerialNo(device.getSerialNo());
+        terminalEmailDto.setEmiNo(device.getEmiNo());
+        terminalEmailDto.setDeviceType(device.getDeviceType());
+        terminalEmailDto.setUniqueId(device.getUniqueId());
+        terminalEmailDto.setDeviceModelId(device.getId());
+        terminalEmailDto.setDeviceModelName(device.getDeviceModel().getName());
+        terminalEmailDto.setVenderId(device.getDeviceModel().getDeviceVendor().getId());
+        terminalEmailDto.setVenderName(device.getDeviceModel().getDeviceVendor().getName());
         terminalEmailDto.setIsMkeEnabled(false);
         terminalEmailDto.setIsOfflineEnabled(false);
         terminalEmailDto.setIsPreauthEnabled(false);
