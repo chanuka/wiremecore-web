@@ -25,14 +25,14 @@ public class TerminalDaoImpl implements TerminalDao<Terminal> {
 
 
     @Override
-    @Cacheable("terminals")
+//    @Cacheable("terminals")
     public Page<Terminal> findAll(int page, int pageSize) throws Exception {
         Pageable pageable = PageRequest.of(page, pageSize);
         return repository.findAll(pageable);
     }
 
     @Override
-    @Cacheable("terminals")
+//    @Cacheable("terminals")
     public List<Terminal> findAll() throws Exception {
         return repository.findAll();
     }
@@ -64,31 +64,31 @@ public class TerminalDaoImpl implements TerminalDao<Terminal> {
     }
 
     @Override
-    @CacheEvict(value = "terminals", allEntries = true)
+//    @CacheEvict(value = "terminals", allEntries = true)
     public void deleteById(int id) throws Exception {
         repository.deleteById(id);
     }
 
     @Override
-    @CacheEvict(value = "terminals", allEntries = true)
+//    @CacheEvict(value = "terminals", allEntries = true)
     public void deleteByIdList(List<Integer> idList) throws Exception {
         repository.deleteAllByIdInBatch(idList);
     }
 
     @Override
-    @CacheEvict(value = "terminals", allEntries = true)
+//    @CacheEvict(value = "terminals", allEntries = true)
     public Terminal updateById(int id, Terminal toBeUpdated) throws Exception {
         return repository.saveAndFlush(toBeUpdated);
     }
 
     @Override
-    @CacheEvict(value = "terminals", allEntries = true)
+//    @CacheEvict(value = "terminals", allEntries = true)
     public Terminal create(Terminal toInsert) throws Exception {
         return repository.save(toInsert);
     }
 
     @Override
-    @CacheEvict(value = "terminals", allEntries = true)
+//    @CacheEvict(value = "terminals", allEntries = true)
     public List<Terminal> createBulk(List<Terminal> entityList) throws Exception {
         return repository.saveAll(entityList);
     }

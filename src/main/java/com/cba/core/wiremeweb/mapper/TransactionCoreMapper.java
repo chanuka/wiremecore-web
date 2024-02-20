@@ -21,6 +21,8 @@ public class TransactionCoreMapper {
         responseDto.setEntryMode(entity.getEntryMode());
         responseDto.setInvoiceNo(entity.getInvoiceNo());
         responseDto.setMerchantId(entity.getMerchantId());
+        responseDto.setTerminalId(entity.getTerminalId());
+        responseDto.setSettledMethod(entity.getSettledMethod());
         responseDto.setNii(entity.getNii());
         responseDto.setRrn(entity.getRrn());
         responseDto.setTranType(entity.getTranType());

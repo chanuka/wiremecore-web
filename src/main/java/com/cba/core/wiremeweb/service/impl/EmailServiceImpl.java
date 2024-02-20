@@ -32,7 +32,7 @@ public class EmailServiceImpl implements EmailService {
             EmailRequestDto emailRequestDto = new EmailRequestDto();
             emailRequestDto.setTo(userMail);
             emailRequestDto.setBody(messageBody);
-            emailRequestDto.setSubject("This is auto generated email - include credentials/OTP");
+            emailRequestDto.setSubject("Wire-me user credentials/OTP(confidencial)");
             emailRequestDto.setIsHtml(false);
 
             HttpEntity<EmailRequestDto> requestEntity = new HttpEntity<>(emailRequestDto, headers);

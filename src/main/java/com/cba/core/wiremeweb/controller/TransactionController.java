@@ -96,6 +96,7 @@ public class TransactionController implements TransactionResource {
             Map<String, ArrayList<Map<String, Object>>> responseDtolist = transactionService.getAllTransactionSummary(dateFrom, dateTo, queryBy);
             return ResponseEntity.ok().body(responseDtolist);
         } catch (Exception e) {
+            e.printStackTrace();
             logger.error(e.getMessage());
             throw e;
         }

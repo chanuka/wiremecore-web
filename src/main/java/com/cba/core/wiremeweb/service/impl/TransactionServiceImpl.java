@@ -24,6 +24,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -100,7 +101,7 @@ public class TransactionServiceImpl implements TransactionService {
         String groupByClause = setGroupByCondition(queryBy);
 
         List<Object[]> list = transactionDao.getAllTransactionSummary(selectClause, whereClause, groupByClause,
-                dateFrom,dateTo);
+                dateFrom, dateTo);
 
 
         list.forEach(i -> {
@@ -108,7 +109,7 @@ public class TransactionServiceImpl implements TransactionService {
             Map<String, Object> amountMap = new HashMap<>();
             String label = (String) i[0];
             Long count = (Long) i[1];
-            Long amount = (Long) i[2];
+            BigDecimal amount = (BigDecimal) i[2];
 
             countMap.put("count", count);
             if ((queryBy != null && !"".equals(queryBy))) {

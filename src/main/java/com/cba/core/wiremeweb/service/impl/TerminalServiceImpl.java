@@ -251,7 +251,7 @@ public class TerminalServiceImpl implements TerminalService<TerminalResponseDto,
         String to_list = emailConfigDao.findByAction("TERMINAL_CREATION").getTo();
         TerminalEmailDto terminalEmailDto = new TerminalEmailDto();
         terminalEmailDto.setTo(to_list);
-        terminalEmailDto.setSubject("This is Terminal creation mail");
+        terminalEmailDto.setSubject("Wire-me Terminal Created at :" + savedEntity.getCreatedAt());
         terminalEmailDto.setMerchantId(merchant.getMerchantId());
         terminalEmailDto.setMerchantName(merchant.getName());
         terminalEmailDto.setTerminalId(requestDto.getTerminalId());

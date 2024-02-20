@@ -7,6 +7,7 @@ import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
+import java.math.BigDecimal;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
@@ -43,8 +44,8 @@ public class TransactionCore implements java.io.Serializable {
     private Integer oriTraceNo;
     @Column(name = "invoice_no")
     private Integer invoiceNo;
-    @Column(name = "amount", nullable = false)
-    private Integer amount;
+    @Column(name = "amount", nullable = false, precision = 12, scale = 2)
+    private BigDecimal amount;
     @Column(name = "currency", nullable = false, length = 6)
     private String currency;
     @Column(name = "ori_batch_no")
@@ -73,8 +74,8 @@ public class TransactionCore implements java.io.Serializable {
     private String oriAuthCode;
     @Column(name = "sign_data", length = 10000)
     private String signData;
-    @Column(name = "tip_amount")
-    private Integer tipAmount;
+    @Column(name = "tip_amount", precision = 12, scale = 2)
+    private BigDecimal tipAmount;
     @Column(name = "entry_mode")
     private String entryMode;
     @Column(name = "dcc_currency")
