@@ -276,8 +276,8 @@ public class TerminalServiceImpl implements TerminalService<TerminalResponseDto,
         terminalEmailDto.setIsOfflineEnabled(false);
         terminalEmailDto.setIsPreauthEnabled(false);
         terminalEmailDto.setIsVoidEnabled(false);
-        terminalEmailDto.setContactPerson("ddddd");
-        terminalEmailDto.setMerchantPassword("ffffff");
+        terminalEmailDto.setContactPerson(merchant.getContactPerson());
+        terminalEmailDto.setMerchantPassword(merchant.getMerchantPassword());
 
         emailService.sendEmail(terminalEmailDto);
 
