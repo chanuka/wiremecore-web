@@ -53,8 +53,8 @@ public class GraphController implements GraphResource {
         Locale currentLocale = LocaleContextHolder.getLocale();// works only when as local statement
         logger.debug(messageSource.getMessage("GRAPH_DELETE_ONE_DEBUG", null, currentLocale));
         try {
-            GraphResponseDto responseDtos = service.deleteByUser_NameAndConfigType(configName);
-            return ResponseEntity.ok().body(responseDtos);
+            GraphResponseDto responseDto = service.deleteByUser_NameAndConfigType(configName);
+            return ResponseEntity.ok().body(responseDto);
         } catch (Exception e) {
             logger.error(e.getMessage());
             throw e;

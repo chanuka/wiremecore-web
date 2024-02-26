@@ -34,11 +34,11 @@ public class DeviceVendorController implements GenericResource<DeviceVendorRespo
     @Override
     public ResponseEntity<PaginationResponse<DeviceVendorResponseDto>> getAllByPageWise(int page, int pageSize) throws Exception {
         Locale currentLocale = LocaleContextHolder.getLocale();
-        logger.debug(messageSource.getMessage("DEVICEVENDOR_GET_ALL_DEBUG", null, currentLocale));
+        logger.debug(messageSource.getMessage("DEVICE_VENDOR_GET_ALL_DEBUG", null, currentLocale));
         try {
             Page<DeviceVendorResponseDto> responseDtoList = service.findAll(page, pageSize);
 
-            return ResponseEntity.ok().body(new PaginationResponse<DeviceVendorResponseDto>(responseDtoList.getContent(), responseDtoList.getTotalElements()));
+            return ResponseEntity.ok().body(new PaginationResponse<>(responseDtoList.getContent(), responseDtoList.getTotalElements()));
         } catch (Exception e) {
             logger.error(e.getMessage());
             throw e;
@@ -48,7 +48,7 @@ public class DeviceVendorController implements GenericResource<DeviceVendorRespo
     @Override
     public ResponseEntity<DeviceVendorResponseDto> getOne(int id) throws Exception {
         Locale currentLocale = LocaleContextHolder.getLocale();
-        logger.debug(messageSource.getMessage("DEVICEVENDOR_GET_ONE_DEBUG", null, currentLocale));
+        logger.debug(messageSource.getMessage("DEVICE_VENDOR_GET_ONE_DEBUG", null, currentLocale));
 
         try {
             DeviceVendorResponseDto responseDto = service.findById(id);
@@ -62,11 +62,11 @@ public class DeviceVendorController implements GenericResource<DeviceVendorRespo
     @Override
     public ResponseEntity<PaginationResponse<DeviceVendorResponseDto>> searchAllByPageWise(Map<String, String> searchParamList, int page, int pageSize) throws Exception {
         Locale currentLocale = LocaleContextHolder.getLocale();// works only when as local statement
-        logger.debug(messageSource.getMessage("DEVICEVENDOR_GET_SEARCH_DEBUG", null, currentLocale));
+        logger.debug(messageSource.getMessage("DEVICE_VENDOR_GET_SEARCH_DEBUG", null, currentLocale));
 
         try {
-            Page<DeviceVendorResponseDto> responseDtolist = service.findBySearchParamLike(searchParamList, page, pageSize);
-            return ResponseEntity.ok().body(new PaginationResponse<>(responseDtolist.getContent(), responseDtolist.getTotalElements()));
+            Page<DeviceVendorResponseDto> responseDtoList = service.findBySearchParamLike(searchParamList, page, pageSize);
+            return ResponseEntity.ok().body(new PaginationResponse<>(responseDtoList.getContent(), responseDtoList.getTotalElements()));
         } catch (Exception e) {
             logger.error(e.getMessage());
             throw e;
@@ -76,11 +76,11 @@ public class DeviceVendorController implements GenericResource<DeviceVendorRespo
     @Override
     public ResponseEntity<String> deleteOne(int id) throws Exception {
         Locale currentLocale = LocaleContextHolder.getLocale();// works only when as local statement
-        logger.debug(messageSource.getMessage("DEVICEVENDOR_DELETE_ONE_DEBUG", null, currentLocale));
+        logger.debug(messageSource.getMessage("DEVICE_VENDOR_DELETE_ONE_DEBUG", null, currentLocale));
 
         try {
-            DeviceVendorResponseDto responseDto = service.deleteById(id);
-            return ResponseEntity.ok().body(messageSource.getMessage("DEVICEVENDOR_DELETE_ONE_SUCCESS", null, currentLocale));
+            service.deleteById(id);
+            return ResponseEntity.ok().body(messageSource.getMessage("DEVICE_VENDOR_DELETE_ONE_SUCCESS", null, currentLocale));
         } catch (Exception e) {
             logger.error(e.getMessage());
             throw e;
@@ -90,7 +90,7 @@ public class DeviceVendorController implements GenericResource<DeviceVendorRespo
     @Override
     public ResponseEntity<DeviceVendorResponseDto> updateOne(int id, DeviceVendorRequestDto requestDto) throws Exception {
         Locale currentLocale = LocaleContextHolder.getLocale();// works only when as local statement
-        logger.debug(messageSource.getMessage("DEVICEVENDOR_UPDATE_ONE_DEBUG", null, currentLocale));
+        logger.debug(messageSource.getMessage("DEVICE_VENDOR_UPDATE_ONE_DEBUG", null, currentLocale));
         try {
             DeviceVendorResponseDto responseDto = service.updateById(id, requestDto);
             return ResponseEntity.ok().body(responseDto);
@@ -104,7 +104,7 @@ public class DeviceVendorController implements GenericResource<DeviceVendorRespo
     @Override
     public ResponseEntity<DeviceVendorResponseDto> createOne(DeviceVendorRequestDto requestDto) throws Exception {
         Locale currentLocale = LocaleContextHolder.getLocale();// works only when as local statement
-        logger.debug(messageSource.getMessage("DEVICEVENDOR_CREATE_ONE_DEBUG", null, currentLocale));
+        logger.debug(messageSource.getMessage("DEVICE_VENDOR_CREATE_ONE_DEBUG", null, currentLocale));
         try {
             DeviceVendorResponseDto responseDto = service.create(requestDto);
             return ResponseEntity.ok().body(responseDto);
@@ -117,11 +117,11 @@ public class DeviceVendorController implements GenericResource<DeviceVendorRespo
     @Override
     public ResponseEntity<String> createBulk(List<DeviceVendorRequestDto> requestDtoList) throws Exception {
         Locale currentLocale = LocaleContextHolder.getLocale();// works only when as local statement
-        logger.debug(messageSource.getMessage("DEVICEVENDOR_CREATE_BULK_DEBUG", null, currentLocale));
+        logger.debug(messageSource.getMessage("DEVICE_VENDOR_CREATE_BULK_DEBUG", null, currentLocale));
 
         try {
-            List<DeviceVendorResponseDto> responseDtoList = service.createBulk(requestDtoList);
-            return ResponseEntity.ok().body(messageSource.getMessage("DEVICEVENDOR_CREATE_ALL_SUCCESS", null, currentLocale));
+             service.createBulk(requestDtoList);
+            return ResponseEntity.ok().body(messageSource.getMessage("DEVICE_VENDOR_CREATE_ALL_SUCCESS", null, currentLocale));
         } catch (Exception e) {
             logger.error(e.getMessage());
             throw e;
@@ -131,10 +131,10 @@ public class DeviceVendorController implements GenericResource<DeviceVendorRespo
     @Override
     public ResponseEntity<String> deleteBulkByIdList(List<Integer> idList) throws Exception {
         Locale currentLocale = LocaleContextHolder.getLocale();// works only when as local statement
-        logger.debug(messageSource.getMessage("DEVICEVENDOR_DELETE_BULK_DEBUG", null, currentLocale));
+        logger.debug(messageSource.getMessage("DEVICE_VENDOR_DELETE_BULK_DEBUG", null, currentLocale));
         try {
             service.deleteByIdList(idList);
-            return ResponseEntity.ok().body(messageSource.getMessage("DEVICEVENDOR_DELETE_ALL_SUCCESS", null, currentLocale));
+            return ResponseEntity.ok().body(messageSource.getMessage("DEVICE_VENDOR_DELETE_ALL_SUCCESS", null, currentLocale));
         } catch (Exception e) {
             logger.error(e.getMessage());
             throw e;

@@ -39,8 +39,8 @@ public class TerminalController implements TerminalResource<TerminalResponseDto,
         Locale currentLocale = LocaleContextHolder.getLocale();
         logger.debug(messageSource.getMessage("TERMINAL_GET_ALL_DEBUG", null, currentLocale));
         try {
-            Page<TerminalResponseDto> responseDtolist = service.findAll(page, pageSize);
-            return ResponseEntity.ok().body(new PaginationResponse<>(responseDtolist.getContent(), responseDtolist.getTotalElements()));
+            Page<TerminalResponseDto> responseDtoList = service.findAll(page, pageSize);
+            return ResponseEntity.ok().body(new PaginationResponse<>(responseDtoList.getContent(), responseDtoList.getTotalElements()));
         } catch (Exception e) {
             logger.error(e.getMessage());
             throw e;
@@ -67,8 +67,8 @@ public class TerminalController implements TerminalResource<TerminalResponseDto,
         logger.debug(messageSource.getMessage("TERMINAL_GET_SEARCH_DEBUG", null, currentLocale));
 
         try {
-            Page<TerminalResponseDto> responseDtolist = service.findBySearchParamLike(searchParamList, page, pageSize);
-            return ResponseEntity.ok().body(new PaginationResponse<>(responseDtolist.getContent(), responseDtolist.getTotalElements()));
+            Page<TerminalResponseDto> responseDtoList = service.findBySearchParamLike(searchParamList, page, pageSize);
+            return ResponseEntity.ok().body(new PaginationResponse<>(responseDtoList.getContent(), responseDtoList.getTotalElements()));
         } catch (Exception e) {
             e.printStackTrace();
             logger.error(e.getMessage());
@@ -82,7 +82,7 @@ public class TerminalController implements TerminalResource<TerminalResponseDto,
         logger.debug(messageSource.getMessage("TERMINAL_DELETE_ONE_DEBUG", null, currentLocale));
 
         try {
-            TerminalResponseDto responseDto = service.deleteById(id);
+            service.deleteById(id);
             return ResponseEntity.ok().body(messageSource.getMessage("TERMINAL_DELETE_ONE_SUCCESS", null, currentLocale));
         } catch (Exception e) {
             logger.error(e.getMessage());
@@ -127,7 +127,7 @@ public class TerminalController implements TerminalResource<TerminalResponseDto,
         logger.debug(messageSource.getMessage("TERMINAL_CREATE_BULK_DEBUG", null, currentLocale));
 
         try {
-            List<TerminalResponseDto> responseDtoList = service.createBulk(requestDtoList);
+            service.createBulk(requestDtoList);
             return ResponseEntity.ok().body(messageSource.getMessage("TERMINAL_CREATE_ALL_SUCCESS", null, currentLocale));
         } catch (Exception e) {
             logger.error(e.getMessage());
@@ -201,8 +201,8 @@ public class TerminalController implements TerminalResource<TerminalResponseDto,
         Locale currentLocale = LocaleContextHolder.getLocale();
         logger.debug(messageSource.getMessage("TERMINAL_GET_ALL_DEBUG", null, currentLocale));
         try {
-            List<TerminalResponseDto> responseDtolist = service.findAll();
-            return ResponseEntity.ok().body(responseDtolist);
+            List<TerminalResponseDto> responseDtoList = service.findAll();
+            return ResponseEntity.ok().body(responseDtoList);
         } catch (Exception e) {
             logger.error(e.getMessage());
             throw e;

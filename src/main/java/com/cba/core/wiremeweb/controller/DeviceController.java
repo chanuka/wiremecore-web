@@ -73,8 +73,8 @@ public class DeviceController implements DeviceResource<DeviceResponseDto, Devic
         logger.debug(messageSource.getMessage("DEVICE_GET_SEARCH_DEBUG", null, currentLocale));
 
         try {
-            Page<DeviceResponseDto> responseDtolist = service.findBySearchParamLike(searchParamList, page, pageSize);
-            return ResponseEntity.ok().body(new PaginationResponse<>(responseDtolist.getContent(), responseDtolist.getTotalElements()));
+            Page<DeviceResponseDto> responseDtoList = service.findBySearchParamLike(searchParamList, page, pageSize);
+            return ResponseEntity.ok().body(new PaginationResponse<>(responseDtoList.getContent(), responseDtoList.getTotalElements()));
         } catch (Exception e) {
             logger.error(e.getMessage());
             throw e;
@@ -89,7 +89,7 @@ public class DeviceController implements DeviceResource<DeviceResponseDto, Devic
         logger.debug(messageSource.getMessage("DEVICE_DELETE_ONE_DEBUG", null, currentLocale));
 
         try {
-            DeviceResponseDto responseDto = service.deleteById(id);
+            service.deleteById(id);
             return ResponseEntity.ok().body(messageSource.getMessage("DEVICE_DELETE_ONE_SUCCESS", null, currentLocale));
         } catch (Exception e) {
             logger.error(e.getMessage());
@@ -133,7 +133,7 @@ public class DeviceController implements DeviceResource<DeviceResponseDto, Devic
         logger.debug(messageSource.getMessage("DEVICE_CREATE_BULK_DEBUG", null, currentLocale));
 
         try {
-            List<DeviceResponseDto> responseDtoList = service.createBulk(requestDtoList);
+            service.createBulk(requestDtoList);
             return ResponseEntity.ok().body(messageSource.getMessage("DEVICE_CREATE_ALL_SUCCESS", null, currentLocale));
         } catch (Exception e) {
             logger.error(e.getMessage());
@@ -208,8 +208,8 @@ public class DeviceController implements DeviceResource<DeviceResponseDto, Devic
         Locale currentLocale = LocaleContextHolder.getLocale();
         logger.debug(messageSource.getMessage("DEVICE_GET_ALL_DISTRIBUTION", null, currentLocale));
         try {
-            List<DistributionResponseDto> responseDtolist = service.getDeviceDistribution(grouping);
-            return ResponseEntity.ok().body(responseDtolist);
+            List<DistributionResponseDto> responseDtoList = service.getDeviceDistribution(grouping);
+            return ResponseEntity.ok().body(responseDtoList);
         } catch (Exception e) {
             logger.error(e.getMessage());
             throw e;
@@ -221,8 +221,8 @@ public class DeviceController implements DeviceResource<DeviceResponseDto, Devic
         Locale currentLocale = LocaleContextHolder.getLocale();
         logger.debug(messageSource.getMessage("DEVICE_GET_ALL_GEOFENCE", null, currentLocale));
         try {
-            PaginationResponse<DeviceResponseDto> responseDtolist = service.getGeoFenceDevice(filter);
-            return ResponseEntity.ok().body(responseDtolist);
+            PaginationResponse<DeviceResponseDto> responseDtoList = service.getGeoFenceDevice(filter);
+            return ResponseEntity.ok().body(responseDtoList);
         } catch (Exception e) {
             logger.error(e.getMessage());
             throw e;
@@ -234,8 +234,8 @@ public class DeviceController implements DeviceResource<DeviceResponseDto, Devic
         Locale currentLocale = LocaleContextHolder.getLocale();
         logger.debug(messageSource.getMessage("DEVICE_GET_ALL_DEBUG", null, currentLocale));
         try {
-            List<DeviceResponseDto> responseDtolist = service.findAll();
-            return ResponseEntity.ok().body(responseDtolist);
+            List<DeviceResponseDto> responseDtoList = service.findAll();
+            return ResponseEntity.ok().body(responseDtoList);
         } catch (Exception e) {
             logger.error(e.getMessage());
             throw e;
@@ -248,8 +248,8 @@ public class DeviceController implements DeviceResource<DeviceResponseDto, Devic
         logger.debug(messageSource.getMessage("DEVICE_GET_SEARCH_DEBUG", null, currentLocale));
 
         try {
-            List<DeviceResponseDto> responseDtolist = service.findBySearchParamLikeByKeyWord(searchParameter);
-            return ResponseEntity.ok().body(responseDtolist);
+            List<DeviceResponseDto> responseDtoList = service.findBySearchParamLikeByKeyWord(searchParameter);
+            return ResponseEntity.ok().body(responseDtoList);
         } catch (Exception e) {
             e.printStackTrace();
             logger.error(e.getMessage());

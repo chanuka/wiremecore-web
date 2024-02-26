@@ -30,7 +30,7 @@ public class DeviceConfigController implements DeviceConfigResource {
     @Override
     public ResponseEntity<DeviceConfigResponseDto> getOne(int id) throws Exception {
         Locale currentLocale = LocaleContextHolder.getLocale();
-        logger.debug(messageSource.getMessage("DEVICECONFIG_GET_ONE_DEBUG", null, currentLocale));
+        logger.debug(messageSource.getMessage("DEVICE_CONFIG_GET_ONE_DEBUG", null, currentLocale));
 
         try {
             DeviceConfigResponseDto responseDto = service.findById(id);
@@ -44,7 +44,7 @@ public class DeviceConfigController implements DeviceConfigResource {
     @Override
     public ResponseEntity<DeviceConfigResponseDto> createOne(DeviceConfigRequestDto requestDto) throws Exception {
         Locale currentLocale = LocaleContextHolder.getLocale();// works only when as local statement
-        logger.debug(messageSource.getMessage("DEVICECONFIG_CREATE_ONE_DEBUG", null, currentLocale));
+        logger.debug(messageSource.getMessage("DEVICE_CONFIG_CREATE_ONE_DEBUG", null, currentLocale));
         try {
             DeviceConfigResponseDto responseDto = service.create(requestDto);
             return ResponseEntity.ok().body(responseDto);
@@ -57,7 +57,7 @@ public class DeviceConfigController implements DeviceConfigResource {
     @Override
     public ResponseEntity<DeviceConfigResponseDto> updateOne(DeviceConfigRequestDto requestDto, int id) throws Exception {
         Locale currentLocale = LocaleContextHolder.getLocale();// works only when as local statement
-        logger.debug(messageSource.getMessage("DEVICECONFIG_UPDATE_ONE_DEBUG", null, currentLocale));
+        logger.debug(messageSource.getMessage("DEVICE_CONFIG_UPDATE_ONE_DEBUG", null, currentLocale));
         try {
             DeviceConfigResponseDto responseDto = service.update(id, requestDto);
             return ResponseEntity.ok().body(responseDto);
@@ -71,11 +71,11 @@ public class DeviceConfigController implements DeviceConfigResource {
     @Override
     public ResponseEntity<String> deleteOne(int id) throws Exception {
         Locale currentLocale = LocaleContextHolder.getLocale();// works only when as local statement
-        logger.debug(messageSource.getMessage("DEVICECONFIG_DELETE_ONE_DEBUG", null, currentLocale));
+        logger.debug(messageSource.getMessage("DEVICE_CONFIG_DELETE_ONE_DEBUG", null, currentLocale));
 
         try {
-            DeviceConfigResponseDto responseDto = service.deleteById(id);
-            return ResponseEntity.ok().body(messageSource.getMessage("DEVICECONFIG_DELETE_ONE_SUCCESS", null, currentLocale));
+            service.deleteById(id);
+            return ResponseEntity.ok().body(messageSource.getMessage("DEVICE_CONFIG_DELETE_ONE_SUCCESS", null, currentLocale));
         } catch (Exception e) {
             logger.error(e.getMessage());
             throw e;

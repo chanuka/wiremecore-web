@@ -39,8 +39,8 @@ public class RoleController implements GenericResource<RoleResponseDto, RoleRequ
         Locale currentLocale = LocaleContextHolder.getLocale();
         logger.debug(messageSource.getMessage("ROLE_GET_ALL_DEBUG", null, currentLocale));
         try {
-            Page<RoleResponseDto> responseDtolist = service.findAll(page, pageSize);
-            return ResponseEntity.ok().body(new PaginationResponse<RoleResponseDto>(responseDtolist.getContent(), responseDtolist.getTotalElements()));
+            Page<RoleResponseDto> responseDtoList = service.findAll(page, pageSize);
+            return ResponseEntity.ok().body(new PaginationResponse<>(responseDtoList.getContent(), responseDtoList.getTotalElements()));
         } catch (Exception e) {
             logger.error(e.getMessage());
             throw e;
@@ -67,8 +67,8 @@ public class RoleController implements GenericResource<RoleResponseDto, RoleRequ
         logger.debug(messageSource.getMessage("ROLE_GET_SEARCH_DEBUG", null, currentLocale));
 
         try {
-            Page<RoleResponseDto> responseDtolist = service.findBySearchParamLike(searchParamList, page, pageSize);
-            return ResponseEntity.ok().body(new PaginationResponse<>(responseDtolist.getContent(), responseDtolist.getTotalElements()));
+            Page<RoleResponseDto> responseDtoList = service.findBySearchParamLike(searchParamList, page, pageSize);
+            return ResponseEntity.ok().body(new PaginationResponse<>(responseDtoList.getContent(), responseDtoList.getTotalElements()));
         } catch (Exception e) {
             logger.error(e.getMessage());
             throw e;
@@ -81,7 +81,7 @@ public class RoleController implements GenericResource<RoleResponseDto, RoleRequ
         logger.debug(messageSource.getMessage("ROLE_DELETE_ONE_DEBUG", null, currentLocale));
 
         try {
-            RoleResponseDto responseDto = service.deleteById(id);
+            service.deleteById(id);
             return ResponseEntity.ok().body(messageSource.getMessage("ROLE_DELETE_ONE_SUCCESS", null, currentLocale));
         } catch (Exception e) {
             logger.error(e.getMessage());
@@ -125,7 +125,7 @@ public class RoleController implements GenericResource<RoleResponseDto, RoleRequ
         logger.debug(messageSource.getMessage("ROLE_CREATE_BULK_DEBUG", null, currentLocale));
 
         try {
-            List<RoleResponseDto> responseDtoList = service.createBulk(requestDtoList);
+            service.createBulk(requestDtoList);
             return ResponseEntity.ok().body(messageSource.getMessage("ROLE_CREATE_ALL_SUCCESS", null, currentLocale));
         } catch (Exception e) {
             logger.error(e.getMessage());

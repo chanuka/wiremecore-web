@@ -78,7 +78,6 @@ public class PermissionController implements PermissionResource<PermissionRespon
         logger.debug(messageSource.getMessage("PERMISSION_DELETE_ONE_DEBUG", null, currentLocale));
 
         try {
-//            PermissionResponseDto responseDto = service.deleteByRole_Id(id);
             service.deleteByRole_Id(id);
             return ResponseEntity.ok().body(messageSource.getMessage("PERMISSION_DELETE_ONE_SUCCESS", null, currentLocale));
         } catch (Exception e) {
@@ -112,7 +111,7 @@ public class PermissionController implements PermissionResource<PermissionRespon
         logger.debug(messageSource.getMessage("PERMISSION_DELETE_ONE_DEBUG", null, currentLocale));
 
         try {
-            PermissionResponseDto responseDto = service.deleteById(id);
+            service.deleteById(id);
             return ResponseEntity.ok().body(messageSource.getMessage("PERMISSION_DELETE_ONE_SUCCESS", null, currentLocale));
         } catch (Exception e) {
             logger.error(e.getMessage());
@@ -153,7 +152,7 @@ public class PermissionController implements PermissionResource<PermissionRespon
         logger.debug(messageSource.getMessage("PERMISSION_CREATE_BULK_DEBUG", null, currentLocale));
 
         try {
-            List<PermissionResponseDto> responseDtoList = service.createBulk(requestDtoList);
+            service.createBulk(requestDtoList);
             return ResponseEntity.ok().body(messageSource.getMessage("PERMISSION_CREATE_ALL_SUCCESS", null, currentLocale));
         } catch (Exception e) {
             logger.error(e.getMessage());

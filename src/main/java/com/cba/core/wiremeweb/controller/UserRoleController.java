@@ -34,10 +34,10 @@ public class UserRoleController implements GenericResource<UserRoleResponseDto, 
     @Override
     public ResponseEntity<PaginationResponse<UserRoleResponseDto>> getAllByPageWise(int page, int pageSize) throws Exception {
         Locale currentLocale = LocaleContextHolder.getLocale();
-        logger.debug(messageSource.getMessage("USERROLE_GET_ALL_DEBUG", null, currentLocale));
+        logger.debug(messageSource.getMessage("USER_ROLE_GET_ALL_DEBUG", null, currentLocale));
         try {
-            Page<UserRoleResponseDto> responseDtolist = service.findAll(page, pageSize);
-            return ResponseEntity.ok().body(new PaginationResponse<>(responseDtolist.getContent(), responseDtolist.getTotalElements()));
+            Page<UserRoleResponseDto> responseDtoList = service.findAll(page, pageSize);
+            return ResponseEntity.ok().body(new PaginationResponse<>(responseDtoList.getContent(), responseDtoList.getTotalElements()));
         } catch (Exception e) {
             logger.error(e.getMessage());
             throw e;
@@ -47,7 +47,7 @@ public class UserRoleController implements GenericResource<UserRoleResponseDto, 
     @Override
     public ResponseEntity<UserRoleResponseDto> getOne(int id) throws Exception {
         Locale currentLocale = LocaleContextHolder.getLocale();
-        logger.debug(messageSource.getMessage("USERROLE_GET_ONE_DEBUG", null, currentLocale));
+        logger.debug(messageSource.getMessage("USER_ROLE_GET_ONE_DEBUG", null, currentLocale));
 
         try {
             UserRoleResponseDto responseDto = service.findById(id);
@@ -66,11 +66,11 @@ public class UserRoleController implements GenericResource<UserRoleResponseDto, 
     @Override
     public ResponseEntity<String> deleteOne(int id) throws Exception {
         Locale currentLocale = LocaleContextHolder.getLocale();// works only when as local statement
-        logger.debug(messageSource.getMessage("USERROLE_DELETE_ONE_DEBUG", null, currentLocale));
+        logger.debug(messageSource.getMessage("USER_ROLE_DELETE_ONE_DEBUG", null, currentLocale));
 
         try {
-            UserRoleResponseDto responseDto = service.deleteById(id);
-            return ResponseEntity.ok().body(messageSource.getMessage("USERROLE_DELETE_ONE_SUCCESS", null, currentLocale));
+            service.deleteById(id);
+            return ResponseEntity.ok().body(messageSource.getMessage("USER_ROLE_DELETE_ONE_SUCCESS", null, currentLocale));
 
         } catch (Exception e) {
             logger.error(e.getMessage());
@@ -81,7 +81,7 @@ public class UserRoleController implements GenericResource<UserRoleResponseDto, 
     @Override
     public ResponseEntity<UserRoleResponseDto> updateOne(int id, UserRoleRequestDto requestDto) throws Exception {
         Locale currentLocale = LocaleContextHolder.getLocale();// works only when as local statement
-        logger.debug(messageSource.getMessage("USERROLE_UPDATE_ONE_DEBUG", null, currentLocale));
+        logger.debug(messageSource.getMessage("USER_ROLE_UPDATE_ONE_DEBUG", null, currentLocale));
         try {
             UserRoleResponseDto responseDto = service.updateById(id, requestDto);
             return ResponseEntity.ok().body(responseDto);
@@ -94,7 +94,7 @@ public class UserRoleController implements GenericResource<UserRoleResponseDto, 
     @Override
     public ResponseEntity<UserRoleResponseDto> createOne(UserRoleRequestDto requestDto) throws Exception {
         Locale currentLocale = LocaleContextHolder.getLocale();// works only when as local statement
-        logger.debug(messageSource.getMessage("USERROLE_CREATE_ONE_DEBUG", null, currentLocale));
+        logger.debug(messageSource.getMessage("USER_ROLE_CREATE_ONE_DEBUG", null, currentLocale));
         try {
             UserRoleResponseDto responseDto = service.create(requestDto);
             return ResponseEntity.ok().body(responseDto);
@@ -108,11 +108,11 @@ public class UserRoleController implements GenericResource<UserRoleResponseDto, 
     public ResponseEntity<String> createBulk(List<UserRoleRequestDto> requestDtoList) throws Exception {
 
         Locale currentLocale = LocaleContextHolder.getLocale();// works only when as local statement
-        logger.debug(messageSource.getMessage("USERROLE_CREATE_BULK_DEBUG", null, currentLocale));
+        logger.debug(messageSource.getMessage("USER_ROLE_CREATE_BULK_DEBUG", null, currentLocale));
 
         try {
-            List<UserRoleResponseDto> responseDtoList = service.createBulk(requestDtoList);
-            return ResponseEntity.ok().body(messageSource.getMessage("USERROLE_CREATE_ALL_SUCCESS", null, currentLocale));
+            service.createBulk(requestDtoList);
+            return ResponseEntity.ok().body(messageSource.getMessage("USER_ROLE_CREATE_ALL_SUCCESS", null, currentLocale));
         } catch (Exception e) {
             e.printStackTrace();
             logger.error(e.getMessage());
@@ -123,10 +123,10 @@ public class UserRoleController implements GenericResource<UserRoleResponseDto, 
     @Override
     public ResponseEntity<String> deleteBulkByIdList(List<Integer> idList) throws Exception {
         Locale currentLocale = LocaleContextHolder.getLocale();// works only when as local statement
-        logger.debug(messageSource.getMessage("USERROLE_DELETE_BULK_DEBUG", null, currentLocale));
+        logger.debug(messageSource.getMessage("USER_ROLE_DELETE_BULK_DEBUG", null, currentLocale));
         try {
             service.deleteByIdList(idList);
-            return ResponseEntity.ok().body(messageSource.getMessage("USERROLE_DELETE_ALL_SUCCESS", null, currentLocale));
+            return ResponseEntity.ok().body(messageSource.getMessage("USER_ROLE_DELETE_ALL_SUCCESS", null, currentLocale));
         } catch (Exception e) {
             logger.error(e.getMessage());
             throw e;

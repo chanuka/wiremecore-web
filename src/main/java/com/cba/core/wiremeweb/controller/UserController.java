@@ -44,8 +44,8 @@ public class UserController implements UserResource<UserResponseDto, UserRequest
         Locale currentLocale = LocaleContextHolder.getLocale();
         logger.debug(messageSource.getMessage("USER_GET_ALL_DEBUG", null, currentLocale));
         try {
-            Page<UserResponseDto> responseDtolist = service.findAll(page, pageSize);
-            return ResponseEntity.ok().body(new PaginationResponse<>(responseDtolist.getContent(), responseDtolist.getTotalElements()));
+            Page<UserResponseDto> responseDtoList = service.findAll(page, pageSize);
+            return ResponseEntity.ok().body(new PaginationResponse<>(responseDtoList.getContent(), responseDtoList.getTotalElements()));
         } catch (Exception e) {
             logger.error(e.getMessage());
             throw e;
@@ -89,7 +89,7 @@ public class UserController implements UserResource<UserResponseDto, UserRequest
         logger.debug(messageSource.getMessage("USER_DELETE_ONE_DEBUG", null, currentLocale));
 
         try {
-            UserResponseDto responseDto = service.deleteById(id);
+            service.deleteById(id);
             return ResponseEntity.ok().body(messageSource.getMessage("USER_DELETE_ONE_SUCCESS", null, currentLocale));
 
         } catch (Exception e) {
@@ -133,7 +133,7 @@ public class UserController implements UserResource<UserResponseDto, UserRequest
         logger.debug(messageSource.getMessage("USER_CREATE_BULK_DEBUG", null, currentLocale));
 
         try {
-            List<UserResponseDto> responseDtoList = service.createBulk(requestDtoList);
+            service.createBulk(requestDtoList);
             return ResponseEntity.ok().body(messageSource.getMessage("USER_CREATE_ALL_SUCCESS", null, currentLocale));
         } catch (Exception e) {
             logger.error(e.getMessage());

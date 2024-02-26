@@ -54,8 +54,8 @@ public class HighlightController implements HighlightResource {
         Locale currentLocale = LocaleContextHolder.getLocale();// works only when as local statement
         logger.debug(messageSource.getMessage("HIGHLIGHTS_DELETE_ONE_DEBUG", null, currentLocale));
         try {
-            HighlightResponseDto responseDtos = service.deleteByUser_NameAndConfigType(configName);
-            return ResponseEntity.ok().body(responseDtos);
+            HighlightResponseDto responseDto = service.deleteByUser_NameAndConfigType(configName);
+            return ResponseEntity.ok().body(responseDto);
         } catch (Exception e) {
             logger.error(e.getMessage());
             throw e;

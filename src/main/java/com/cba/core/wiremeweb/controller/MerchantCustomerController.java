@@ -43,8 +43,8 @@ public class MerchantCustomerController implements MerchantCustomerResource<Merc
         Locale currentLocale = LocaleContextHolder.getLocale();
         logger.debug(messageSource.getMessage("MERCHANT_CUSTOMER_GET_ALL_DEBUG", null, currentLocale));
         try {
-            Page<MerchantCustomerResponseDto> responseDtolist = service.findAll(page, pageSize);
-            return ResponseEntity.ok().body(new PaginationResponse<>(responseDtolist.getContent(), responseDtolist.getTotalElements()));
+            Page<MerchantCustomerResponseDto> responseDtoList = service.findAll(page, pageSize);
+            return ResponseEntity.ok().body(new PaginationResponse<>(responseDtoList.getContent(), responseDtoList.getTotalElements()));
         } catch (Exception e) {
             logger.error(e.getMessage());
             throw e;
@@ -86,7 +86,7 @@ public class MerchantCustomerController implements MerchantCustomerResource<Merc
         logger.debug(messageSource.getMessage("MERCHANT_CUSTOMER_DELETE_ONE_DEBUG", null, currentLocale));
 
         try {
-            MerchantCustomerResponseDto responseDto = service.deleteById(id);
+            service.deleteById(id);
             return ResponseEntity.ok().body(messageSource.getMessage("MERCHANT_CUSTOMER_DELETE_ONE_SUCCESS", null, currentLocale));
         } catch (Exception e) {
             logger.error(e.getMessage());
@@ -128,7 +128,7 @@ public class MerchantCustomerController implements MerchantCustomerResource<Merc
         logger.debug(messageSource.getMessage("MERCHANT_CUSTOMER_CREATE_BULK_DEBUG", null, currentLocale));
 
         try {
-            List<MerchantCustomerResponseDto> responseDtoList = service.createBulk(requestDtoList);
+            service.createBulk(requestDtoList);
             return ResponseEntity.ok().body(messageSource.getMessage("MERCHANT_CUSTOMER_CREATE_ALL_SUCCESS", null, currentLocale));
         } catch (Exception e) {
             logger.error(e.getMessage());
@@ -213,8 +213,8 @@ public class MerchantCustomerController implements MerchantCustomerResource<Merc
         Locale currentLocale = LocaleContextHolder.getLocale();
         logger.debug(messageSource.getMessage("MERCHANT_CUSTOMER_GET_ALL_DEBUG", null, currentLocale));
         try {
-            List<MerchantCustomerResponseDto> responseDtolist = service.findAll();
-            return ResponseEntity.ok().body(responseDtolist);
+            List<MerchantCustomerResponseDto> responseDtoList = service.findAll();
+            return ResponseEntity.ok().body(responseDtoList);
         } catch (Exception e) {
             logger.error(e.getMessage());
             throw e;
@@ -227,8 +227,8 @@ public class MerchantCustomerController implements MerchantCustomerResource<Merc
         logger.debug(messageSource.getMessage("MERCHANT_CUSTOMER_GET_SEARCH_DEBUG", null, currentLocale));
 
         try {
-            List<MerchantCustomerResponseDto> responseDtolist = service.findBySearchParamLikeByKeyWord(searchParameter);
-            return ResponseEntity.ok().body(responseDtolist);
+            List<MerchantCustomerResponseDto> responseDtoList = service.findBySearchParamLikeByKeyWord(searchParameter);
+            return ResponseEntity.ok().body(responseDtoList);
         } catch (Exception e) {
             e.printStackTrace();
             logger.error(e.getMessage());
