@@ -4,6 +4,7 @@ import com.cba.core.wiremeweb.model.Permission;
 
 import java.sql.SQLException;
 import java.util.List;
+import java.util.Optional;
 
 public interface PermissionDao<T> extends GenericDao<T> {
 
@@ -12,4 +13,5 @@ public interface PermissionDao<T> extends GenericDao<T> {
     void deleteByRole_Id(int roleId) throws SQLException;
 
     List<Permission> findAllByRole_Id(int id) throws Exception;
+
 }

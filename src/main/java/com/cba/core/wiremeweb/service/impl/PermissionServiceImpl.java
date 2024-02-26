@@ -275,4 +275,51 @@ public class PermissionServiceImpl implements PermissionService<PermissionRespon
         }
         dao.deleteByRole_Id(roleId);
     }
+
+    @Override
+    public void updateBulk(int roleId, List<PermissionRequestDto> requestDtoList) throws Exception {
+
+        // Retrieve the existing records from the database for the given roleId
+        List<Permission> existingRecords = dao.findAllByRole_Id(roleId);
+
+        List<PermissionResponseDto> existingDtoRecords = existingRecords
+                .stream()
+                .map(PermissionMapper::toDto)
+                .collect(Collectors.toList());
+
+        globalAuditDao.create(new GlobalAuditEntry(resource, UserOperationEnum.UPDATE.getValue(),
+                roleId, objectMapper.writeValueAsString(existingDtoRecords), objectMapper.writeValueAsString(requestDtoList),
+                userBeanUtil.getRemoteAdr()));
+
+        // Update existing records and remove records that are not in the updateRequests list
+        for (Permission existingRecord : existingRecords) {
+            boolean found = false;
+            for (PermissionRequestDto updateRequest : requestDtoList) {
+                if (existingRecord.getResource().getId() == updateRequest.getResourceId()) {
+                    // Update existing record
+                    existingRecord.setCreated(updateRequest.getCreated().byteValue());
+                    existingRecord.setReadd(updateRequest.getReadd().byteValue());
+                    existingRecord.setUpdated(updateRequest.getUpdated().byteValue());
+                    existingRecord.setDeleted(updateRequest.getDeleted().byteValue());
+                    dao.updateById(roleId, existingRecord);
+                    found = true;
+                    break;
+                }
+            }
+            if (!found) {
+                // Remove record from the database
+                dao.deleteById(existingRecord.getId());
+            }
+        }
+
+        // Insert new records
+        for (PermissionRequestDto updateRequest : requestDtoList) {
+            boolean isNewRecord = existingRecords.stream().noneMatch(record -> record.getResource().getId() == updateRequest.getResourceId());
+            if (isNewRecord) {
+                dao.create(PermissionMapper.toModel(updateRequest));
+            }
+        }
+
+
+    }
 }

@@ -14,5 +14,6 @@ public interface PermissionService<T, K> extends GenericService<T, K> {
 
     void deleteByRole_Id(int roleId) throws Exception;
 
+    void updateBulk(int roleId, List<K> requestDtoList) throws Exception;
 
 }

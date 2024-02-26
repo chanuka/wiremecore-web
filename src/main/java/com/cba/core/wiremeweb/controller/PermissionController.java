@@ -1,9 +1,7 @@
 package com.cba.core.wiremeweb.controller;
 
 import com.cba.core.wiremeweb.controller.resource.PermissionResource;
-import com.cba.core.wiremeweb.dto.PermissionRequestDto;
-import com.cba.core.wiremeweb.dto.PermissionResponseDto;
-import com.cba.core.wiremeweb.dto.RoleResourcePermissionDto;
+import com.cba.core.wiremeweb.dto.*;
 import com.cba.core.wiremeweb.service.GenericService;
 import com.cba.core.wiremeweb.service.PermissionService;
 import com.cba.core.wiremeweb.util.PaginationResponse;
@@ -159,6 +157,22 @@ public class PermissionController implements PermissionResource<PermissionRespon
             return ResponseEntity.ok().body(messageSource.getMessage("PERMISSION_CREATE_ALL_SUCCESS", null, currentLocale));
         } catch (Exception e) {
             logger.error(e.getMessage());
+            throw e;
+        }
+    }
+
+    @Override
+    public ResponseEntity<String> updateBulk(int roleId, List<PermissionRequestDto> requestDtoList) throws Exception {
+
+        Locale currentLocale = LocaleContextHolder.getLocale();// works only when as local statement
+        logger.debug(messageSource.getMessage("TERMINAL_CREATE_BULK_DEBUG", null, currentLocale));
+
+        try {
+            service.updateBulk(roleId, requestDtoList);
+            return ResponseEntity.ok().body(messageSource.getMessage("TERMINAL_CREATE_ALL_SUCCESS", null, currentLocale));
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+            e.printStackTrace();
             throw e;
         }
     }
