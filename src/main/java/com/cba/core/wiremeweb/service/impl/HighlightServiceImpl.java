@@ -19,6 +19,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.text.ParseException;
 import java.util.HashMap;
 import java.util.List;
@@ -369,16 +370,23 @@ public class HighlightServiceImpl implements HighlightService {
         IntStream.range(0, list.size())
                 .forEach(i -> {
                     String index = String.valueOf(i + 1);
-                    Long value = (Long) list.get(i)[1];
                     String label = (String) list.get(i)[0];
-                    responseData.put(index, createDataEntry(requestDto, value, label)
-                    );
+
+                    if ("Revenue".equalsIgnoreCase(requestDto.getAggregator())) {
+                        BigDecimal value = (BigDecimal) list.get(i)[1];
+                        responseData.put(index, createDataEntry(requestDto, value, label)
+                        );
+                    } else {
+                        Long value = (Long) list.get(i)[1];
+                        responseData.put(index, createDataEntry(requestDto, value, label)
+                        );
+                    }
                 });
     }
 
-    private Map<String, Object> createDataEntry(HighlightRequestDto requestDto, long count, String cardLabel) {
+    private <T> Map<String, Object> createDataEntry(HighlightRequestDto requestDto, T value, String cardLabel) {
         Map<String, Object> dataEntry = new HashMap<>();
-        dataEntry.put(requestDto.getAggregator(), count);
+        dataEntry.put(requestDto.getAggregator(), value);
         dataEntry.put(requestDto.getGrouping(), cardLabel);
         return dataEntry;
     }

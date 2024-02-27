@@ -20,6 +20,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -245,7 +246,7 @@ public class GraphServiceImpl implements GraphService {
             String groupByClause = setGroupByCondition(requestDto);
 
             List<Object[]> list = dao.findGraphs(whereClause, selectClause, groupByClause, requestDto);
-            responseData.putAll(getStringListMap(list));
+            responseData.putAll(getStringListMap(list, requestDto.getYaxis()));
 
         } catch (ParseException e) {
             e.printStackTrace();
@@ -448,15 +449,21 @@ public class GraphServiceImpl implements GraphService {
         return groupBy;
     }
 
-    private Map<String, List<Map<String, Object>>> getStringListMap(List<Object[]> list) {
+    private Map<String, List<Map<String, Object>>> getStringListMap(List<Object[]> list, String aggregator) {
         Map<String, List<Map<String, Object>>> responseData = new HashMap<>();
         list.forEach(obj -> {
             String key = (String) obj[0];
             String grouping = (String) obj[1];
-            Long value = (Long) obj[2];
+            if ("Revenue".equalsIgnoreCase(aggregator)) {
+                BigDecimal value = (BigDecimal) obj[2];
+                responseData.computeIfAbsent(key, k -> new ArrayList<>())
+                        .add(Map.of("grouping", grouping, "value", value));
+            } else {
+                Long value = (Long) obj[2];
+                responseData.computeIfAbsent(key, k -> new ArrayList<>())
+                        .add(Map.of("grouping", grouping, "value", value));
+            }
 
-            responseData.computeIfAbsent(key, k -> new ArrayList<>())
-                    .add(Map.of("grouping", grouping, "value", value));
         });
         return responseData;
     }

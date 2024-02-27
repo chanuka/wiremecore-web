@@ -14,7 +14,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 @Entity
-@Table(name = "terminal", uniqueConstraints = {@UniqueConstraint(name = "terminal_un", columnNames = {"terminal_id"})}
+@Table(name = "terminal", uniqueConstraints = {@UniqueConstraint(name = "terminal_un", columnNames = {"terminal_id","merchant_id"})}
 )
 @EntityListeners(AuditingEntityListener.class) // enable entity level auditing for create,modified attributes
 @Data
@@ -63,8 +63,9 @@ public class Terminal implements java.io.Serializable {
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "last_settled", length = 19)
     private Date lastSettled;
-    @Column(name = "currency", length = 6)
-    private String currency;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "currency", nullable = false)
+    private Currency currency;
     @Column(name = "remarks", length = 65535, columnDefinition = "TEXT")
     private String remarks;
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "terminal")

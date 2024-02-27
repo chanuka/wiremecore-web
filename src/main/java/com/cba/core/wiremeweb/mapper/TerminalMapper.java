@@ -2,10 +2,7 @@ package com.cba.core.wiremeweb.mapper;
 
 import com.cba.core.wiremeweb.dto.TerminalRequestDto;
 import com.cba.core.wiremeweb.dto.TerminalResponseDto;
-import com.cba.core.wiremeweb.model.Device;
-import com.cba.core.wiremeweb.model.Merchant;
-import com.cba.core.wiremeweb.model.Status;
-import com.cba.core.wiremeweb.model.Terminal;
+import com.cba.core.wiremeweb.model.*;
 
 public class TerminalMapper {
 
@@ -20,7 +17,7 @@ public class TerminalMapper {
         responseDto.setSerialNo(entity.getDevice().getSerialNo());
         responseDto.setMerchantName(entity.getMerchant().getName());
         responseDto.setId(entity.getId());
-        responseDto.setCurrency(entity.getCurrency());
+        responseDto.setCurrency(entity.getCurrency().getCode());
         responseDto.setRemarks(entity.getRemarks());
         responseDto.setDailyExpSale(entity.getDailyExpSale());
         responseDto.setIsMkeEnabled((entity.getIsMkeEnabled() == 1 )?true:false);
@@ -36,7 +33,7 @@ public class TerminalMapper {
         entity.setMerchant(merchant);
         entity.setStatus(new Status(requestDto.getStatus()));
         entity.setDevice(new Device(requestDto.getDeviceId()));
-        entity.setCurrency(requestDto.getCurrency());
+        entity.setCurrency(new Currency(requestDto.getCurrency()));
         entity.setRemarks(requestDto.getRemarks());
         entity.setDailyExpSale(requestDto.getDailyExpSale());
         entity.setIsMkeEnabled((byte)(requestDto.getIsMkeEnabled()?1:0));

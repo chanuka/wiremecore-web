@@ -176,7 +176,7 @@ public class TerminalServiceImpl implements TerminalService<TerminalResponseDto,
             oldDataMap.put("currency", toBeUpdated.getCurrency());
             newDataMap.put("currency", requestDto.getCurrency());
 
-            toBeUpdated.setCurrency(requestDto.getCurrency());
+            toBeUpdated.setCurrency(new Currency(requestDto.getCurrency()));
         }
         if (!toBeUpdated.getRemarks().equals(requestDto.getRemarks())) {
             updateRequired = true;
