@@ -24,14 +24,14 @@ public class UserDaoImpl implements UserDao<User> {
     private final UserRepository repository;
 
     @Override
-    @Cacheable("users")
+//    @Cacheable("users")
     public Page<User> findAll(int page, int pageSize) throws Exception {
         Pageable pageable = PageRequest.of(page, pageSize);
         return repository.findAll(pageable);
     }
 
     @Override
-    @Cacheable("users")
+//    @Cacheable("users")
     public List<User> findAll() throws Exception {
         return repository.findAll();
     }
@@ -55,31 +55,31 @@ public class UserDaoImpl implements UserDao<User> {
     }
 
     @Override
-    @CacheEvict(value = "users", allEntries = true)
+//    @CacheEvict(value = "users", allEntries = true)
     public void deleteById(int id) throws Exception {
         repository.deleteById(id);
     }
 
     @Override
-    @CacheEvict(value = "users", allEntries = true)
+//    @CacheEvict(value = "users", allEntries = true)
     public void deleteByIdList(List<Integer> idList) throws Exception {
         repository.deleteAllByIdInBatch(idList);
     }
 
     @Override
-    @CacheEvict(value = "users", allEntries = true)
+//    @CacheEvict(value = "users", allEntries = true)
     public User updateById(int id, User toBeUpdated) throws Exception {
         return repository.save(toBeUpdated);
     }
 
     @Override
-    @CacheEvict(value = "users", allEntries = true)
+//    @CacheEvict(value = "users", allEntries = true)
     public User create(User toInsert) throws Exception {
         return repository.save(toInsert);
     }
 
     @Override
-    @CacheEvict(value = "users", allEntries = true)
+//    @CacheEvict(value = "users", allEntries = true)
     public List<User> createBulk(List<User> entityList) throws Exception {
         return repository.saveAll(entityList);
     }

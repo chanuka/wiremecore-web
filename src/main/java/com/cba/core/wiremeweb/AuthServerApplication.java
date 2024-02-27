@@ -9,7 +9,7 @@ import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 
 @EnableConfigurationProperties(RsaKeyProperties.class)
 @SpringBootApplication
-@EnableCaching
+//@EnableCaching
 @EnableJpaAuditing(auditorAwareRef = "auditorAware") // use for auditing purpose, enable created and modified user at entity level
 public class AuthServerApplication {
 

@@ -24,14 +24,14 @@ public class MerchantDaoImpl implements MerchantDao<Merchant> {
     private final MerchantRepository repository;
 
     @Override
-    @Cacheable("merchants")
+//    @Cacheable("merchants")
     public Page<Merchant> findAll(int page, int pageSize) throws Exception {
         Pageable pageable = PageRequest.of(page, pageSize);
         return repository.findAll(pageable);
     }
 
     @Override
-    @Cacheable("merchants")
+//    @Cacheable("merchants")
     public List<Merchant> findAll() throws Exception {
         return repository.findAll();
     }
@@ -60,31 +60,31 @@ public class MerchantDaoImpl implements MerchantDao<Merchant> {
     }
 
     @Override
-    @CacheEvict(value = "merchants", allEntries = true)
+//    @CacheEvict(value = "merchants", allEntries = true)
     public void deleteById(int id) throws Exception {
         repository.deleteById(id);
     }
 
     @Override
-    @CacheEvict(value = "merchants", allEntries = true)
+//    @CacheEvict(value = "merchants", allEntries = true)
     public void deleteByIdList(List<Integer> idList) throws Exception {
         repository.deleteAllByIdInBatch(idList);
     }
 
     @Override
-    @CacheEvict(value = "merchants", allEntries = true)
+//    @CacheEvict(value = "merchants", allEntries = true)
     public Merchant updateById(int id, Merchant toBeUpdated) throws Exception {
         return repository.saveAndFlush(toBeUpdated);
     }
 
     @Override
-    @CacheEvict(value = "merchants", allEntries = true)
+//    @CacheEvict(value = "merchants", allEntries = true)
     public Merchant create(Merchant toInsert) throws Exception {
         return repository.save(toInsert);
     }
 
     @Override
-    @CacheEvict(value = "merchants", allEntries = true)
+//    @CacheEvict(value = "merchants", allEntries = true)
     public List<Merchant> createBulk(List<Merchant> entityList) throws Exception {
         return repository.saveAll(entityList);
     }

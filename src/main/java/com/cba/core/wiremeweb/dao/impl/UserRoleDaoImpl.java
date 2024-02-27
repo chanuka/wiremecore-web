@@ -22,14 +22,14 @@ public class UserRoleDaoImpl implements GenericDao<UserRole> {
     private final UserRoleRepository repository;
 
     @Override
-    @Cacheable("userroles")
+//    @Cacheable("userroles")
     public Page<UserRole> findAll(int page, int pageSize) throws Exception {
         Pageable pageable = PageRequest.of(page, pageSize);
         return repository.findAll(pageable);
     }
 
     @Override
-    @Cacheable("userroles")
+//    @Cacheable("userroles")
     public List<UserRole> findAll() throws Exception {
         return repository.findAll();
     }
@@ -50,31 +50,31 @@ public class UserRoleDaoImpl implements GenericDao<UserRole> {
     }
 
     @Override
-    @CacheEvict(value = "userroles", allEntries = true)
+//    @CacheEvict(value = "userroles", allEntries = true)
     public void deleteById(int id) throws Exception {
         repository.deleteById(id);
     }
 
     @Override
-    @CacheEvict(value = "userroles", allEntries = true)
+//    @CacheEvict(value = "userroles", allEntries = true)
     public void deleteByIdList(List<Integer> idList) throws Exception {
         repository.deleteAllByIdInBatch(idList);
     }
 
     @Override
-    @CacheEvict(value = "userroles", allEntries = true)
+//    @CacheEvict(value = "userroles", allEntries = true)
     public UserRole updateById(int id, UserRole toBeUpdated) throws Exception {
         return repository.saveAndFlush(toBeUpdated);
     }
 
     @Override
-    @CacheEvict(value = "userroles", allEntries = true)
+//    @CacheEvict(value = "userroles", allEntries = true)
     public UserRole create(UserRole toInsert) throws Exception {
         return repository.save(toInsert);
     }
 
     @Override
-    @CacheEvict(value = "userroles", allEntries = true)
+//    @CacheEvict(value = "userroles", allEntries = true)
     public List<UserRole> createBulk(List<UserRole> entityList) throws Exception {
         return repository.saveAll(entityList);
     }

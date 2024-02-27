@@ -25,14 +25,14 @@ public class RoleDaoImpl implements GenericDao<Role> {
 
 
     @Override
-    @Cacheable("roles")
+//    @Cacheable("roles")
     public Page<Role> findAll(int page, int pageSize) throws Exception {
         Pageable pageable = PageRequest.of(page, pageSize);
         return repository.findAll(pageable);
     }
 
     @Override
-    @Cacheable("roles")
+//    @Cacheable("roles")
     public List<Role> findAll() throws Exception {
         return repository.findAll();
     }
@@ -56,31 +56,31 @@ public class RoleDaoImpl implements GenericDao<Role> {
     }
 
     @Override
-    @CacheEvict(value = "roles", allEntries = true)
+//    @CacheEvict(value = "roles", allEntries = true)
     public void deleteById(int id) throws Exception {
         repository.deleteById(id);
     }
 
     @Override
-    @CacheEvict(value = "roles", allEntries = true)
+//    @CacheEvict(value = "roles", allEntries = true)
     public void deleteByIdList(List<Integer> idList) throws Exception {
         repository.deleteAllByIdInBatch(idList);
     }
 
     @Override
-    @CacheEvict(value = "roles", allEntries = true)
+//    @CacheEvict(value = "roles", allEntries = true)
     public Role updateById(int id, Role toBeUpdated) throws Exception {
         return repository.saveAndFlush(toBeUpdated);
     }
 
     @Override
-    @CacheEvict(value = "roles", allEntries = true)
+//    @CacheEvict(value = "roles", allEntries = true)
     public Role create(Role toInsert) throws Exception {
         return repository.save(toInsert);
     }
 
     @Override
-    @CacheEvict(value = "roles", allEntries = true)
+//    @CacheEvict(value = "roles", allEntries = true)
     public List<Role> createBulk(List<Role> entityList) throws Exception {
         return repository.saveAll(entityList);
     }

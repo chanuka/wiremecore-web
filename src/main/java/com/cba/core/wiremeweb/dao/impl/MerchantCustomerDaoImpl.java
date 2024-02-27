@@ -24,14 +24,14 @@ public class MerchantCustomerDaoImpl implements GenericDao<MerchantCustomer> {
     private final MerchantCustomerRepository repository;
 
     @Override
-    @Cacheable("partners")
+//    @Cacheable("partners")
     public Page<MerchantCustomer> findAll(int page, int pageSize) throws Exception {
         Pageable pageable = PageRequest.of(page, pageSize);
         return repository.findAll(pageable);
     }
 
     @Override
-    @Cacheable("partners")
+//    @Cacheable("partners")
     public List<MerchantCustomer> findAll() throws Exception {
         return repository.findAll();
     }
@@ -57,31 +57,31 @@ public class MerchantCustomerDaoImpl implements GenericDao<MerchantCustomer> {
     }
 
     @Override
-    @CacheEvict(value = "partners", allEntries = true)
+//    @CacheEvict(value = "partners", allEntries = true)
     public void deleteById(int id) throws Exception {
         repository.deleteById(id);
     }
 
     @Override
-    @CacheEvict(value = "partners", allEntries = true)
+//    @CacheEvict(value = "partners", allEntries = true)
     public void deleteByIdList(List<Integer> idList) throws Exception {
         repository.deleteAllByIdInBatch(idList);
     }
 
     @Override
-    @CacheEvict(value = "partners", allEntries = true)
+//    @CacheEvict(value = "partners", allEntries = true)
     public MerchantCustomer updateById(int id, MerchantCustomer requestDto) throws Exception {
         return repository.saveAndFlush(requestDto);
     }
 
     @Override
-    @CacheEvict(value = "partners", allEntries = true)
+//    @CacheEvict(value = "partners", allEntries = true)
     public MerchantCustomer create(MerchantCustomer requestDto) throws Exception {
         return repository.save(requestDto);
     }
 
     @Override
-    @CacheEvict(value = "partners", allEntries = true)
+//    @CacheEvict(value = "partners", allEntries = true)
     public List<MerchantCustomer> createBulk(List<MerchantCustomer> entityList) throws Exception {
         return repository.saveAll(entityList);
     }

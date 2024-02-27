@@ -30,14 +30,14 @@ public class DeviceDaoImpl implements DeviceDao<Device> {
 
 
     @Override
-    @Cacheable("devices")
+//    @Cacheable("devices")
     public Page<Device> findAll(int page, int pageSize) throws Exception {
         Pageable pageable = PageRequest.of(page, pageSize);
         return repository.findAll(pageable);
     }
 
     @Override
-    @Cacheable("devices")
+//    @Cacheable("devices")
     public List<Device> findAll() throws Exception {
         return repository.findAll();
     }
@@ -70,31 +70,31 @@ public class DeviceDaoImpl implements DeviceDao<Device> {
     }
 
     @Override
-    @CacheEvict(value = "devices", allEntries = true)
+//    @CacheEvict(value = "devices", allEntries = true)
     public void deleteById(int id) throws Exception {
         repository.deleteById(id);
     }
 
     @Override
-    @CacheEvict(value = "devices", allEntries = true)
+//    @CacheEvict(value = "devices", allEntries = true)
     public void deleteByIdList(List<Integer> idList) throws Exception {
         repository.deleteAllByIdInBatch(idList);
     }
 
     @Override
-    @CacheEvict(value = "devices", allEntries = true)
+//    @CacheEvict(value = "devices", allEntries = true)
     public Device updateById(int id, Device device) throws Exception {
         return repository.saveAndFlush(device);
     }
 
     @Override
-    @CacheEvict(value = "devices", allEntries = true)
+//    @CacheEvict(value = "devices", allEntries = true)
     public Device create(Device device) throws Exception {
         return repository.save(device);
     }
 
     @Override
-    @CacheEvict(value = "devices", allEntries = true)
+//    @CacheEvict(value = "devices", allEntries = true)
     public List<Device> createBulk(List<Device> entityList) throws Exception {
         return repository.saveAll(entityList);
     }
