@@ -1,6 +1,7 @@
 package com.cba.core.wiremeweb.service.impl;
 
 import com.cba.core.wiremeweb.dao.GlobalAuditDao;
+import com.cba.core.wiremeweb.dao.MccDao;
 import com.cba.core.wiremeweb.dao.MerchantDao;
 import com.cba.core.wiremeweb.dto.MerchantRequestDto;
 import com.cba.core.wiremeweb.dto.MerchantResponseDto;
@@ -43,6 +44,7 @@ public class MerchantServiceImpl implements MerchantService<MerchantResponseDto,
 
     private final MerchantDao<Merchant> dao;
     private final GlobalAuditDao globalAuditDao;
+    private final MccDao mccDao;
     private final UserBeanUtil userBeanUtil;
     private final ObjectMapper objectMapper;
 
@@ -236,6 +238,8 @@ public class MerchantServiceImpl implements MerchantService<MerchantResponseDto,
     public MerchantResponseDto create(MerchantRequestDto requestDto) throws Exception {
 
         Merchant toInsert = MerchantMapper.toModel(requestDto);
+
+        toInsert.setMcc(mccDao.findByCode(requestDto.getMcc()));
 
         Merchant savedEntity = dao.create(toInsert);
         MerchantResponseDto responseDto = MerchantMapper.toDto(savedEntity);

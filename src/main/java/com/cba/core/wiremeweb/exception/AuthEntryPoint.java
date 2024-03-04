@@ -46,7 +46,8 @@ public class AuthEntryPoint implements AuthenticationEntryPoint {
             message = (((BadCredentialsException) request.getAttribute("errorObject")).getMessage());
             response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
             response.setContentType("application/json");
-            exceptionResponseDto = new ExceptionResponseDto(LocalDateTime.now(), "1001", message);
+//            exceptionResponseDto = new ExceptionResponseDto(LocalDateTime.now(), "1001", message);
+            exceptionResponseDto = new ExceptionResponseDto(LocalDateTime.now(), "1001", "Invalid Credentials");
         }  else {
             message = authException.getMessage();
             response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);

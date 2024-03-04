@@ -30,6 +30,10 @@ public class MerchantRequestDto implements Serializable {
     private String email;
     @NotBlank(message = "{validation.merchant.province.empty}")
     private String province;
+    @NotBlank(message = "{validation.merchant.address.empty}")
+    private String address;
+    @NotBlank(message = "{validation.merchant.mcc.empty}")
+    private String mcc;
     @NotBlank(message = "{validation.merchant.district.empty}")
     private String district;
     @NotBlank(message = "{validation.merchant.status.empty}")

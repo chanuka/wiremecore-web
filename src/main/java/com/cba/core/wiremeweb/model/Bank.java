@@ -31,6 +31,9 @@ public class Bank implements java.io.Serializable {
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "bank")
     private Set<TransactionSwitch> transactionSwitches = new HashSet<TransactionSwitch>(0);
 
+    public Bank(String bankCode) {
+        this.bankCode = bankCode;
+    }
 }
 
 

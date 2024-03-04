@@ -8,6 +8,8 @@ import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Table(name = "mcc", uniqueConstraints = {@UniqueConstraint(name = "mcc_un", columnNames = {"code"})}
@@ -33,4 +35,10 @@ public class Mcc implements java.io.Serializable {
     private String code;
     @Column(name = "description", length = 100)
     private String description;
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "mcc")
+    private Set<Merchant> merchants = new HashSet<Merchant>(0);
+
+    public Mcc(Integer id) {
+        this.id = id;
+    }
 }

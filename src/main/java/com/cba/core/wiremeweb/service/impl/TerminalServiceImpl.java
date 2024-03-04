@@ -260,7 +260,7 @@ public class TerminalServiceImpl implements TerminalService<TerminalResponseDto,
         terminalEmailDto.setProvince(merchant.getProvince());
         terminalEmailDto.setDistrict(merchant.getDistrict());
         terminalEmailDto.setAddress(merchant.getAddress());
-        terminalEmailDto.setMcc(merchant.getMcc());
+        terminalEmailDto.setMcc(merchant.getMcc().getCode());
         terminalEmailDto.setMccDescription("MCC");
         terminalEmailDto.setLat(merchant.getLat());
         terminalEmailDto.setLng(merchant.getLon());

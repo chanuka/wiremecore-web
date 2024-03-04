@@ -116,6 +116,7 @@ public class MerchantController implements MerchantResource<MerchantResponseDto,
             MerchantResponseDto responseDto = service.create(requestDto);
             return ResponseEntity.ok().body(responseDto);
         } catch (Exception e) {
+            e.printStackTrace();
             logger.error(e.getMessage());
             throw e;
         }

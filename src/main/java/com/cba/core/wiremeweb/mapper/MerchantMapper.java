@@ -2,6 +2,7 @@ package com.cba.core.wiremeweb.mapper;
 
 import com.cba.core.wiremeweb.dto.MerchantRequestDto;
 import com.cba.core.wiremeweb.dto.MerchantResponseDto;
+import com.cba.core.wiremeweb.model.Mcc;
 import com.cba.core.wiremeweb.model.Merchant;
 import com.cba.core.wiremeweb.model.MerchantCustomer;
 import com.cba.core.wiremeweb.model.Status;
@@ -31,6 +32,7 @@ public class MerchantMapper {
         entity.setMerchantId(requestDto.getMerchantId());
         entity.setProvince(requestDto.getProvince());
         entity.setDistrict(requestDto.getDistrict());
+        entity.setAddress(requestDto.getAddress());
         entity.setStatus(new Status(requestDto.getStatus()));
         entity.setMerchantCustomer(new MerchantCustomer(requestDto.getPartnerId()));
         entity.setEmail(requestDto.getEmail());

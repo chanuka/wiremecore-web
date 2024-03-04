@@ -27,7 +27,7 @@ public class Merchant implements java.io.Serializable {
     private Integer id;
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "bank")
-    private Bank bank;
+    private Bank bank = new Bank("001");
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "merchant_customer_id", nullable = false)
     private MerchantCustomer merchantCustomer;
@@ -67,13 +67,14 @@ public class Merchant implements java.io.Serializable {
     @LastModifiedDate
     private Date updatedAt;
     @Column(name = "is_email_enabled")
-    private Boolean isEmailEnabled;
+    private Boolean isEmailEnabled = false;
     @Column(name = "is_sms_enabled")
-    private Boolean isSmsEnabled;
+    private Boolean isSmsEnabled = false;
     @Column(name = "address", nullable = false, length = 200)
     private String address;
-    @Column(name = "mcc", length = 6)
-    private String mcc;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "mcc", referencedColumnName = "code", unique = true)
+    private Mcc mcc = new Mcc(1);
     @Column(name = "contact_person", length = 30)
     private String contactPerson;
     @Column(name = "merchant_password", length = 30)
