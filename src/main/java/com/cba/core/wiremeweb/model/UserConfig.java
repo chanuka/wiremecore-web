@@ -12,7 +12,7 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import java.util.Date;
 
 @Entity
-@Table(name = "user_config"
+@Table(name = "user_config", uniqueConstraints = {@UniqueConstraint(name = "user_config_un", columnNames = {"config_name"})}
 )
 @EntityListeners(AuditingEntityListener.class) // enable entity level auditing for create,modified attributes
 @Data
@@ -32,7 +32,7 @@ public class UserConfig implements java.io.Serializable {
     private String config;
     @Column(name = "priority_order", nullable = false)
     private Integer priorityOrder;
-    @Column(name = "config_name", nullable = false)
+    @Column(name = "config_name", nullable = false, unique = true)
     private String configName;
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "status", nullable = false)

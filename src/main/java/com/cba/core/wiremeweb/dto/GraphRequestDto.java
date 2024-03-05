@@ -38,9 +38,9 @@ public class GraphRequestDto implements Serializable {
     private String yaxis;
     @NotBlank(message = "{validation.highlights.status.empty}")
     private String status;
-    @NotBlank(message = "{validation.highlights.from_date.empty}")
+    @JsonInclude(JsonInclude.Include.NON_NULL)
     private String fromDate;
-    @NotBlank(message = "{validation.highlights.to_date.empty}")
+    @JsonInclude(JsonInclude.Include.NON_NULL)
     private String toDate;
     @NotBlank(message = "{validation.highlights.priority.empty}")
     private Integer priorityOrder;
